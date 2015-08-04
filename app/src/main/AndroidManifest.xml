@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.razon30.totalmovie" >
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <application
+        android:name=".MyApplication"
+        android:label="ToTaL MoViE"
+        android:allowBackup="true"
+        android:icon="@drawable/movie_icon"
+        android:theme="@style/AppTheme" >
+        <activity
+            android:name=".MainActivity"
+            android:icon="@drawable/movie_icon"
+            android:label="ToTaL MoViE"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".Movie_Details"
+            android:icon="@drawable/movie_icon"
+            android:label="ToTaL MoViE"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyCustomToolBarMovieDetails">
+        </activity>
+        <activity
+            android:name=".Person_Details"
+            android:icon="@drawable/movie_icon"
+            android:label="ToTaL MoViE"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyCustomToolBarMovieDetails">
+        </activity>
+        <activity
+            android:name=".Search_List_Activity"
+            android:icon="@drawable/movie_icon"
+            android:label="ToTaL MoViE"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".Multi_Search_Activity"
+            android:icon="@drawable/movie_icon"
+            android:label="ToTaL MoViE"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".Splash_Activity"
+            android:icon="@drawable/movie_icon"
+            android:label="ToTaL MoViE"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyCustomToolBaSplash">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:screenOrientation="portrait"
+            android:name=".IMDB_Movie_Details_Top_Bottom"
+            android:label="@string/title_activity_imdb__movie__details__top__bottom" >
+        </activity>
+    </application>
+
+</manifest>

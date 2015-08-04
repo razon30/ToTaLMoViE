@@ -1,0 +1,42 @@
+<resources>
+
+    <!-- Base application theme. -->
+
+    <style name="AppTheme" parent="AppTheme.Base">
+        <!-- Customize your theme here. -->
+    </style>
+
+    <style name="AppTheme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryDark">@color/primaryColorDark</item>
+        <item name="colorAccent">@color/accentColor</item>
+
+
+    </style>
+    <style name="MyCustomToolBarThem" parent="ThemeOverlay.AppCompat.Light">
+
+        <item name="android:textColorPrimary">#F00</item>
+        <item name="android:textColorSecondary">#00F</item>
+
+
+    </style>
+    <style name="MyCustomToolBarMovieDetails" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="colorPrimary">#DAA520</item>
+        <item name="colorPrimaryDark">#DAA520</item>
+        <item name="colorAccent">#DAA520</item>
+
+    </style>
+
+    <style name="MyCustomToolBaSplash" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="colorPrimary">#fff59d</item>
+        <item name="colorPrimaryDark">#fff59d</item>
+        <item name="colorAccent">#fff59d</item>
+
+    </style>
+
+
+
+</resources>

@@ -1,0 +1,27 @@
+<LinearLayout
+    android:id="@+id/splash_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/spalsh"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/t_movie"
+        android:id="@+id/splash_image"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="Md. Razon Hossain\nLearner"
+        android:textColor="@color/primaryColor"
+        android:textSize="18sp"
+        android:id="@+id/splash_text"/>
+
+
+</LinearLayout>
