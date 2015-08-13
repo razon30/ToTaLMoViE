@@ -14,10 +14,11 @@
 
 
     </style>
-    <style name="MyCustomToolBarThem" parent="ThemeOverlay.AppCompat.Light">
 
-        <item name="android:textColorPrimary">#F00</item>
-        <item name="android:textColorSecondary">#00F</item>
+    <style name="MyCustomToolBarThem" parent="ThemeOverlay.AppCompat.Dark">
+
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:textColorSecondary">#FFFFFF</item>
 
 
     </style>
@@ -37,6 +38,9 @@
 
     </style>
 
+    <style name="menu_labels_style">
 
+        <item name="android:textColor">@color/accentColor</item>
+    </style>
 
 </resources>

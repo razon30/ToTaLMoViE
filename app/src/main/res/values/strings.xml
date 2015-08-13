@@ -7,7 +7,7 @@
     <string name="open">open</string>
     <string name="close">close</string>
     <string-array name="tabs">
-        <item>Search</item>
+        <item>Discover</item>
         <item>Box Office</item>
         <item>Upcoming</item>
     </string-array>
@@ -22,5 +22,5 @@
     <string name="title_activity_splash_">Splash_Activity</string>
     <string name="title_activity_imdb__movie__details__top__bottom">IMDB_Movie_Details_Top_Bottom
     </string>
-
+    <string name="facebook_app_id">505284192967672</string>
 </resources>

@@ -1,12 +1,9 @@
 package com.example.razon30.totalmovie;
 
-import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -42,19 +39,11 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
     private static final String STATE_MOVIE = "state_genre";
-
-
     //    String genreUrl = "http://api.themoviedb.org/3/genre/movie/list?api_key=f246d5e5105e9934d3cd4c4c181d618d";
 //
     ArrayList<Movie> trailer_list = new ArrayList<Movie>();
     String trailer = "http://www.myapifilms.com/imdb/trailers";
-
     String imdb_bottom_100 = "http://www.myapifilms.com/imdb/bottom";
     String imdb_top_250 = "http://www.myapifilms.com/imdb/top";
     String item_of_top_250_of_imdb = "http://api.themoviedb.org/3/find/";
@@ -64,11 +53,8 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
     String multiPost = "multi?api_key=f246d5e5105e9934d3cd4c4c181d618d&query=";
     String keyword = "";
     String image_url = "http://image.tmdb.org/t/p/w500";
-
     String popular_movie = "http://api.themoviedb.org/3/movie/popular?api_key=f246d5e5105e9934d3cd4c4c181d618d";
-
     String popular_person = "http://api.themoviedb.org/3/person/popular?api_key=f246d5e5105e9934d3cd4c4c181d618d";
-
     ArrayList<String> listmovies = new ArrayList<String>();
     ImageView view1, view2, view3, view4, view5, view6;
     TextView tv1, tv2, tv3, tv_top10, tv_bottom10, tvTrailer, tv_popular_movies, tv_popular_persons,
@@ -76,37 +62,29 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
     String id1, id2, id3;
     String pid1, pid2, pid3;
     String tid1, tid2, tid3;
-
     ImageView trialerImageView1, trialerImageView2, trialerImageView3;
     TextView tvTrailer1, tvTrailer2, tvTrailer3;
-
     String imdb_id;
     String DB_id = "";
-
-
     EditText etSearch;
     Button btnSearch;
-
-
     ListView lvGenre1, lvGenre2, lvGenre3;
     String[] genreName1 = {"Action", "Adventure", "Animation", "Comedy", "Crime", "Documentary", "Drama"};
     String[] genreName2 = {"Family", "Fantasy", "Foreign", "History", "Horror", "Music", "Mystery"};
     String[] genreName3 = {"Romance", "Science Fiction", "Tv Movie", "Thriller", "War", "Western"};
-
     String[] genreId1 = {"28", "12", "16", "35", "80", "99", "18"};
     String[] genreId2 = {"10751", "14", "10769", "36", "27", "10402", "9648"};
     String[] genreId3 = {"10749", "878", "10770", "53", "10752", "37"};
-
-
     Adapter_genre adapter_genre;
-
-    private VolleySingleton volleySingleton;
-    private RequestQueue requestQueue;
-
     ArrayList<Movie> topten = new ArrayList<Movie>();
     ArrayList<Movie> bottomten = new ArrayList<Movie>();
     ArrayList<Movie> popular_movie_list = new ArrayList<Movie>();
     ArrayList<Movie> popular_person_list = new ArrayList<Movie>();
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+    private VolleySingleton volleySingleton;
+    private RequestQueue requestQueue;
 
 
 //
@@ -184,7 +162,7 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                                 releaseDate = currentmovie.getString("release_date");
                                 audienceScore = currentmovie.getInt("vote_average");
                                 synopsis = currentmovie.getString("overview");
-                                urlThumbnail = currentmovie.getString("poster_path");
+                                urlThumbnail = currentmovie.getString("backdrop_path");
 
 
                                 Movie movie = new Movie(id, title, releaseDate, audienceScore, synopsis, urlThumbnail);
@@ -195,9 +173,9 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                             }
 
 
-                            String image1 = jsonArray.getJSONObject(0).getString("backdrop_path");
-                            String image2 = jsonArray.getJSONObject(1).getString("backdrop_path");
-                            String image3 = jsonArray.getJSONObject(2).getString("backdrop_path");
+                            String image1 = jsonArray.getJSONObject(0).getString("poster_path");
+                            String image2 = jsonArray.getJSONObject(1).getString("poster_path");
+                            String image3 = jsonArray.getJSONObject(2).getString("poster_path");
 
 
                             String text1 = jsonArray.getJSONObject(0).getString("title");
@@ -209,12 +187,9 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                             id3 = jsonArray.getJSONObject(2).getString("id");
 
 
-                            Picasso.with(getActivity()).load(image_url + image1).resize(120, 100)
-                                    .into(view1);
-                            Picasso.with(getActivity()).load(image_url + image2).resize(120, 100)
-                                    .into(view2);
-                            Picasso.with(getActivity()).load(image_url + image3).resize(120, 100)
-                                    .into(view3);
+                            Picasso.with(getActivity()).load(image_url + image1).into(view1);
+                            Picasso.with(getActivity()).load(image_url + image2).into(view2);
+                            Picasso.with(getActivity()).load(image_url + image3).into(view3);
 
                             tv1.setText(text1);
                             tv2.setText(text2);
@@ -407,8 +382,8 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                         Intent intent = new Intent(getActivity(), IMDB_Movie_Details_Top_Bottom.class);
                         intent.putExtra("tv", imdb_idd);
 
-                        Toast.makeText(getActivity(), imdb_idd + "", Toast.LENGTH_LONG)
-                                .show();
+//                        Toast.makeText(getActivity(), imdb_idd + "", Toast.LENGTH_LONG)
+//                                .show();
 
 
                         startActivity(intent);
@@ -1533,11 +1508,11 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
 //    }
 
 
-    public static interface ClickListener {
+    public interface ClickListener {
 
-        public void onCLick(View v, int position);
+        void onCLick(View v, int position);
 
-        public void onLongClick(View v, int position);
+        void onLongClick(View v, int position);
 
     }
 

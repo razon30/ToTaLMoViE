@@ -1,5 +1,6 @@
 package com.example.razon30.totalmovie;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -14,10 +15,8 @@ import java.util.ArrayList;
  */
 public class DBMovies extends SQLiteOpenHelper {
 
-    SQLiteDatabase db;
     public static final String DATABASE_NAME = "Database_Movie_";
     public static final int DB_VERSION = 1;
-
     public static final String DB_TABLE_NAME_BOX_OFFICE = "Box_Office";
     public static final String DB_TABLE_NAME_UPCOMING = "Box_Office_upcoming";
     public static final String DB_TABLE_NAME_SEARCHING = "Box_Office_searching";
@@ -28,30 +27,39 @@ public class DBMovies extends SQLiteOpenHelper {
     public static final String RELEASE_DATE = "release_date";
     public static final String SYNOPSIS = "synopsis";
     public static final String URLTHUMBNILE = "urlThubnile";
-
+    //watch and wish List
+    public static final String DB_TABLE_NAME_WATCH = "Watch_Movies";
+    public static final String DB_TABLE_NAME_WISH = "Wish_Movies";
+    public static final String W_ID = "w_id";
+    public static final String W_NAME = "w_name";
     // CREATING THE TABLE
     public static final String MOVIES_TABLE_SQL_BOX_OFFICE = "CREATE TABLE "
             + DB_TABLE_NAME_BOX_OFFICE + " ( " + ID_FIELD
             + " INTEGER PRIMARY KEY AUTOINCREMENT," + Movie_Id + " TEXT, " + TITLE
             + " TEXT, " + RATINGS + " TEXT, " + RELEASE_DATE + " TEXT, " + SYNOPSIS
             + " TEXT, " + URLTHUMBNILE + " TEXT)";
-
     public static final String MOVIES_TABLE_SQL_UPCOMING = "CREATE TABLE "
             + DB_TABLE_NAME_UPCOMING + " ( " + ID_FIELD
             + " INTEGER PRIMARY KEY AUTOINCREMENT," + Movie_Id + " TEXT, " + TITLE
             + " TEXT, " + RATINGS + " TEXT, " + RELEASE_DATE + " TEXT, " + SYNOPSIS
             + " TEXT, " + URLTHUMBNILE + " TEXT)";
-
     public static final String MOVIES_TABLE_SQL_SEARCHING = "CREATE TABLE "
             + DB_TABLE_NAME_SEARCHING + " ( " + ID_FIELD
             + " INTEGER PRIMARY KEY AUTOINCREMENT," + Movie_Id + " TEXT, " + TITLE
             + " TEXT, " + RATINGS + " TEXT, " + RELEASE_DATE + " TEXT, " + SYNOPSIS
             + " TEXT, " + URLTHUMBNILE + " TEXT)";
-
-
+    public static final String MOVIES_TABLE_SQL_WATCH = "CREATE TABLE "
+            + DB_TABLE_NAME_WATCH + " ( " + W_ID
+            + " TEXT, " + W_NAME + " TEXT)";
+    public static final String MOVIES_TABLE_SQL_WISH = "CREATE TABLE "
+            + DB_TABLE_NAME_WISH + " ( " + W_ID
+            + " TEXT, " + W_NAME + " TEXT)";
+    SQLiteDatabase db;
     Context context;
+
     public DBMovies(Context context) {
         super(context, DATABASE_NAME, null, DB_VERSION);
+        this.context = context;
     }
 
     @Override
@@ -66,6 +74,12 @@ public class DBMovies extends SQLiteOpenHelper {
         db.execSQL(MOVIES_TABLE_SQL_SEARCHING);
         Log.e("TABLE CREAT", MOVIES_TABLE_SQL_SEARCHING);
 
+        db.execSQL(MOVIES_TABLE_SQL_WATCH);
+        Log.e("TABLE CREAT", MOVIES_TABLE_SQL_WATCH);
+
+        db.execSQL(MOVIES_TABLE_SQL_WISH);
+        Log.e("TABLE CREAT", MOVIES_TABLE_SQL_WISH);
+
 
     }
 
@@ -75,11 +89,11 @@ public class DBMovies extends SQLiteOpenHelper {
     }
 
 
-    public void insertdata_boxOffice (ArrayList<Movie> listMovies, boolean clearall){
+    public void insertdata_boxOffice(ArrayList<Movie> listMovies, boolean clearall) {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        if (clearall){
+        if (clearall) {
             deleateAll_BOX_OFFICE();
         }
 
@@ -112,11 +126,11 @@ public class DBMovies extends SQLiteOpenHelper {
 
     }
 
-    public void insertdata_Upcoming (ArrayList<Movie> listMovies, boolean clearall){
+    public void insertdata_Upcoming(ArrayList<Movie> listMovies, boolean clearall) {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        if (clearall){
+        if (clearall) {
             deleateAll_UPCOMING();
         }
 
@@ -149,11 +163,11 @@ public class DBMovies extends SQLiteOpenHelper {
 
     }
 
-    public void insertdata_Searching (ArrayList<Movie> listMovies, boolean clearall){
+    public void insertdata_Searching(ArrayList<Movie> listMovies, boolean clearall) {
 
         SQLiteDatabase db = this.getWritableDatabase();
 
-        if (clearall){
+        if (clearall) {
             deleateAll_Searching();
         }
 
@@ -213,7 +227,7 @@ public class DBMovies extends SQLiteOpenHelper {
                 String synopsis = cursor.getString(cursor.getColumnIndex(SYNOPSIS));
                 String url = cursor.getString(cursor.getColumnIndex(URLTHUMBNILE));
 
-                Movie movie = new Movie(id,title,release,rating,synopsis,url);
+                Movie movie = new Movie(id, title, release, rating, synopsis, url);
 
                 listMovies.add(movie);
             }
@@ -251,7 +265,7 @@ public class DBMovies extends SQLiteOpenHelper {
                 String synopsis = cursor.getString(cursor.getColumnIndex(SYNOPSIS));
                 String url = cursor.getString(cursor.getColumnIndex(URLTHUMBNILE));
 
-                Movie movie = new Movie(id,title,release,rating,synopsis,url);
+                Movie movie = new Movie(id, title, release, rating, synopsis, url);
 
                 listMovies.add(movie);
             }
@@ -289,7 +303,7 @@ public class DBMovies extends SQLiteOpenHelper {
                 String synopsis = cursor.getString(cursor.getColumnIndex(SYNOPSIS));
                 String url = cursor.getString(cursor.getColumnIndex(URLTHUMBNILE));
 
-                Movie movie = new Movie(id,title,release,rating,synopsis,url);
+                Movie movie = new Movie(id, title, release, rating, synopsis, url);
 
                 listMovies.add(movie);
             }
@@ -299,6 +313,243 @@ public class DBMovies extends SQLiteOpenHelper {
         db.close();
 
         return listMovies;
+    }
+
+    public long insertWatch(Movie movie) {
+        // TODO Auto-generated method stub
+
+        if (movie.getAuthor().length() == 0 || movie.getAuthor() == null || movie.getAuthor().compareTo("")
+                == 0) {
+
+            return -1;
+
+        }
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(W_ID, movie.getAuthor());
+        // values.put(PASSWORD, data.getPassword());
+        values.put(W_NAME, movie.getText());
+        long insert = db.insert(DB_TABLE_NAME_WATCH, null, values);
+        db.close();
+        return insert;
+
+    }
+
+    public ArrayList<Movie> searchWatch() {
+        // TODO Auto-generated method stub
+
+        ArrayList<Movie> dataArrayList = new ArrayList<Movie>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        //Cursor cursor = db.query(DB_TABLE_NAME, null, ID_FIELD + " LIKE '%"
+        //		+ keyword + "%'", null, null, null, null);
+
+
+        //Cursor cursor = db.query(DB_TABLE_NAME, null, null, null, null, null, null);
+
+        String selectQuery = "SELECT  * FROM " + DB_TABLE_NAME_WATCH;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+
+        if (cursor != null && cursor.getCount() > 0) {
+
+            cursor.moveToFirst();
+            for (int i = 0; i < cursor.getCount(); i++) {
+
+                String name = cursor.getString(cursor
+                        .getColumnIndex(W_ID));
+                String link = cursor.getString(cursor
+                        .getColumnIndex(W_NAME));
+
+                Movie movie = new Movie(name, link);
+
+                dataArrayList.add(movie);
+                cursor.moveToNext();
+
+            }
+
+        }
+
+        cursor.close();
+        db.close();
+        return dataArrayList;
+    }
+
+    public boolean checkWatch(String w_id) {
+        boolean bool = false;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT  * FROM " + DB_TABLE_NAME_WATCH + " WHERE " + w_id + "=" + W_ID;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor != null && cursor.getCount() > 0) {
+
+//            cursor.moveToFirst();
+//            for (int i = 0; i < cursor.getCount(); i++) {
+//
+//                String name = cursor.getString(cursor
+//                        .getColumnIndex(W_ID));
+//
+//                if (name == w_id) {
+//
+//                    bool = true;
+//                    break;
+//                } else {
+//
+//                    cursor.moveToNext();
+//                }
+//            }
+//        }
+
+            cursor.close();
+            db.close();
+            return true;
+        } else {
+            return false;
+        }
+
+
+        // return bool;
+    }
+
+    public int deleteWatch(String address) {
+        // TODO Auto-generated method stub
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        int dlt = db.delete(DB_TABLE_NAME_WATCH, W_ID + "=?", new String[]{""
+                + address});
+
+//        String selectQuery = "DELETE FROM " + DB_TABLE_NAME_WISH + " WHERE " + address + "=" +
+//                W_ID;
+
+        //  db.rawQuery(selectQuery, null);
+
+        //int dlt = db.delete(DB_TABLE_NAME_WATCH, null, null);
+
+        db.close();
+        return dlt;
+
+    }
+
+    public long insertWish(Movie movie) {
+        // TODO Auto-generated method stub
+
+        if (movie.getAuthor().length() == 0 || movie.getAuthor() == null || movie.getAuthor().compareTo("")
+                == 0) {
+
+            return -1;
+
+        }
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(W_ID, movie.getAuthor());
+        // values.put(PASSWORD, data.getPassword());
+        values.put(W_NAME, movie.getText());
+        long insert = db.insert(DB_TABLE_NAME_WISH, null, values);
+        db.close();
+        return insert;
+
+    }
+
+    public ArrayList<Movie> searchWish() {
+        // TODO Auto-generated method stub
+
+        ArrayList<Movie> dataArrayList = new ArrayList<Movie>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        //Cursor cursor = db.query(DB_TABLE_NAME, null, ID_FIELD + " LIKE '%"
+        //		+ keyword + "%'", null, null, null, null);
+
+
+        //Cursor cursor = db.query(DB_TABLE_NAME, null, null, null, null, null, null);
+
+        String selectQuery = "SELECT  * FROM " + DB_TABLE_NAME_WISH;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+
+        if (cursor != null && cursor.getCount() > 0) {
+
+            cursor.moveToFirst();
+            for (int i = 0; i < cursor.getCount(); i++) {
+
+                String name = cursor.getString(cursor
+                        .getColumnIndex(W_ID));
+                String link = cursor.getString(cursor
+                        .getColumnIndex(W_NAME));
+
+                Movie movie = new Movie(name, link);
+
+                dataArrayList.add(movie);
+                cursor.moveToNext();
+
+            }
+
+        }
+
+        cursor.close();
+        db.close();
+        return dataArrayList;
+    }
+
+    public boolean checkWish(String w_id) {
+        boolean bool = false;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT  * FROM " + DB_TABLE_NAME_WISH + " WHERE " + w_id + "=" + W_ID;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor != null && cursor.getCount() > 0) {
+            cursor.close();
+            db.close();
+            return true;
+
+//            cursor.moveToFirst();
+//            for (int i = 0; i < cursor.getCount(); i++) {
+//
+//                String name = cursor.getString(cursor
+//                        .getColumnIndex(W_ID));
+//
+//                if (name == w_id) {
+//
+//                    bool = true;
+//                    break;
+//                } else {
+//
+//                    cursor.moveToNext();
+//                }
+//            }
+        } else {
+            return false;
+        }
+
+    }
+
+
+    public int deleteWish(String address) {
+        // TODO Auto-generated method stub
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        int dlt = db.delete(DB_TABLE_NAME_WISH, W_ID + "=?", new String[]{""
+                + address});
+
+//        String selectQuery = "DELETE FROM " + DB_TABLE_NAME_WISH + " WHERE " + address + "=" +
+//                W_ID;
+
+        //  db.rawQuery(selectQuery, null);
+
+        //int dlt = db.delete(DB_TABLE_NAME_WATCH, null, null);
+
+        db.close();
+        return dlt;
+
     }
 
 

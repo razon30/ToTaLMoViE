@@ -1,19 +1,16 @@
 package com.example.razon30.totalmovie;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.android.volley.toolbox.ImageLoader;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -23,12 +20,12 @@ import java.util.ArrayList;
 public class Adapter_KKeyword_Search extends RecyclerView.Adapter<Adapter_KKeyword_Search
         .ViewHolderBoxOffice> {
 
+    String image_url = "http://image.tmdb.org/t/p/w342";
+    Context context;
     private ArrayList<Movie> listMovies = new ArrayList<>();
     private LayoutInflater layoutInflater;
     private VolleySingleton volleySingleton;
-    String image_url = "http://image.tmdb.org/t/p/w342";
     private int previousPosition = 0;
-    Context context;
 
 
     public Adapter_KKeyword_Search(Context context) {
@@ -51,6 +48,39 @@ public class Adapter_KKeyword_Search extends RecyclerView.Adapter<Adapter_KKeywo
 
     @Override
     public void onBindViewHolder(ViewHolderBoxOffice holder, int position) {
+
+        if (position == 0) {
+            holder.layout.setBackgroundResource(R.color.background2);
+            holder.cardView.setBackgroundResource(R.color.background5);
+            holder.movieThumbnail.setBackgroundResource(R.color.background6);
+        } else if (position == 1) {
+            holder.layout.setBackgroundResource(R.color.background4);
+            holder.cardView.setBackgroundResource(R.color.background6);
+            holder.movieThumbnail.setBackgroundResource(R.color.accentColor);
+        } else if (position % 2 == 0) {
+            holder.layout.setBackgroundResource(R.color.primaryColor);
+            holder.cardView.setBackgroundResource(R.color.accentColor);
+            holder.movieThumbnail.setBackgroundResource(R.color.primaryColorDark);
+        } else if (position % 3 == 0) {
+            holder.layout.setBackgroundResource(R.color.background5);
+            holder.cardView.setBackgroundResource(R.color.primaryColorDark);
+            holder.movieThumbnail.setBackgroundResource(R.color.background2);
+        } else if (position % 4 == 0) {
+            holder.layout.setBackgroundResource(R.color.background2);
+            holder.cardView.setBackgroundResource(R.color.accentColor);
+            holder.movieThumbnail.setBackgroundResource(R.color.background5);
+        } else if (position % 5 == 0) {
+            holder.layout.setBackgroundResource(R.color.background7);
+            holder.cardView.setBackgroundResource(R.color.background6);
+            holder.movieThumbnail.setBackgroundResource(R.color.accentColor);
+        } else {
+            holder.layout.setBackgroundResource(R.color.background2);
+            holder.cardView.setBackgroundResource(R.color.background1);
+            holder.movieThumbnail.setBackgroundResource(R.color.background3);
+        }
+
+
+
         Movie currentMovie = listMovies.get(position);
         holder.movieTitle.setText(currentMovie.getName());
         String movieReleaseDate = currentMovie.getType();
@@ -86,13 +116,16 @@ public class Adapter_KKeyword_Search extends RecyclerView.Adapter<Adapter_KKeywo
         ImageView movieThumbnail;
         TextView movieTitle;
         TextView movieReleaseDate;
-
+        CardView cardView;
+        RelativeLayout layout;
 
         public ViewHolderBoxOffice(View itemView) {
             super(itemView);
             movieThumbnail = (ImageView) itemView.findViewById(R.id.cast_thumbnail);
             movieTitle = (TextView) itemView.findViewById(R.id.name_cast);
             movieReleaseDate = (TextView) itemView.findViewById(R.id.cast_job);
+            cardView = (CardView) itemView.findViewById(R.id.card_view);
+            layout = (RelativeLayout) itemView.findViewById(R.id.layout_relative);
         }
     }
 

@@ -1,17 +1,13 @@
 package com.example.razon30.totalmovie;
 
-import android.animation.ObjectAnimator;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
-import android.os.Build;
+import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,12 +18,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RatingBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,7 +31,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -46,21 +38,22 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import static android.provider.MediaStore.Images.Media.getBitmap;
-
 
 public class Movie_Details extends AppCompatActivity {
 
+    public ArrayList<Movie> cast_and_crew = new ArrayList<Movie>();
+    //similar
+    public ArrayList<Movie> similar_list = new ArrayList<Movie>();
+    //reviews
+    public ArrayList<Movie> reviews = new ArrayList<Movie>();
     Toolbar toolbar;
     CollapsingToolbarLayout collapsingToolbarLayout;
     CoordinatorLayout rootLayout;
-
-
-    ImageView coverLayout,coverLayout1;
-    CircularImageView circularImageView;
+    ImageView coverLayout, coverLayout1;
+    ImageView circularImageView, circularImageView1;
     ImageView imageView, imageRating;
     TextView button, btn_moreImage, btn_reviws, btn_similar;
-    TextView tvTitle, tvGenre, tvOverview, tvHomepage, tvProduction, tvGenreDown, tvRevenue, tvTagLine,
+    TextView tvGenre, tvOverview, tvHomepage, tvProduction, tvGenreDown, tvRevenue, tvTagLine,
             tvImbdId, tvRating;
     String urlPreId = "http://api.themoviedb.org/3/movie/";
     long id;
@@ -72,44 +65,34 @@ public class Movie_Details extends AppCompatActivity {
     String similar_post = "/similar?api_key=f246d5e5105e9934d3cd4c4c181d618d";
     String reviews_post = "/reviews?api_key=f246d5e5105e9934d3cd4c4c181d618d";
     String trailer, homepage;
-    private ImageLoader imageLoader;
     String com_URL;
-
-
-
-
-    //Retriving data
-    private VolleySingleton volleySingleton;
-    private RequestQueue requestQueue;
-    public ArrayList<Movie> cast_and_crew = new ArrayList<Movie>();
-
     //more image
     ListView oddList, evenList;
     ImageView more_image;
     ArrayList<String> oddArray = new ArrayList<String>();
     ArrayList<String> evenArray = new ArrayList<String>();
     ArrayList<String> more_image_array = new ArrayList<String>();
-
-    //similar
-    public ArrayList<Movie> similar_list = new ArrayList<Movie>();
-
-    //reviews
-    public ArrayList<Movie> reviews = new ArrayList<Movie>();
-
     ScrollView scrollView;
-
-    ImageView image1,image2,image3;
-    String iid1,iid2,iid3;
-
-    ImageView similarImage1,similarImage2,similarImage3;
-    String sid1,sid2,sid3;
-    TextView similar_text1,similar_text2,similar_text3;
-
-
-    ImageView castImage1, castImage2,castImage3;
-    String cid1,cid2,cid3;
-    TextView cast_text1,cast_text2,cast_text3;
-
+    ImageView image1, image2, image3;
+    String iid1, iid2, iid3;
+    ImageView similarImage1, similarImage2, similarImage3;
+    String sid1, sid2, sid3;
+    TextView similar_text1, similar_text2, similar_text3;
+    ImageView castImage1, castImage2, castImage3;
+    String cid1, cid2, cid3;
+    TextView cast_text1, cast_text2, cast_text3;
+    //watch and wish
+    String w_id;
+    String w_name;
+    int a = 1;
+    ImageView watch;
+    ImageView wish, add;
+    DBMovies dbMovies;
+    LinearLayout layout1, layout2, layout3;
+    private ImageLoader imageLoader;
+    //Retriving data
+    private VolleySingleton volleySingleton;
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,9 +100,48 @@ public class Movie_Details extends AppCompatActivity {
         setContentView(R.layout.activity_movie__details);
         final Intent intent = getIntent();
         id = Long.parseLong(intent.getStringExtra("tv"));
+        w_id = String.valueOf(id);
         initualizing_contents();
+        watch = (ImageView) findViewById(R.id.watch);
+        wish = (ImageView) findViewById(R.id.wish);
+        dbMovies = new DBMovies(Movie_Details.this);
+        layout1 = (LinearLayout) findViewById(R.id.multiple_layout);
+        layout2 = (LinearLayout) findViewById(R.id.watch_layout);
+        layout3 = (LinearLayout) findViewById(R.id.wish_layout);
+        boolean bool1 = dbMovies.checkWatch(w_id);
+        if (bool1) {
 
-      //  scrollView = (ScrollView) findViewById(R.id.movie_details);
+            watch.setBackgroundResource(R.color.accent_color);
+
+        }
+        boolean bool2 = dbMovies.checkWish(w_id);
+        if (bool2) {
+
+            wish.setBackgroundResource(R.color.primary_color_dark);
+
+        }
+
+        if (bool1 | bool2) {
+            layout1.setVisibility(View.GONE);
+            layout2.setVisibility(View.VISIBLE);
+            layout3.setVisibility(View.VISIBLE);
+        } else {
+            layout1.setVisibility(View.VISIBLE);
+            layout2.setVisibility(View.GONE);
+            layout3.setVisibility(View.GONE);
+        }
+
+        add = (ImageView) findViewById(R.id.multiple_actions);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layout2.setVisibility(View.VISIBLE);
+                layout3.setVisibility(View.VISIBLE);
+            }
+        });
+
+
+        //  scrollView = (ScrollView) findViewById(R.id.movie_details);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         rootLayout = (CoordinatorLayout) findViewById(R.id.rootLayout);
@@ -193,9 +215,9 @@ public class Movie_Details extends AppCompatActivity {
                             String overview = "";
                             overview = jsonObject.getString("overview");
                             if (overview != "" && overview != null) {
-                                tvOverview.setText("OVERVIEW:  " + overview);
+                                tvOverview.setText("           " + overview);
                             } else {
-                                tvOverview.setText("OVERVIEW:  " + "NA");
+                                tvOverview.setText("           " + "NA");
                             }
 
 
@@ -228,21 +250,30 @@ public class Movie_Details extends AppCompatActivity {
                             String release_Date = jsonObject.getString("release_date");
                             String[] date = release_Date.split("-");
                             String title = jsonObject.getString("title");
-                            tvTitle.setText(title + "  (" + date[0] + ")");
+                            // tvTitle.setText(title + "  (" + date[0] + ")");
+                            w_name = title + "  (" + date[0] + ")";
+                            //tvTitle.setText(w_name);
                             collapsingToolbarLayout.setTitle(title + "  (" + date[0] + ")");
-                           // setTheme(R.style.MyCustomToolBarMovieDetails);
+                            // setTheme(R.style.MyCustomToolBarMovieDetails);
+                            collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style
+                                    .ExpandedAppBar);
+                            collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style
+                                    .CollapsedAppBar);
+                            collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style
+                                    .ExpandedAppBarPlus1);
+                            collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style
+                                    .CollapsedAppBarPlus1);
 
 
                             String revenue = "";
                             revenue = jsonObject.getString("revenue");
 
                             if (revenue != null && revenue.length() != 0 && revenue != "" &&
-                                    revenue!="0") {
+                                    revenue != "0") {
                                 tvRevenue.setText(revenue);
-                            }else if (revenue=="0"){
+                            } else if (revenue == "0") {
                                 tvRevenue.setText("Revenue Unknown");
-                            }
-                            else {
+                            } else {
 
                                 tvRevenue.setText("Still Running, NO total Revenue");
                             }
@@ -252,11 +283,11 @@ public class Movie_Details extends AppCompatActivity {
 
                             tagLine = jsonObject.getString("tagline");
                             if (tagLine != null && tagLine.length() != 0 && tagLine != "") {
-                                tvTagLine.setVisibility(tvTagLine.VISIBLE);
-                                tvTagLine.setText("''"+tagLine+"''");
+                                tvTagLine.setVisibility(View.VISIBLE);
+                                tvTagLine.setText("''" + tagLine + "''");
                             } else {
                                 tvTagLine.setText("NA");
-                                tvTagLine.setVisibility(tvTagLine.GONE);
+                                tvTagLine.setVisibility(View.GONE);
                             }
 
                             double audience_score = -1;
@@ -323,7 +354,6 @@ public class Movie_Details extends AppCompatActivity {
         requestQueue.add(request);
 
 
-
         JsonObjectRequest request1 = new JsonObjectRequest(Request.Method.GET,
                 urlPreId + id + vediopost, null,
 
@@ -385,48 +415,48 @@ public class Movie_Details extends AppCompatActivity {
                             String name1 = cast.getJSONObject(0).getString("name");
                             String profile = cast.getJSONObject(0).getString("profile_path");
                             cid1 = cast.getJSONObject(0).getString("id");
-                            if (name1!=null && name1.length()!=0){
-                                cast_text1.setVisibility(cast_text1.VISIBLE);
-                                castImage1.setVisibility(castImage1.VISIBLE);
+                            if (name1 != null && name1.length() != 0) {
+                                cast_text1.setVisibility(View.VISIBLE);
+                                castImage1.setVisibility(View.VISIBLE);
                                 cast_text1.setText(name1);
-                                Picasso.with(Movie_Details.this).load(image_url+profile).into
+                                Picasso.with(Movie_Details.this).load(image_url + profile).into
                                         (castImage1);
-                            }else {
+                            } else {
 
-                                cast_text1.setVisibility(cast_text1.GONE);
-                                castImage1.setVisibility(castImage1.GONE);
+                                cast_text1.setVisibility(View.GONE);
+                                castImage1.setVisibility(View.GONE);
                             }
 
 
                             String name2 = cast.getJSONObject(1).getString("name");
                             String profile2 = cast.getJSONObject(1).getString("profile_path");
                             cid2 = cast.getJSONObject(1).getString("id");
-                            if (name2!=null && name2.length()!=0){
-                                cast_text2.setVisibility(cast_text2.VISIBLE);
-                                castImage2.setVisibility(castImage2.VISIBLE);
+                            if (name2 != null && name2.length() != 0) {
+                                cast_text2.setVisibility(View.VISIBLE);
+                                castImage2.setVisibility(View.VISIBLE);
                                 cast_text2.setText(name2);
-                                Picasso.with(Movie_Details.this).load(image_url+profile2).into
+                                Picasso.with(Movie_Details.this).load(image_url + profile2).into
                                         (castImage2);
-                            }else {
+                            } else {
 
-                                cast_text2.setVisibility(cast_text2.GONE);
-                                castImage2.setVisibility(castImage2.GONE);
+                                cast_text2.setVisibility(View.GONE);
+                                castImage2.setVisibility(View.GONE);
                             }
 
 
                             String name3 = cast.getJSONObject(2).getString("name");
                             String profile3 = cast.getJSONObject(2).getString("profile_path");
                             cid3 = cast.getJSONObject(2).getString("id");
-                            if (name3!=null && name3.length()!=0){
-                                cast_text3.setVisibility(cast_text3.VISIBLE);
-                                castImage3.setVisibility(castImage3.VISIBLE);
+                            if (name3 != null && name3.length() != 0) {
+                                cast_text3.setVisibility(View.VISIBLE);
+                                castImage3.setVisibility(View.VISIBLE);
                                 cast_text3.setText(name3);
-                                Picasso.with(Movie_Details.this).load(image_url+profile3).into
+                                Picasso.with(Movie_Details.this).load(image_url + profile3).into
                                         (castImage3);
-                            }else {
+                            } else {
 
-                                cast_text3.setVisibility(cast_text3.GONE);
-                                castImage3.setVisibility(castImage3.GONE);
+                                cast_text3.setVisibility(View.GONE);
+                                castImage3.setVisibility(View.GONE);
                             }
 
 
@@ -438,7 +468,7 @@ public class Movie_Details extends AppCompatActivity {
                                 String profile_thumbnail = current_cast.getString("profile_path");
                                 long id = current_cast.getLong("id");
 
-                                Movie movie = new Movie(name, job, profile_thumbnail,id);
+                                Movie movie = new Movie(name, job, profile_thumbnail, id);
                                 cast_and_crew.add(movie);
 
                             }
@@ -452,7 +482,7 @@ public class Movie_Details extends AppCompatActivity {
                                 String profile_thumbnail = current_cast.getString("profile_path");
                                 long id = current_cast.getLong("id");
 
-                                Movie movie = new Movie(name, job, profile_thumbnail,id);
+                                Movie movie = new Movie(name, job, profile_thumbnail, id);
                                 cast_and_crew.add(movie);
 
                             }
@@ -494,26 +524,26 @@ public class Movie_Details extends AppCompatActivity {
 
                         try {
 
-                            JSONArray image = jsonObject.getJSONArray("backdrops");
+                            JSONArray image = jsonObject.getJSONArray("posters");
 
-                            String profile1 = image.getJSONObject(0).getString("file_path");
-                            if (profile1!=null && profile1.length()!=0){
-                                image1.setVisibility(image1.VISIBLE);
-                                Picasso.with(Movie_Details.this).load(image_url+profile1).into
+                            String profile1 = image.getJSONObject(1).getString("file_path");
+                            if (profile1 != null && profile1.length() != 0) {
+                                image1.setVisibility(View.VISIBLE);
+                                Picasso.with(Movie_Details.this).load(image_url + profile1).into
                                         (image1);
-                            }else {
+                            } else {
 
-                                image1.setVisibility(image1.GONE);
+                                image1.setVisibility(View.GONE);
                             }
 
-                            String profile2 = image.getJSONObject(1).getString("file_path");
-                            if (profile2!=null && profile2.length()!=0){
-                                image2.setVisibility(image2.VISIBLE);
-                                Picasso.with(Movie_Details.this).load(image_url+profile2).into
+                            String profile2 = image.getJSONObject(2).getString("file_path");
+                            if (profile2 != null && profile2.length() != 0) {
+                                image2.setVisibility(View.VISIBLE);
+                                Picasso.with(Movie_Details.this).load(image_url + profile2).into
                                         (image2);
-                            }else {
+                            } else {
 
-                                image2.setVisibility(image2.GONE);
+                                image2.setVisibility(View.GONE);
                             }
 
 
@@ -528,13 +558,13 @@ public class Movie_Details extends AppCompatActivity {
                             JSONArray image11 = jsonObject.getJSONArray("posters");
 
                             String profile3 = image11.getJSONObject(0).getString("file_path");
-                            if (profile3!=null && profile3.length()!=0){
-                                image3.setVisibility(image3.VISIBLE);
-                                Picasso.with(Movie_Details.this).load(image_url+profile3).into
+                            if (profile3 != null && profile3.length() != 0) {
+                                image3.setVisibility(View.VISIBLE);
+                                Picasso.with(Movie_Details.this).load(image_url + profile3).into
                                         (image3);
-                            }else {
+                            } else {
 
-                                image3.setVisibility(image3.GONE);
+                                image3.setVisibility(View.GONE);
                             }
 
 
@@ -589,34 +619,33 @@ public class Movie_Details extends AppCompatActivity {
                             String profile1 = arrayMovies.getJSONObject(0).getString
                                     ("poster_path");
                             sid1 = arrayMovies.getJSONObject(0).getString("id");
-                            if (name1!=null && name1.length()!=0){
-                                similar_text1.setVisibility(similar_text1.VISIBLE);
-                                similarImage1.setVisibility(similarImage1.VISIBLE);
+                            if (name1 != null && name1.length() != 0) {
+                                similar_text1.setVisibility(View.VISIBLE);
+                                similarImage1.setVisibility(View.VISIBLE);
                                 similar_text1.setText(name1);
-                                Picasso.with(Movie_Details.this).load(image_url+profile1).into
+                                Picasso.with(Movie_Details.this).load(image_url + profile1).into
                                         (similarImage1);
-                            }else {
+                            } else {
 
-                                similar_text1.setVisibility(similar_text1.GONE);
-                                similarImage1.setVisibility(similarImage1.GONE);
+                                similar_text1.setVisibility(View.GONE);
+                                similarImage1.setVisibility(View.GONE);
                             }
-
 
 
                             String name2 = arrayMovies.getJSONObject(1).getString("title");
                             String profile2 = arrayMovies.getJSONObject(1).getString
                                     ("poster_path");
                             sid2 = arrayMovies.getJSONObject(1).getString("id");
-                            if (name2!=null && name2.length()!=0){
-                                similar_text2.setVisibility(similar_text2.VISIBLE);
-                                similarImage2.setVisibility(similarImage2.VISIBLE);
+                            if (name2 != null && name2.length() != 0) {
+                                similar_text2.setVisibility(View.VISIBLE);
+                                similarImage2.setVisibility(View.VISIBLE);
                                 similar_text2.setText(name2);
-                                Picasso.with(Movie_Details.this).load(image_url+profile2).into
+                                Picasso.with(Movie_Details.this).load(image_url + profile2).into
                                         (similarImage2);
-                            }else {
+                            } else {
 
-                                similar_text2.setVisibility(similar_text2.GONE);
-                                similarImage2.setVisibility(similarImage2.GONE);
+                                similar_text2.setVisibility(View.GONE);
+                                similarImage2.setVisibility(View.GONE);
                             }
 
 
@@ -624,19 +653,17 @@ public class Movie_Details extends AppCompatActivity {
                             String profile3 = arrayMovies.getJSONObject(2).getString
                                     ("poster_path");
                             sid3 = arrayMovies.getJSONObject(2).getString("id");
-                            if (name3!=null && name3.length()!=0){
-                                similar_text3.setVisibility(similar_text3.VISIBLE);
-                                similarImage3.setVisibility(similarImage3.VISIBLE);
+                            if (name3 != null && name3.length() != 0) {
+                                similar_text3.setVisibility(View.VISIBLE);
+                                similarImage3.setVisibility(View.VISIBLE);
                                 similar_text3.setText(name3);
-                                Picasso.with(Movie_Details.this).load(image_url+profile3).into
+                                Picasso.with(Movie_Details.this).load(image_url + profile3).into
                                         (similarImage3);
-                            }else {
+                            } else {
 
-                                similar_text3.setVisibility(similar_text3.GONE);
-                                similarImage3.setVisibility(similarImage3.GONE);
+                                similar_text3.setVisibility(View.GONE);
+                                similarImage3.setVisibility(View.GONE);
                             }
-
-
 
 
                             for (int i = 0; i < arrayMovies.length(); i++) {
@@ -653,7 +680,7 @@ public class Movie_Details extends AppCompatActivity {
                                 releaseDate = currentmovie.getString("release_date");
                                 audienceScore = currentmovie.getInt("vote_average");
                                 synopsis = currentmovie.getString("overview");
-                                urlThumbnail = currentmovie.getString("poster_path");
+                                urlThumbnail = currentmovie.getString("backdrop_path");
 
 
                                 Movie movie = new Movie(id, title, releaseDate, audienceScore, synopsis, urlThumbnail);
@@ -743,12 +770,12 @@ public class Movie_Details extends AppCompatActivity {
             public void onClick(View v) {
 
 
-                try{
+                try {
                     Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube:" + trailer));
                     startActivity(intent);
-                }catch (ActivityNotFoundException ex){
-                    Intent intent=new Intent(Intent.ACTION_VIEW,
-                            Uri.parse("http://www.youtube.com/watch?v="+trailer));
+                } catch (ActivityNotFoundException ex) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse("http://www.youtube.com/watch?v=" + trailer));
                     startActivity(intent);
                 }
 
@@ -794,7 +821,6 @@ public class Movie_Details extends AppCompatActivity {
 
                     }
                 }));
-
 
 
                 AlertDialog.Builder builderAlertDialog = new AlertDialog.Builder(
@@ -966,7 +992,7 @@ public class Movie_Details extends AppCompatActivity {
         castImage1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1 = new Intent(Movie_Details.this,Person_Details.class);
+                Intent intent1 = new Intent(Movie_Details.this, Person_Details.class);
                 intent1.putExtra("tv", cid1);
                 startActivity(intent1);
             }
@@ -975,8 +1001,8 @@ public class Movie_Details extends AppCompatActivity {
         castImage2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1 = new Intent(Movie_Details.this,Person_Details.class);
-                intent1.putExtra("tv",cid2);
+                Intent intent1 = new Intent(Movie_Details.this, Person_Details.class);
+                intent1.putExtra("tv", cid2);
                 startActivity(intent1);
             }
         });
@@ -984,8 +1010,8 @@ public class Movie_Details extends AppCompatActivity {
         castImage3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent1 = new Intent(Movie_Details.this,Person_Details.class);
-                intent1.putExtra("tv",cid3);
+                Intent intent1 = new Intent(Movie_Details.this, Person_Details.class);
+                intent1.putExtra("tv", cid3);
                 startActivity(intent1);
             }
         });
@@ -1017,19 +1043,96 @@ public class Movie_Details extends AppCompatActivity {
             }
         });
 
+//Toast.makeText(Movie_Details.this,w_name,Toast.LENGTH_LONG).show();
+
+        watch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dbMovies = new DBMovies(Movie_Details.this);
+                boolean bool = dbMovies.checkWatch(w_id);
+                final boolean boo2 = dbMovies.checkWish(w_id);
+                if (bool) {
+
+                    Snackbar.make(rootLayout, "Already in Watch List", Snackbar.LENGTH_LONG)
+                            .setAction("Remove?", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dbMovies.deleteWatch(w_id);
+                                    watch.setBackgroundResource(R.color.grey_60);
+                                    if (!boo2) {
+                                        layout1.setVisibility(View.VISIBLE);
+                                        layout2.setVisibility(View.GONE);
+                                        layout3.setVisibility(View.GONE);
+                                    }
+                                }
+                            }).show();
+                } else {
+                    Movie movie = new Movie(w_id, w_name);
+                    long fact = dbMovies.insertWatch(movie);
+                    if (fact != -1) {
+                        watch.setBackgroundResource(R.color.accent_color);
+                        layout1.setVisibility(View.GONE);
+                        Snackbar.make(rootLayout, "Added to Watch List", Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            }
+        });
+
+
+        wish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dbMovies = new DBMovies(Movie_Details.this);
+                final boolean boo2 = dbMovies.checkWatch(w_id);
+                boolean bool = dbMovies.checkWish(w_id);
+                if (bool) {
+                    Snackbar.make(rootLayout, "Alrea dy in Wish List", Snackbar.LENGTH_LONG)
+                            .setAction("Remove?", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dbMovies.deleteWish(w_id);
+                                    wish.setBackgroundResource(R.color.grey_60);
+                                    if (!boo2) {
+                                        layout1.setVisibility(View.VISIBLE);
+                                        layout2.setVisibility(View.GONE);
+                                        layout3.setVisibility(View.GONE);
+                                    }
+                                }
+                            }).show();
+                } else {
+                    Movie movie = new Movie(w_id, w_name);
+                    long fact = dbMovies.insertWish(movie);
+                    if (fact != -1) {
+                        wish.setBackgroundResource(R.color.primary_color_dark);
+                        layout1.setVisibility(View.GONE);
+                        Snackbar.make(rootLayout, "Added to Wish List", Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            }
+        });
+
+        // worksOnWatchWish(w_id,w_name);
+
+    }
+
+    private void worksOnWatchWish(final String w_id, final String w_name) {
 
 
     }
 
     private void initualizing_contents() {
 
+        rootLayout = (CoordinatorLayout) findViewById(R.id.rootLayout);
         coverLayout = (ImageView) findViewById(R.id.cover);
         coverLayout1 = (ImageView) findViewById(R.id.cover1);
-        circularImageView = (CircularImageView) findViewById(R.id.play_trailer);
+        coverLayout1.setVisibility(View.GONE);
+        circularImageView = (ImageView) findViewById(R.id.play_trailer);
+        circularImageView1 = (ImageView) findViewById(R.id.play_trailer1);
+        circularImageView1.setVisibility(View.GONE);
         //  ratingBar = (RatingBar) findViewById(R.id.movieAudienceScore_details);
         imageView = (ImageView) findViewById(R.id.postar_image_detail);
         button = (TextView) findViewById(R.id.cast_and_crew);
-        tvTitle = (TextView) findViewById(R.id.title_details);
+        // tvTitle = (TextView) findViewById(R.id.title_details);
         tvGenre = (TextView) findViewById(R.id.genre_details);
         tvOverview = (TextView) findViewById(R.id.overview_details);
         tvHomepage = (TextView) findViewById(R.id.homepage_details);
@@ -1092,35 +1195,35 @@ public class Movie_Details extends AppCompatActivity {
     }
 
 
+    public interface ClickListener {
 
-    public static interface ClickListener{
+        void onCLick(View v, int position);
 
-        public void onCLick(View v, int position);
-        public void onLongClick(View v, int position);
+        void onLongClick(View v, int position);
 
     }
 
-    static class RecyclerTOuchListener implements RecyclerView.OnItemTouchListener{
+    static class RecyclerTOuchListener implements RecyclerView.OnItemTouchListener {
 
         GestureDetector gestureDetector;
         ClickListener clickListener;
 
-        public  RecyclerTOuchListener(Context context, final RecyclerView rv, final ClickListener clickListener){
+        public RecyclerTOuchListener(Context context, final RecyclerView rv, final ClickListener clickListener) {
 
             this.clickListener = clickListener;
-            gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener(){
+            gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
 
                 @Override
                 public boolean onSingleTapUp(MotionEvent e) {
-                    return  true;
+                    return true;
                 }
 
                 @Override
                 public void onLongPress(MotionEvent e) {
 
-                    View child = rv.findChildViewUnder(e.getX(),e.getY());
-                    if (child != null && clickListener !=null){
-                        clickListener.onLongClick(child,rv.getChildPosition(child));
+                    View child = rv.findChildViewUnder(e.getX(), e.getY());
+                    if (child != null && clickListener != null) {
+                        clickListener.onLongClick(child, rv.getChildPosition(child));
                     }
 
                 }
@@ -1130,14 +1233,13 @@ public class Movie_Details extends AppCompatActivity {
         }
 
 
-
         @Override
         public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
 
-            View child = rv.findChildViewUnder(e.getX(),e.getY());
-            if (child !=null && clickListener!=null && gestureDetector.onTouchEvent(e)){
+            View child = rv.findChildViewUnder(e.getX(), e.getY());
+            if (child != null && clickListener != null && gestureDetector.onTouchEvent(e)) {
 
-                clickListener.onCLick(child,rv.getChildPosition(child));
+                clickListener.onCLick(child, rv.getChildPosition(child));
 
             }
 
@@ -1149,7 +1251,6 @@ public class Movie_Details extends AppCompatActivity {
 
         }
     }
-
 
 
 }

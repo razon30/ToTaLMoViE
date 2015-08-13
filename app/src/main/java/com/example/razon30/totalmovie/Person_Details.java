@@ -2,10 +2,9 @@ package com.example.razon30.totalmovie;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -13,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -34,14 +32,17 @@ import java.util.ArrayList;
 
 public class Person_Details extends AppCompatActivity {
 
+    public ArrayList<Movie> cast_and_crew = new ArrayList<Movie>();
+    //more movies
+    public ArrayList<Movie> person_more_movie_list = new ArrayList<Movie>();
+    //popular
+    public ArrayList<Movie> popular_person_list = new ArrayList<Movie>();
     Toolbar toolbar;
     CollapsingToolbarLayout collapsingToolbarLayout;
     CoordinatorLayout rootLayout;
-
     ImageView image_cover,image_cover1, image_poster, hide, show;
     TextView name, biography, birth_date, birth_place, height, homepage, person_more_image, person_more_movies;
-    Button popular_person;
-
+    TextView popular_person;
     String urlPreId = "http://api.themoviedb.org/3/person/";
     long id;
     String urlLaterId = "?api_key=f246d5e5105e9934d3cd4c4c181d618d";
@@ -49,39 +50,23 @@ public class Person_Details extends AppCompatActivity {
     String image_post = "/images?api_key=f246d5e5105e9934d3cd4c4c181d618d";
     String more_movie_post = "/movie_credits?api_key=f246d5e5105e9934d3cd4c4c181d618d";
     String person_popular_post = "popular?api_key=f246d5e5105e9934d3cd4c4c181d618d";
-
-    //Retriving data
-    private VolleySingleton volleySingleton;
-    private RequestQueue requestQueue;
-    public ArrayList<Movie> cast_and_crew = new ArrayList<Movie>();
-
     //more image
     ListView oddList, evenList;
     ImageView more_image;
     ArrayList<String> oddArray = new ArrayList<String>();
     ArrayList<String> evenArray = new ArrayList<String>();
     ArrayList<String> more_image_array = new ArrayList<String>();
-
-    //more movies
-    public ArrayList<Movie> person_more_movie_list = new ArrayList<Movie>();
-
-    //popular
-    public ArrayList<Movie> popular_person_list = new ArrayList<Movie>();
-
-
     String person_homepage;
     int line_count;
     String profile_path;
-
-
     ImageView image1, image2, image3;
-
     ImageView movie_image1, movie_image2, movie_image3;
     TextView movie_name1, movie_name2, movie_name3;
     String mid1, mid2, mid3;
-
     TextView imagesPerson, moviesPerson;
-
+    //Retriving data
+    private VolleySingleton volleySingleton;
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,39 +188,39 @@ public class Person_Details extends AppCompatActivity {
 
                             String profile1 = image.getJSONObject(0).getString("file_path");
                             if (profile1 != null && profile1.length() != 0) {
-                                imagesPerson.setVisibility(imagesPerson.VISIBLE);
-                                image1.setVisibility(image1.VISIBLE);
+                                imagesPerson.setVisibility(View.VISIBLE);
+                                image1.setVisibility(View.VISIBLE);
                                 Picasso.with(Person_Details.this).load(image_url + profile1).into
                                         (image1);
                             } else {
 
-                                imagesPerson.setVisibility(imagesPerson.GONE);
-                                image1.setVisibility(image1.GONE);
+                                imagesPerson.setVisibility(View.GONE);
+                                image1.setVisibility(View.GONE);
                             }
 
                             String profile2 = image.getJSONObject(1).getString("file_path");
                             if (profile2 != null && profile2.length() != 0) {
-                                imagesPerson.setVisibility(imagesPerson.VISIBLE);
-                                image2.setVisibility(image2.VISIBLE);
+                                imagesPerson.setVisibility(View.VISIBLE);
+                                image2.setVisibility(View.VISIBLE);
                                 Picasso.with(Person_Details.this).load(image_url + profile2).into
                                         (image2);
                             } else {
 
-                                imagesPerson.setVisibility(imagesPerson.GONE);
-                                image2.setVisibility(image2.GONE);
+                                imagesPerson.setVisibility(View.GONE);
+                                image2.setVisibility(View.GONE);
                             }
 
 
                             String profile3 = image.getJSONObject(2).getString("file_path");
                             if (profile3 != null && profile3.length() != 0) {
-                                imagesPerson.setVisibility(imagesPerson.VISIBLE);
-                                image3.setVisibility(image3.VISIBLE);
+                                imagesPerson.setVisibility(View.VISIBLE);
+                                image3.setVisibility(View.VISIBLE);
                                 Picasso.with(Person_Details.this).load(image_url + profile3).into
                                         (image3);
                             } else {
 
-                                imagesPerson.setVisibility(imagesPerson.GONE);
-                                image3.setVisibility(image3.GONE);
+                                imagesPerson.setVisibility(View.GONE);
+                                image3.setVisibility(View.GONE);
                             }
 
 
@@ -316,16 +301,16 @@ public class Person_Details extends AppCompatActivity {
                             String profile1 = movies.getJSONObject(0).getString("poster_path");
                             mid1 = movies.getJSONObject(0).getString("id");
                             if (name1 != null && name1.length() != 0) {
-                                moviesPerson.setVisibility(moviesPerson.VISIBLE);
-                                movie_name1.setVisibility(movie_name1.VISIBLE);
-                                movie_image1.setVisibility(movie_image1.VISIBLE);
+                                moviesPerson.setVisibility(View.VISIBLE);
+                                movie_name1.setVisibility(View.VISIBLE);
+                                movie_image1.setVisibility(View.VISIBLE);
                                 movie_name1.setText(name1);
                                 Picasso.with(Person_Details.this).load(image_url + profile1).into
                                         (movie_image1);
                             } else {
-                                moviesPerson.setVisibility(moviesPerson.GONE);
-                                movie_name1.setVisibility(movie_name1.GONE);
-                                movie_image1.setVisibility(movie_image1.GONE);
+                                moviesPerson.setVisibility(View.GONE);
+                                movie_name1.setVisibility(View.GONE);
+                                movie_image1.setVisibility(View.GONE);
                             }
 
 
@@ -333,16 +318,16 @@ public class Person_Details extends AppCompatActivity {
                             String profile2 = movies.getJSONObject(1).getString("poster_path");
                             mid2 = movies.getJSONObject(1).getString("id");
                             if (name2 != null && name2.length() != 0) {
-                                moviesPerson.setVisibility(moviesPerson.VISIBLE);
-                                movie_name2.setVisibility(movie_name2.VISIBLE);
-                                movie_image2.setVisibility(movie_image2.VISIBLE);
+                                moviesPerson.setVisibility(View.VISIBLE);
+                                movie_name2.setVisibility(View.VISIBLE);
+                                movie_image2.setVisibility(View.VISIBLE);
                                 movie_name2.setText(name2);
                                 Picasso.with(Person_Details.this).load(image_url + profile2).into
                                         (movie_image2);
                             } else {
-                                moviesPerson.setVisibility(moviesPerson.GONE);
-                                movie_name2.setVisibility(movie_name2.GONE);
-                                movie_image2.setVisibility(movie_image2.GONE);
+                                moviesPerson.setVisibility(View.GONE);
+                                movie_name2.setVisibility(View.GONE);
+                                movie_image2.setVisibility(View.GONE);
                             }
 
 
@@ -350,16 +335,16 @@ public class Person_Details extends AppCompatActivity {
                             String profile3 = movies.getJSONObject(2).getString("poster_path");
                             mid3 = movies.getJSONObject(2).getString("id");
                             if (name3 != null && name3.length() != 0) {
-                                moviesPerson.setVisibility(moviesPerson.VISIBLE);
-                                movie_name3.setVisibility(movie_name3.VISIBLE);
-                                movie_image3.setVisibility(movie_image3.VISIBLE);
+                                moviesPerson.setVisibility(View.VISIBLE);
+                                movie_name3.setVisibility(View.VISIBLE);
+                                movie_image3.setVisibility(View.VISIBLE);
                                 movie_name3.setText(name3);
                                 Picasso.with(Person_Details.this).load(image_url + profile3).into
                                         (movie_image3);
                             } else {
-                                moviesPerson.setVisibility(moviesPerson.GONE);
-                                movie_name3.setVisibility(movie_name3.GONE);
-                                movie_image3.setVisibility(movie_image3.GONE);
+                                moviesPerson.setVisibility(View.GONE);
+                                movie_name3.setVisibility(View.GONE);
+                                movie_image3.setVisibility(View.GONE);
                             }
 
 
@@ -480,8 +465,8 @@ public class Person_Details extends AppCompatActivity {
             public void onClick(View v) {
 
                 biography.setMaxLines(line_count);
-                show.setVisibility(show.GONE);
-                hide.setVisibility(hide.VISIBLE);
+                show.setVisibility(View.GONE);
+                hide.setVisibility(View.VISIBLE);
 
             }
         });
@@ -491,8 +476,8 @@ public class Person_Details extends AppCompatActivity {
             public void onClick(View v) {
 
                 biography.setMaxLines(2);
-                show.setVisibility(show.VISIBLE);
-                hide.setVisibility(hide.GONE);
+                show.setVisibility(View.VISIBLE);
+                hide.setVisibility(View.GONE);
 
             }
         });
@@ -690,10 +675,12 @@ public class Person_Details extends AppCompatActivity {
 
     private void initialization() {
 
-        image_cover = (ImageView) findViewById(R.id.cover_person);
-        image_cover1 = (ImageView) findViewById(R.id.coverPerson);
+        image_cover = (ImageView) findViewById(R.id.coverPerson);
+        image_cover1 = (ImageView) findViewById(R.id.cover_person1);
+        image_cover1.setVisibility(View.GONE);
         image_poster = (ImageView) findViewById(R.id.postar_image_detail);
         name = (TextView) findViewById(R.id.name_person);
+        name.setVisibility(View.GONE);
         biography = (TextView) findViewById(R.id.description_text);
         birth_date = (TextView) findViewById(R.id.person_birth_death);
         birth_place = (TextView) findViewById(R.id.person_birth_place);
@@ -702,7 +689,7 @@ public class Person_Details extends AppCompatActivity {
         show = (ImageView) findViewById(R.id.show);
         person_more_image = (TextView) findViewById(R.id.person_more_image);
         person_more_movies = (TextView) findViewById(R.id.person_more_movies);
-        popular_person = (Button) findViewById(R.id.recent_popular_person);
+        popular_person = (TextView) findViewById(R.id.recent_popular_person);
         popular_person.setSelected(true);
 
 

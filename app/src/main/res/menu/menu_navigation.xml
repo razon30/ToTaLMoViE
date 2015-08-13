@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <item
+        android:id="@+id/home"
+        android:title="Home"
+        >
+        <menu>
+
+            <item
+                android:id="@+id/drawer_discover"
+                android:title="Discover"
+                >
+            </item>
+
+            <item
+                android:id="@+id/drawe_box_office"
+                android:title="Box Office"
+                app:itemTextColor="#FFFFFF"
+                >
+            </item>
+
+            <item
+                android:id="@+id/drawer_upcomin"
+                android:title="Upcoming"
+                >
+            </item>
+
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/drawer_watch_list"
+        android:title="Watch List"
+        ></item>
+    <item
+        android:id="@+id/drawer_wish_list"
+        android:title="Wish List"
+        ></item>
+
+
+</menu>

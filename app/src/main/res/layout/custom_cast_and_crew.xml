@@ -1,61 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    android:id="@+id/card_view"
+
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:cardview="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/darker_gray"
+    android:orientation="vertical">
 
-    card_view:cardCornerRadius="14.5dp"
-    card_view:cardElevation="14.5dp"
-    card_view:cardPreventCornerOverlap="true"
-    cardview:contentPaddingBottom="14.5dp"
-    >
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
+        android:layout_marginTop="10dp"
+        android:background="#B6B6B6"
+        >
 
     <RelativeLayout
+        android:id="@+id/layout_relative"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginBottom="@dimen/size_byte"
-        android:layout_marginLeft="@dimen/size_word"
-        android:layout_marginRight="@dimen/size_word"
-        android:layout_marginTop="@dimen/size_byte"
-        android:background="#B6B6B6"
+        android:background="#FFFFFF"
         >
 
 
         <ImageView
             android:id="@+id/cast_thumbnail"
-            android:layout_width="@dimen/movie_thumbnail_width"
-            android:layout_height="@dimen/movie_thumbnail_height"
-            android:layout_centerVertical="true"
-            android:src="@drawable/clearhistory"
-            android:background="#B6B6B6"/>
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_gravity="top"
+            android:background="#FFFFFF"/>
 
         <TextView
             android:id="@+id/name_cast"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="56dp"
-            android:alpha="0.87"
-            android:gravity="right"
-            android:padding="@dimen/size_half_byte"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/cast_thumbnail"
+            android:layout_marginLeft="16dp"
+            android:gravity="right|center_vertical"
+            android:paddingBottom="8dp"
+            android:paddingRight="8dp"
             android:text="Hitman Agent 47"
-            android:textSize="@dimen/size_text_primary"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"
-            android:textColor="#F5F5F5"/>
+            android:textColor="@color/accentColor"
+            android:textSize="24sp"/>
 
         <TextView
-            android:textColor="#F5F5F5"
+
             android:id="@+id/cast_job"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/name_cast"
+            android:layout_below="@+id/name_cast"
             android:alpha="0.87"
             android:padding="@dimen/size_half_byte"
             android:text="31-31-31"
-            android:textSize="@dimen/size_text_secondary"
-            android:layout_alignBottom="@+id/cast_thumbnail"
-            android:layout_alignEnd="@+id/name_cast"/>
+            android:textColor="@color/accentColor"
+            android:textSize="@dimen/size_text_secondary"/>
+
+        <TextView
+            android:id="@+id/imageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/name_cast"
+            android:layout_marginRight="50dp"
+            android:padding="@dimen/size_half_byte"
+            android:text="Explore"
+            android:textColor="@color/primaryColor"
+            android:textSize="20sp"/>
     </RelativeLayout>
 </android.support.v7.widget.CardView>
+</LinearLayout>

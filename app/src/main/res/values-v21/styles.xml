@@ -2,15 +2,83 @@
 <resources>
 
     <style name="AppTheme" parent="AppTheme.Base">
-
+        <item name="android:colorEdgeEffect">@color/primaryColor</item>
         <item name="android:colorPrimary">@color/primaryColor</item>
         <item name="android:colorPrimaryDark">@color/primaryColorDark</item>
         <item name="android:colorAccent">@color/accentColor</item>
         <item name="android:windowContentTransitions">true</item>
+
         <item name="android:windowTransitionBackgroundFadeDuration">5000</item>
 
     </style>
 
+    <style name="MyCustomToolBarThem" parent="ThemeOverlay.AppCompat.Light">
 
+        <item name="android:textColorPrimary">#F00</item>
+        <item name="android:textColorSecondary">#00F</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowTransitionBackgroundFadeDuration">5000</item>
+
+
+    </style>
+
+    <style name="MyCustomToolBarMovieDetails" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:colorEdgeEffect">@color/primaryColor</item>
+        <item name="colorPrimary">#fff59d</item>
+        <item name="colorPrimaryDark">#fff59d</item>
+        <item name="colorAccent">#fff59d</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTransitionBackgroundFadeDuration">5000</item>
+
+
+    </style>
+
+    <style name="MyCustomToolBaSplash" parent="Theme.AppCompat.Light.NoActionBar">
+
+        <item name="colorPrimary">#fff59d</item>
+        <item name="colorPrimaryDark">#fff59d</item>
+        <item name="colorAccent">#fff59d</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowTranslucentStatus">true</item>
+        <item name="android:windowTransitionBackgroundFadeDuration">5000</item>
+
+    </style>
+    <!-- ToolBar -->
+    <style name="Rushmore.Toolbar.Transparent" parent="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="android:windowActionBarOverlay">true</item>
+
+        <!-- Support Library compability -->
+        <item name="windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="menu_labels_style">
+        <item name="android:background">@drawable/selector_button_red</item>
+        <item name="android:textColor">@color/accentColor</item>
+    </style>
+
+    <style name="ExpandedAppBar" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">26sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CollapsedAppBar" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/accentColor</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+
+    <style name="ExpandedAppBarPlus1" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">26sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="CollapsedAppBarPlus1" parent="@android:style/TextAppearance.Medium">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/accentColor</item>
+        <item name="android:textStyle">normal</item>
+    </style>
 
 </resources>

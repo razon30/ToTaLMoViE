@@ -4,21 +4,23 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,7 +30,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.pkmmte.view.CircularImageView;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -39,11 +40,26 @@ import java.util.ArrayList;
 
 public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
 
-    ImageView coverLayout;
-    CircularImageView circularImageView;
+    public ArrayList<Movie> cast_and_crew = new ArrayList<Movie>();
+    //similar
+    public ArrayList<Movie> similar_list = new ArrayList<Movie>();
+    //reviews
+    public ArrayList<Movie> reviews = new ArrayList<Movie>();
+    Toolbar toolbar;
+    CollapsingToolbarLayout collapsingToolbarLayout;
+    CoordinatorLayout rootLayout;
+    String w_id;
+    String w_name;
+    int a = 1;
+    ImageView watch;
+    ImageView wish, add;
+    DBMovies dbMovies;
+    LinearLayout layout1, layout2, layout3;
+    ImageView coverLayout, coverLayout1;
+    ImageView circularImageView, circularImageView1;
     ImageView imageView, imageRating;
-    Button button, btn_moreImage, btn_reviws, btn_similar;
-    TextView tvTitle, tvGenre, tvOverview, tvHomepage, tvProduction, tvGenreDown, tvRevenue, tvTagLine,
+    TextView button, btn_moreImage, btn_reviws, btn_similar;
+    TextView tvGenre, tvOverview, tvHomepage, tvProduction, tvGenreDown, tvRevenue, tvTagLine,
             tvImbdId, tvRating;
     String urlPreId = "http://api.themoviedb.org/3/movie/";
     long id;
@@ -58,28 +74,18 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
     String similar_post = "/similar?external_source=imdb_id&api_key=f246d5e5105e9934d3cd4c4c181d618d";
     String reviews_post = "/reviews?external_source=imdb_id&api_key=f246d5e5105e9934d3cd4c4c181d618d";
     String trailer, homepage;
-    private ImageLoader imageLoader;
     long current_id;
     ArrayList<String> movie_id = new ArrayList<String>();
-
-    //Retriving data
-    private VolleySingleton volleySingleton;
-    private RequestQueue requestQueue;
-    public ArrayList<Movie> cast_and_crew = new ArrayList<Movie>();
-
     //more image
     ListView oddList, evenList;
     ImageView more_image;
     ArrayList<String> oddArray = new ArrayList<String>();
     ArrayList<String> evenArray = new ArrayList<String>();
     ArrayList<String> more_image_array = new ArrayList<String>();
-
-    //similar
-    public ArrayList<Movie> similar_list = new ArrayList<Movie>();
-
-    //reviews
-    public ArrayList<Movie> reviews = new ArrayList<Movie>();
-
+    private ImageLoader imageLoader;
+    //Retriving data
+    private VolleySingleton volleySingleton;
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +93,54 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
         setContentView(R.layout.activity_imdb__movie__details__top__bottom);
         Intent intent = getIntent();
         imdb_id = intent.getStringExtra("tv");
+        w_id = String.valueOf(id);
         initualizing_contents();
+
+        watch = (ImageView) findViewById(R.id.watch);
+        wish = (ImageView) findViewById(R.id.wish);
+        dbMovies = new DBMovies(IMDB_Movie_Details_Top_Bottom.this);
+        layout1 = (LinearLayout) findViewById(R.id.multiple_layout);
+        layout2 = (LinearLayout) findViewById(R.id.watch_layout);
+        layout3 = (LinearLayout) findViewById(R.id.wish_layout);
+        boolean bool1 = dbMovies.checkWatch(w_id);
+        if (bool1) {
+
+            watch.setBackgroundResource(R.color.accent_color);
+
+        }
+        boolean bool2 = dbMovies.checkWish(w_id);
+        if (bool2) {
+
+            wish.setBackgroundResource(R.color.primary_color_dark);
+
+        }
+
+        if (bool1 | bool2) {
+            layout1.setVisibility(View.GONE);
+            layout2.setVisibility(View.VISIBLE);
+            layout3.setVisibility(View.VISIBLE);
+        } else {
+            layout1.setVisibility(View.VISIBLE);
+            layout2.setVisibility(View.GONE);
+            layout3.setVisibility(View.GONE);
+        }
+
+        add = (ImageView) findViewById(R.id.multiple_actions);
+        add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                layout2.setVisibility(View.VISIBLE);
+                layout3.setVisibility(View.VISIBLE);
+            }
+        });
+
+
+        //  scrollView = (ScrollView) findViewById(R.id.movie_details);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        rootLayout = (CoordinatorLayout) findViewById(R.id.rootLayout);
+        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbarLayout);
+
 
 
         volleySingleton = VolleySingleton.getsInstance();
@@ -235,7 +288,9 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
                             String release_Date = jsonObject.getString("release_date");
                             String[] date = release_Date.split("-");
                             String title = jsonObject.getString("title");
-                            tvTitle.setText(title + "  (" + date[0] + ")");
+                            w_name = title + "  (" + date[0] + ")";
+                            // tvTitle.setText(w_name);
+                            collapsingToolbarLayout.setTitle(title + "  (" + date[0] + ")");
 
                             String revenue = "";
                             revenue = jsonObject.getString("revenue");
@@ -633,8 +688,8 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
                         recyclerView, new ClickListener() {
                     @Override
                     public void onCLick(View v, int position) {
-                      //  Toast.makeText(IMDB_Movie_Details_Top_Bottom.this, "Touched on: " +
-                         //       position, Toast.LENGTH_LONG).show();
+                        //  Toast.makeText(IMDB_Movie_Details_Top_Bottom.this, "Touched on: " +
+                        //       position, Toast.LENGTH_LONG).show();
 
                         Movie movie = cast_and_crew.get(position);
                         String id = String.valueOf(movie.getId());
@@ -651,8 +706,8 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
                     @Override
                     public void onLongClick(View v, int position) {
 
-                       // Toast.makeText(IMDB_Movie_Details_Top_Bottom.this, "Long Touched on: " +
-                             //   position, Toast.LENGTH_LONG).show();
+                        // Toast.makeText(IMDB_Movie_Details_Top_Bottom.this, "Long Touched on: " +
+                        //   position, Toast.LENGTH_LONG).show();
 
                     }
                 }));
@@ -824,16 +879,88 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
         });
 
 
+        watch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dbMovies = new DBMovies(IMDB_Movie_Details_Top_Bottom.this);
+                boolean bool = dbMovies.checkWatch(w_id);
+                final boolean boo2 = dbMovies.checkWish(w_id);
+                if (bool) {
+
+                    Snackbar.make(rootLayout, "Already in Watch List", Snackbar.LENGTH_LONG)
+                            .setAction("Remove?", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dbMovies.deleteWatch(w_id);
+                                    watch.setBackgroundResource(R.color.grey_60);
+                                    if (!boo2) {
+                                        layout1.setVisibility(View.VISIBLE);
+                                        layout2.setVisibility(View.GONE);
+                                        layout3.setVisibility(View.GONE);
+                                    }
+                                }
+                            }).show();
+                } else {
+                    Movie movie = new Movie(w_id, w_name);
+                    long fact = dbMovies.insertWatch(movie);
+                    if (fact != -1) {
+                        watch.setBackgroundResource(R.color.accent_color);
+                        layout1.setVisibility(View.GONE);
+                        Snackbar.make(rootLayout, "Added to Watch List", Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            }
+        });
+
+
+        wish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dbMovies = new DBMovies(IMDB_Movie_Details_Top_Bottom.this);
+                final boolean boo2 = dbMovies.checkWatch(w_id);
+                boolean bool = dbMovies.checkWish(w_id);
+                if (bool) {
+                    Snackbar.make(rootLayout, "Alrea dy in Wish List", Snackbar.LENGTH_LONG)
+                            .setAction("Remove?", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    dbMovies.deleteWish(w_id);
+                                    wish.setBackgroundResource(R.color.grey_60);
+                                    if (!boo2) {
+                                        layout1.setVisibility(View.VISIBLE);
+                                        layout2.setVisibility(View.GONE);
+                                        layout3.setVisibility(View.GONE);
+                                    }
+                                }
+                            }).show();
+                } else {
+                    Movie movie = new Movie(w_id, w_name);
+                    long fact = dbMovies.insertWish(movie);
+                    if (fact != -1) {
+                        wish.setBackgroundResource(R.color.primary_color_dark);
+                        layout1.setVisibility(View.GONE);
+                        Snackbar.make(rootLayout, "Added to Wish List", Snackbar.LENGTH_LONG).show();
+                    }
+                }
+            }
+        });
+
+
     }
 
     private void initualizing_contents() {
 
+        rootLayout = (CoordinatorLayout) findViewById(R.id.rootLayout);
         coverLayout = (ImageView) findViewById(R.id.cover);
-        circularImageView = (CircularImageView) findViewById(R.id.play_trailer);
+        coverLayout1 = (ImageView) findViewById(R.id.cover1);
+        coverLayout1.setVisibility(View.GONE);
+        circularImageView = (ImageView) findViewById(R.id.play_trailer);
+        circularImageView1 = (ImageView) findViewById(R.id.play_trailer1);
+        circularImageView1.setVisibility(View.GONE);
         //  ratingBar = (RatingBar) findViewById(R.id.movieAudienceScore_details);
         imageView = (ImageView) findViewById(R.id.postar_image_detail);
-        button = (Button) findViewById(R.id.cast_and_crew);
-        tvTitle = (TextView) findViewById(R.id.title_details);
+        button = (TextView) findViewById(R.id.cast_and_crew);
+        // tvTitle = (TextView) findViewById(R.id.title_details);
         tvGenre = (TextView) findViewById(R.id.genre_details);
         tvOverview = (TextView) findViewById(R.id.overview_details);
         tvHomepage = (TextView) findViewById(R.id.homepage_details);
@@ -847,9 +974,9 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
         Picasso.with(IMDB_Movie_Details_Top_Bottom.this).load(R.drawable.bookmark_toolbar).resize(70, 70)
                 .into(imageRating);
 
-        btn_moreImage = (Button) findViewById(R.id.more_image);
-        btn_reviws = (Button) findViewById(R.id.review_details);
-        btn_similar = (Button) findViewById(R.id.similar_details);
+        btn_moreImage = (TextView) findViewById(R.id.more_image);
+        btn_reviws = (TextView) findViewById(R.id.review_details);
+        btn_similar = (TextView) findViewById(R.id.similar_details);
     }
 
     @Override
@@ -875,11 +1002,11 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
     }
 
 
-    public static interface ClickListener {
+    public interface ClickListener {
 
-        public void onCLick(View v, int position);
+        void onCLick(View v, int position);
 
-        public void onLongClick(View v, int position);
+        void onLongClick(View v, int position);
 
     }
 

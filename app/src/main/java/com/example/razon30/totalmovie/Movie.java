@@ -8,13 +8,179 @@ import android.os.Parcelable;
  */
 public class Movie implements Parcelable {
 
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
+    public static final Parcelable.Creator<Movie> creator = new Parcelable.Creator<Movie>() {
+
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+
+    };
     //for trailer
-    String duration,trailer_title,videoURL;
+    String duration, trailer_title, videoURL;
+    //for watch wish
+    String w_id, w_name;
+    //top 10 imdb
+    String imdb_id_top,imdb_title,imdb_url_poster,year_imdb;
+    int rating_imdb;
+    //movie details
+    String backdrop_path;
+    String genre;
+    String overview;
+    String poster_path;
+    String revenue;
+    String tagLine;
+    String imdb_id;
+    String homepage;
+    String production;
+    //movie cast and crew
+    String name;
+    String job;
+    String profile_thumbnail;
+    //reviews
+    String author;
+    String text;
+    String type;
+    //for genre and id
+    long genre_id;
+    String genre_name;
+    StringBuilder stringBuilder;
+    //primary details
+    private long id;
+    private String title;
+    private String releaseDateTheater;
+    private int audienceScore;
+    private String synopsis;
+    private String urlThumbnail;
 
     public Movie(String trailer_title, String duration, String videoURL) {
         this.trailer_title = trailer_title;
         this.duration = duration;
         this.videoURL = videoURL;
+    }
+
+    public Movie(String imdb_id_top, String imdb_title, String imdb_url_poster, int rating_imdb,
+                 String year_imdb) {
+        this.imdb_id_top = imdb_id_top;
+        this.imdb_title = imdb_title;
+        this.imdb_url_poster = imdb_url_poster;
+        this.rating_imdb = rating_imdb;
+        this.year_imdb = year_imdb;
+    }
+
+    public Movie(long id, String title, String releaseDateTheater, int audienceScore, String synopsis, String urlThumbnail) {
+        this.id = id;
+        this.title = title;
+        this.releaseDateTheater = releaseDateTheater;
+        this.audienceScore = audienceScore;
+        this.synopsis = synopsis;
+        this.urlThumbnail = urlThumbnail;
+    }
+
+    public Movie(long genre_id, String genre_name) {
+        this.genre_id = genre_id;
+        this.genre_name = genre_name;
+    }
+    public Movie(String name, StringBuilder stringBuilder, String profile_thumbnail,long id) {
+        this.name = name;
+        this.stringBuilder = stringBuilder;
+        this.profile_thumbnail = profile_thumbnail;
+        this.id = id;
+    }
+    //for more movie person
+    public Movie(String title, String releaseDateTheater, String urlThumbnail, String job, long
+            id) {
+        this.title = title;
+        this.releaseDateTheater = releaseDateTheater;
+        this.urlThumbnail = urlThumbnail;
+        this.job = job;
+        this.id = id;
+    }
+    public Movie(String author, String text) {
+        this.author = author;
+        this.text = text;
+    }
+    //search result for movie
+    public Movie(String type,long id, String title, String releaseDateTheater, int audienceScore,
+                 String urlThumbnail) {
+        this.type = type;
+        this.id = id;
+        this.title = title;
+        this.releaseDateTheater = releaseDateTheater;
+        this.audienceScore = audienceScore;
+        this.urlThumbnail = urlThumbnail;
+    }
+    //search result of cast
+    public Movie(String name, String type, String profile_thumbnail,long id) {
+        this.name = name;
+        this.type = type;
+        this.profile_thumbnail = profile_thumbnail;
+        this.id = id;
+    }
+
+    //for popular person
+    public Movie(String type, String profile_thumbnail,long id,String name) {
+        this.name = name;
+        this.type = type;
+        this.profile_thumbnail = profile_thumbnail;
+        this.id = id;
+    }
+    //search for multi
+    public Movie(String profile_thumbnail,long id,String name, String type) {
+        this.name = name;
+        this.type = type;
+        this.profile_thumbnail = profile_thumbnail;
+        this.id = id;
+    }
+    public Movie(String title, String releaseDateTheater, int audienceScore, String
+            backdrop_path, String genre, String overview, String poster_path, String revenue,
+                 String tagLine, String imdb_id,String homepage,String production) {
+        this.title = title;
+        this.releaseDateTheater = releaseDateTheater;
+        this.audienceScore = audienceScore;
+        this.backdrop_path = backdrop_path;
+        this.genre = genre;
+        this.overview = overview;
+        this.poster_path = poster_path;
+        this.revenue = revenue;
+        this.tagLine = tagLine;
+        this.imdb_id = imdb_id;
+        this.homepage = homepage;
+        this.production = production;
+    }
+
+    public Movie() {
+    }
+    public Movie(Parcel in) {
+
+        genre_id = in.readLong();
+        genre_name = in.readString();
+
+        id = in.readLong();
+        title = in.readString();
+        audienceScore = in.readInt();
+        synopsis = in.readString();
+        urlThumbnail = in.readString();
+
+    }
+
+    public static Creator<Movie> getCreator() {
+        return creator;
     }
 
     public String getDuration() {
@@ -39,19 +205,6 @@ public class Movie implements Parcelable {
 
     public void setVideoURL(String videoURL) {
         this.videoURL = videoURL;
-    }
-
-    //top 10 imdb
-    String imdb_id_top,imdb_title,imdb_url_poster,year_imdb;
-    int rating_imdb;
-
-    public Movie(String imdb_id_top, String imdb_title, String imdb_url_poster, int rating_imdb,
-                 String year_imdb) {
-        this.imdb_id_top = imdb_id_top;
-        this.imdb_title = imdb_title;
-        this.imdb_url_poster = imdb_url_poster;
-        this.rating_imdb = rating_imdb;
-        this.year_imdb = year_imdb;
     }
 
     public String getImdb_id_top() {
@@ -94,54 +247,6 @@ public class Movie implements Parcelable {
         this.rating_imdb = rating_imdb;
     }
 
-    //primary details
-    private long id;
-    private String title;
-    private String releaseDateTheater;
-    private int audienceScore;
-    private String synopsis;
-    private String urlThumbnail;
-
-    public Movie(long id, String title, String releaseDateTheater, int audienceScore, String synopsis, String urlThumbnail) {
-        this.id = id;
-        this.title = title;
-        this.releaseDateTheater = releaseDateTheater;
-        this.audienceScore = audienceScore;
-        this.synopsis = synopsis;
-        this.urlThumbnail = urlThumbnail;
-    }
-
-    //movie details
-    String backdrop_path;
-    String genre;
-    String overview;
-    String poster_path;
-    String revenue;
-    String tagLine;
-    String imdb_id;
-    String homepage;
-    String production;
-
-    //movie cast and crew
-    String name;
-    String job;
-    String profile_thumbnail;
-
-    //reviews
-    String author;
-    String text;
-
-    String type;
-
-    //for genre and id
-    long genre_id;
-    String genre_name;
-
-    public Movie(long genre_id, String genre_name) {
-        this.genre_id = genre_id;
-        this.genre_name = genre_name;
-    }
-
     public long getGenre_id() {
         return genre_id;
     }
@@ -166,15 +271,6 @@ public class Movie implements Parcelable {
         this.type = type;
     }
 
-    StringBuilder stringBuilder;
-
-    public Movie(String name, StringBuilder stringBuilder, String profile_thumbnail,long id) {
-        this.name = name;
-        this.stringBuilder = stringBuilder;
-        this.profile_thumbnail = profile_thumbnail;
-        this.id = id;
-    }
-
     public StringBuilder getStringBuilder() {
         return stringBuilder;
     }
@@ -183,108 +279,6 @@ public class Movie implements Parcelable {
         this.stringBuilder = stringBuilder;
     }
 
-
-
-
-    //for more movie person
-    public Movie(String title, String releaseDateTheater, String urlThumbnail, String job, long
-            id) {
-        this.title = title;
-        this.releaseDateTheater = releaseDateTheater;
-        this.urlThumbnail = urlThumbnail;
-        this.job = job;
-        this.id = id;
-    }
-
-    public Movie(String author, String text) {
-        this.author = author;
-        this.text = text;
-    }
-
-    //search result for movie
-    public Movie(String type,long id, String title, String releaseDateTheater, int audienceScore,
-                 String urlThumbnail) {
-        this.type = type;
-        this.id = id;
-        this.title = title;
-        this.releaseDateTheater = releaseDateTheater;
-        this.audienceScore = audienceScore;
-        this.urlThumbnail = urlThumbnail;
-    }
-
-    //search result of cast
-    public Movie(String name, String type, String profile_thumbnail,long id) {
-        this.name = name;
-        this.type = type;
-        this.profile_thumbnail = profile_thumbnail;
-        this.id = id;
-    }
-
-    //for popular person
-    public Movie(String type, String profile_thumbnail,long id,String name) {
-        this.name = name;
-        this.type = type;
-        this.profile_thumbnail = profile_thumbnail;
-        this.id = id;
-    }
-
-    //search for multi
-    public Movie(String profile_thumbnail,long id,String name, String type) {
-        this.name = name;
-        this.type = type;
-        this.profile_thumbnail = profile_thumbnail;
-        this.id = id;
-    }
-
-    public Movie(String title, String releaseDateTheater, int audienceScore, String
-            backdrop_path, String genre, String overview, String poster_path, String revenue,
-                 String tagLine, String imdb_id,String homepage,String production) {
-        this.title = title;
-        this.releaseDateTheater = releaseDateTheater;
-        this.audienceScore = audienceScore;
-        this.backdrop_path = backdrop_path;
-        this.genre = genre;
-        this.overview = overview;
-        this.poster_path = poster_path;
-        this.revenue = revenue;
-        this.tagLine = tagLine;
-        this.imdb_id = imdb_id;
-        this.homepage = homepage;
-        this.production = production;
-    }
-
-
-
-
-    public Movie() {
-    }
-
-    public Movie(Parcel in) {
-
-        genre_id = in.readLong();
-        genre_name = in.readString();
-
-        id = in.readLong();
-        title = in.readString();
-        audienceScore = in.readInt();
-        synopsis = in.readString();
-        urlThumbnail = in.readString();
-
-    }
-
-    public static final Parcelable.Creator<Movie> creator = new Parcelable.Creator<Movie>() {
-
-        @Override
-        public Movie createFromParcel(Parcel in) {
-            return new Movie(in);
-        }
-
-        public Movie[] newArray(int size) {
-            return new Movie[size];
-        }
-
-    };
-
     public String getHomepage() {
         return homepage;
     }
@@ -292,7 +286,6 @@ public class Movie implements Parcelable {
     public void setHomepage(String homepage) {
         this.homepage = homepage;
     }
-
 
     public String getBackdrop_path() {
         return backdrop_path;
@@ -348,10 +341,6 @@ public class Movie implements Parcelable {
 
     public void setImdb_id(String imdb_id) {
         this.imdb_id = imdb_id;
-    }
-
-    public static Creator<Movie> getCreator() {
-        return creator;
     }
 
     public long getId() {
@@ -427,6 +416,10 @@ public class Movie implements Parcelable {
         return profile_thumbnail;
     }
 
+    public void setProfile_thumbnail(String profile_thumbnail) {
+        this.profile_thumbnail = profile_thumbnail;
+    }
+
     public String getAuthor() {
         return author;
     }
@@ -441,10 +434,6 @@ public class Movie implements Parcelable {
 
     public void setText(String text) {
         this.text = text;
-    }
-
-    public void setProfile_thumbnail(String profile_thumbnail) {
-        this.profile_thumbnail = profile_thumbnail;
     }
 
     @Override

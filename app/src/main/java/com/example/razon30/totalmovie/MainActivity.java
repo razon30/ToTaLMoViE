@@ -1,47 +1,107 @@
 package com.example.razon30.totalmovie;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.PersistableBundle;
+import android.preference.PreferenceManager;
 import android.speech.RecognizerIntent;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.AccessTokenTracker;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
+import com.facebook.ProfileTracker;
+import com.facebook.appevents.AppEventsLogger;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
 import com.quinny898.library.persistentsearch.SearchBox;
-import com.quinny898.library.persistentsearch.SearchResult;
+import com.squareup.picasso.Picasso;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import it.neokree.materialtabs.MaterialTab;
-import it.neokree.materialtabs.MaterialTabHost;
 import it.neokree.materialtabs.MaterialTabListener;
 
 
-public class MainActivity extends AppCompatActivity implements MaterialTabListener ,View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements MaterialTabListener, View
+        .OnClickListener, NavigationView.OnNavigationItemSelectedListener {
 
-    //for search
-    private SearchBox search;
-    private Toolbar toolbar;
-
-
+    public static final int MOVIES_SEARCH_RESULTS = 0;
+    public static final int MOVIES_HITS = 1;
+    public static final int MOVIES_UPCOMING = 2;
+    // public static final int MOVIES_REVIEWS = 3;
+    public static final int TAB_COUNT = 3;
+    //remembering drawer was seen by user or not
+    private static final String FIRST_TIME = "first_time";
+    //sorting
+    private static final String TAG_SORT_NAME = "sortName";
+    private static final String TAG_SORT_DATE = "sortDate";
+    private static final String TAG_SORT_RATINGS = "sortRatings";
+    //for drawer
+    NavigationView mDrawer;
+    DrawerLayout drawerLayout;
+    ActionBarDrawerToggle actionBarDrawerToggle;
+    //for drawer header
+    ImageView drawer_cover_image;
+    ImageView drawer_profile_image;
+    TextView drawer_name, drawer_profile;
+    CallbackManager callbackManager;
+    AccessToken accessToken;
+    AccessTokenTracker accessTokenTracker;
+    ProfileTracker profileTracker;
+    String profile_link;
+    //for drawer menu
+    LinearLayout drawer_discover, drawer_box, drawer_upcoming, drawer_watch, drawer_wish;
+    DBMovies dbMovies;
     //for toolbar
     //private Toolbar toolbar;
     EditText etSearch;
@@ -49,35 +109,25 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
     String urlPre = "http://api.themoviedb.org/3/search/";
     String multiPost = "multi?api_key=f246d5e5105e9934d3cd4c4c181d618d&query=";
     String keyword = "";
-
+    //FLoating Button
+    FloatingActionButton actionButton;
+    FloatingActionMenu actionMenu;
+    //for search
+    private SearchBox search;
+    private Toolbar toolbar;
+    private boolean mUserSawDrawer = false;
     //for tab
     private TabLayout tabHost;
-
     //for viewPager
     private ViewPager viewPager;
     private ViewPagerAdapter adapter;
     private ViewGroup containerAppBar;
 
-    public static final int MOVIES_SEARCH_RESULTS = 0;
-    public static final int MOVIES_HITS = 1;
-    public static final int MOVIES_UPCOMING = 2;
-   // public static final int MOVIES_REVIEWS = 3;
-    public static final int TAB_COUNT = 3;
-
-    //sorting
-    private static final String TAG_SORT_NAME = "sortName";
-    private static final String TAG_SORT_DATE = "sortDate";
-    private static final String TAG_SORT_RATINGS = "sortRatings";
-
-
-    //FLoating Button
-    FloatingActionButton actionButton;
-    FloatingActionMenu actionMenu;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        FacebookSdk.sdkInitialize(getApplicationContext());
+        callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_main);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
@@ -97,14 +147,17 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
             }
         });
 
+        worksOnDrawer();
+        worksOnDrawerHeader();
+        worksOnDrawerMenu();
 
 
         //toolbar setting
 //        toolbar = (Toolbar) findViewById(R.id.app_bar);
 //        setSupportActionBar(toolbar);
-       // toolbar.setVisibility(toolbar.VISIBLE);
-       // containerAppBar = (ViewGroup) findViewById(R.id.container_app_bar);
-       // AnimationUtils.animateToolbar(containerAppBar);
+        // toolbar.setVisibility(toolbar.VISIBLE);
+        // containerAppBar = (ViewGroup) findViewById(R.id.container_app_bar);
+        // AnimationUtils.animateToolbar(containerAppBar);
 
 //        etSearch = (EditText) findViewById(R.id.et_search);
 //        btnSearch = (Button) findViewById(R.id.btn_search);
@@ -140,8 +193,7 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
 //        }
 
 
-        setting_floating_action_button_and_menu();
-
+        //  setting_floating_action_button_and_menu();
 
 
 //        btnSearch.setOnClickListener(new View.OnClickListener() {
@@ -169,7 +221,464 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
 //        });
 
 
+    }
 
+    private void worksOnDrawerMenu() {
+
+        dbMovies = new DBMovies(MainActivity.this);
+        drawer_discover = (LinearLayout) findViewById(R.id.drawer_layout_discover);
+        drawer_box = (LinearLayout) findViewById(R.id.drawer_layout_Box_Office);
+        drawer_upcoming = (LinearLayout) findViewById(R.id.drawer_layout_Upcoming);
+        drawer_watch = (LinearLayout) findViewById(R.id.drawer_layout_watchList);
+        drawer_wish = (LinearLayout) findViewById(R.id.drawer_layout_wishList);
+
+        drawer_discover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                viewPager.setCurrentItem(0);
+            }
+        });
+
+        drawer_box.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                viewPager.setCurrentItem(1);
+            }
+        });
+
+        drawer_upcoming.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+                viewPager.setCurrentItem(2);
+            }
+        });
+
+        drawer_watch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                View view1 = getLayoutInflater().inflate(R.layout.watch_wish_list,
+                        null);
+                ListView listView = (ListView) view1.findViewById(R.id.watch_list);
+                final ArrayList<Movie> watch_list = dbMovies.searchWatch();
+                BaseAdapter adapter = new BaseAdapter() {
+                    @Override
+                    public int getCount() {
+                        return watch_list.size();
+                    }
+
+                    @Override
+                    public Object getItem(int position) {
+                        return watch_list.get(position);
+                    }
+
+                    @Override
+                    public long getItemId(int position) {
+                        return position;
+                    }
+
+                    @Override
+                    public View getView(int position, View view, ViewGroup parent) {
+
+                        view = getLayoutInflater().inflate(R.layout.watch_wish_item,
+                                null);
+                        TextView textView = (TextView) view.findViewById(R.id.watchwltv);
+
+                        textView.setText(watch_list.get(position).getText());
+
+                        return view;
+                    }
+                };
+
+                listView.setAdapter(adapter);
+
+
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String m_id = watch_list.get(position).getAuthor();
+                        // String link = movie.getVideoURL();
+
+
+                        if (m_id != null && m_id.length() != 0) {
+                            // startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
+                            Intent intent = new Intent(MainActivity.this, Movie_Details.class);
+                            intent.putExtra("tv", m_id);
+                            startActivity(intent);
+                        } else {
+                            return;
+                        }
+
+                    }
+                });
+
+
+                AlertDialog.Builder builderAlertDialog = new AlertDialog.Builder(
+                        MainActivity.this);
+
+                if (watch_list == null || watch_list.size() == 0) {
+                    Toast.makeText(MainActivity.this, watch_list.toString() + "No Watch List " +
+                            "found", Toast
+                            .LENGTH_LONG).show();
+
+                    return;
+                } else {
+
+                    builderAlertDialog
+                            .setView(view1)
+                            .show();
+                }
+
+
+            }
+        });
+
+
+        drawer_wish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                View view1 = getLayoutInflater().inflate(R.layout.watch_wish_list,
+                        null);
+                ListView listView = (ListView) view1.findViewById(R.id.watch_list);
+                final ArrayList<Movie> watch_list = dbMovies.searchWish();
+                BaseAdapter adapter = new BaseAdapter() {
+                    @Override
+                    public int getCount() {
+                        return watch_list.size();
+                    }
+
+                    @Override
+                    public Object getItem(int position) {
+                        return watch_list.get(position);
+                    }
+
+                    @Override
+                    public long getItemId(int position) {
+                        return position;
+                    }
+
+                    @Override
+                    public View getView(int position, View view, ViewGroup parent) {
+
+                        view = getLayoutInflater().inflate(R.layout.watch_wish_item,
+                                null);
+
+                        TextView textView = (TextView) view.findViewById(R.id.watchwltv);
+
+                        textView.setText(watch_list.get(position).getText());
+
+                        return view;
+                    }
+                };
+
+                listView.setAdapter(adapter);
+
+
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String m_id = watch_list.get(position).getAuthor();
+                        // String link = movie.getVideoURL();
+
+
+                        if (m_id != null && m_id.length() != 0) {
+                            // startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
+                            Intent intent = new Intent(MainActivity.this, Movie_Details.class);
+                            intent.putExtra("tv", m_id);
+                            startActivity(intent);
+                        } else {
+                            return;
+                        }
+
+                    }
+                });
+//                Toast.makeText(MainActivity.this, watch_list.get(0).getText() +"", Toast
+//                        .LENGTH_LONG).show();
+//
+//
+
+                AlertDialog.Builder builderAlertDialog = new AlertDialog.Builder(
+                        MainActivity.this);
+
+                if (watch_list == null || watch_list.size() == 0) {
+                    Toast.makeText(MainActivity.this, watch_list.toString() + "No Wish List " +
+                            "found", Toast
+                            .LENGTH_LONG).show();
+
+                    return;
+                } else {
+
+                    builderAlertDialog
+                            .setView(view1)
+                            .show();
+                }
+
+
+            }
+        });
+
+
+
+    }
+
+    private void worksOnDrawerHeader() {
+
+        LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList
+                ("public_profile", "user_friends"));
+
+        drawer_cover_image = (ImageView) findViewById(R.id.fb_cover_image);
+        drawer_profile_image = (ImageView) findViewById(R.id.fb_profile_image);
+        drawer_name = (TextView) findViewById(R.id.fb_profile_name);
+        drawer_profile = (TextView) findViewById(R.id.fb_profile);
+
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.example.razon30.totalmovie",
+                    PackageManager.GET_SIGNATURES);
+            for (android.content.pm.Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+                // Toast.makeText(MainActivity.this,"KeyHash: "+Base64.encodeToString(md.digest(),
+                //       Base64.DEFAULT),Toast.LENGTH_SHORT).show();
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }
+
+
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        // App code
+                        accessToken = loginResult.getAccessToken();
+                        Profile profile = Profile.getCurrentProfile();
+                        displayMessage(profile);
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        // App code
+                    }
+
+                    @Override
+                    public void onError(FacebookException exception) {
+                        // App code
+                    }
+                });
+
+
+        accessTokenTracker = new AccessTokenTracker() {
+            @Override
+            protected void onCurrentAccessTokenChanged(AccessToken accessToken, AccessToken accessToken1) {
+
+
+            }
+        };
+
+        profileTracker = new ProfileTracker() {
+            @Override
+            protected void onCurrentProfileChanged(Profile profile, Profile profile1) {
+
+                displayMessage(profile1);
+
+            }
+        };
+
+        accessTokenTracker.startTracking();
+        profileTracker.startTracking();
+
+
+    }
+
+    private void displayMessage(Profile profile1) {
+
+        //getting data from graph api
+        GraphRequest request = GraphRequest.newMeRequest(
+                accessToken,
+                new GraphRequest.GraphJSONObjectCallback() {
+                    @Override
+                    public void onCompleted(JSONObject object, GraphResponse response) {
+                        // Insert your code here
+                        if (object != null) {
+                            try {
+                                String name = object.getString("name");
+                                drawer_name.setText(name);
+                                profile_link = object.getString("link");
+                                JSONObject cover_obj = object.getJSONObject("cover");
+                                String cover = cover_obj.getString("source");
+                                Picasso.with(MainActivity.this).load(cover).into(drawer_cover_image);
+
+                                JSONObject picture_obj = object.getJSONObject("picture");
+                                JSONObject data_obj = picture_obj.getJSONObject("data");
+                                String prof_pic = data_obj.getString("url");
+                                Picasso.with(MainActivity.this).load(prof_pic).into(drawer_profile_image);
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            Toast.makeText(MainActivity.this, "Log in To FaceBook", Toast
+                                    .LENGTH_SHORT).show();
+                        }
+
+
+                    }
+                });
+
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id,name,link,cover,picture");
+        request.setParameters(parameters);
+        request.executeAsync();
+
+        drawer_profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (profile_link != null && profile_link != "" && profile_link.length() != 0) {
+                    Intent i = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse(profile_link));
+                    startActivity(i);
+                } else {
+                    Toast.makeText(MainActivity.this, "No Link is Available", Toast.LENGTH_LONG)
+                            .show();
+                }
+            }
+        });
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Profile profile = Profile.getCurrentProfile();
+        displayMessage(profile);
+        // Logs 'install' and 'app activate' App Events.
+        AppEventsLogger.activateApp(this);
+    }
+
+
+    private void worksOnDrawer() {
+
+        mDrawer = (NavigationView) findViewById(R.id.navigationView);
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawerLayout);
+        actionBarDrawerToggle = new ActionBarDrawerToggle(MainActivity.this, drawerLayout, toolbar, R
+                .string
+                .open, R.string.close);
+        drawerLayout.setDrawerListener(actionBarDrawerToggle);
+        actionBarDrawerToggle.syncState();
+        mDrawer.setNavigationItemSelectedListener(this);
+
+
+        ColorStateList textStateList = new ColorStateList(
+                new int[][]{
+                        new int[]{android.R.attr.state_checked},
+                        new int[]{}
+                },
+                new int[]{
+                        getResources().getColor(R.color.primaryColor),
+                        getResources().getColor(R.color.accentColor)
+                }
+        );
+
+        // mDrawer.setItemIconTintList(iconStateList);
+        mDrawer.setItemTextColor(textStateList);
+
+        //drawer 1st time or not
+        if (!didUserSeeDrawer()) {
+            showDrawer();
+            markDrawerSeen();
+        } else {
+            hideDrawer();
+        }
+
+
+    }
+
+    private void hideDrawer() {
+        drawerLayout.closeDrawer(GravityCompat.START);
+    }
+
+    private void markDrawerSeen() {
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mUserSawDrawer = true;
+        sharedPreferences.edit().putBoolean(FIRST_TIME, mUserSawDrawer).apply();
+
+    }
+
+    private void showDrawer() {
+
+        drawerLayout.openDrawer(GravityCompat.START);
+
+    }
+
+    private boolean didUserSeeDrawer() {
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mUserSawDrawer = sharedPreferences.getBoolean(FIRST_TIME, false);
+        return mUserSawDrawer;
+    }
+
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        actionBarDrawerToggle.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
+
+
+        if (menuItem.getItemId() == R.id.drawer_discover) {
+
+            // drawerLayout.closeDrawer(GravityCompat.START);
+        }
+        if (menuItem.getItemId() == R.id.drawe_box_office) {
+
+            // drawerLayout.closeDrawer(GravityCompat.START);
+        }
+
+        if (menuItem.getItemId() == R.id.drawer_upcomin) {
+
+            // drawerLayout.closeDrawer(GravityCompat.START);
+
+        }
+        if (menuItem.getItemId() == R.id.drawer_watch_list) {
+
+            Toast.makeText(MainActivity.this, "clicked on item 0", Toast.LENGTH_LONG).show();
+        }
+
+        if (menuItem.getItemId() == R.id.drawer_wish_list) {
+
+            Toast.makeText(MainActivity.this, "clicked on item 0", Toast.LENGTH_LONG).show();
+        }
+
+
+        return true;
+    }
+
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+
+            super.onBackPressed();
+        }
     }
 
 
@@ -278,10 +787,109 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
 
     }
 
+    public void openSearch() {
+        toolbar.setTitle("");
+        search.revealFromMenuItem(R.id.action_search, this);
+//        for (int x = 0; x < 10; x++) {
+//            SearchResult option = new SearchResult("Result "
+//                    + Integer.toString(x), getResources().getDrawable(
+//                    R.drawable.ic_history));
+//            //  search.addSearchable(option);
+//        }
+//        search.setMenuListener(new SearchBox.MenuListener() {
+//
+//            @Override
+//            public void onMenuClick() {
+//                // Hamburger has been clicked
+//                Toast.makeText(MainActivity.this, "Menu click",
+//                        Toast.LENGTH_LONG).show();
+//            }
+//
+//        });
+        search.setSearchListener(new SearchBox.SearchListener() {
+
+            @Override
+            public void onSearchOpened() {
+                // Use this to tint the screen
+
+            }
+
+            @Override
+            public void onSearchClosed() {
+                // Use this to un-tint the screen
+                closeSearch();
+            }
+
+            @Override
+            public void onSearchTermChanged() {
+                // React to the search term changing
+                // Called after it has updated results
+            }
+
+            @Override
+            public void onSearch(String searchTerm) {
+//                Toast.makeText(MainActivity.this, searchTerm + " Searched",
+//                        Toast.LENGTH_LONG).show();
+                // toolbar.setTitle(searchTerm);
+
+                if (searchTerm != null && searchTerm.length() != 0 && searchTerm != "") {
+
+                    String key;
+                    String[] search = searchTerm.split(" ");
+                    StringBuilder builder = new StringBuilder();
+                    for (int i = 0; i < search.length; i++) {
+                        builder.append(search[i]);
+                        if (i < search.length - 1) {
+                            builder.append("+");
+                        }
+                    }
+
+                    //searchTerm = searchTerm.replaceAll("\\s", "");
+
+                    key = urlPre + multiPost + builder;
+
+                    Intent intent = new Intent(MainActivity.this, Multi_Search_Activity.class);
+                    intent.putExtra("tv", key);
+                    startActivity(intent);
+
+                } else {
+                    Toast.makeText(MainActivity.this, "Not Proper Keyword", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+            }
+
+            @Override
+            public void onSearchCleared() {
+
+            }
+
+        });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        callbackManager.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1234 && resultCode == RESULT_OK) {
+            ArrayList<String> matches = data
+                    .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            search.populateEditText(matches);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    protected void closeSearch() {
+        search.hideCircularly(this);
+        if (search.getSearchText().isEmpty()) toolbar.setTitle("");
+    }
+
     class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
-       // String[] tabs = getResources().getStringArray(R.array.tabs);
-        int[] icon = {R.drawable.clearhistory,R.drawable.clearhistory,R.drawable.clearhistory};
+        // String[] tabs = getResources().getStringArray(R.array.tabs);
+        int[] icon = {R.drawable.clearhistory, R.drawable.clearhistory, R.drawable.clearhistory};
 
         FragmentManager fragmentManager;
 
@@ -328,94 +936,6 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
             return getResources().getDrawable(icon[position]);
         }
     }
-
-
-    public void openSearch() {
-        toolbar.setTitle("");
-        search.revealFromMenuItem(R.id.action_search, this);
-//        for (int x = 0; x < 10; x++) {
-//            SearchResult option = new SearchResult("Result "
-//                    + Integer.toString(x), getResources().getDrawable(
-//                    R.drawable.ic_history));
-//            //  search.addSearchable(option);
-//        }
-//        search.setMenuListener(new SearchBox.MenuListener() {
-//
-//            @Override
-//            public void onMenuClick() {
-//                // Hamburger has been clicked
-//                Toast.makeText(MainActivity.this, "Menu click",
-//                        Toast.LENGTH_LONG).show();
-//            }
-//
-//        });
-        search.setSearchListener(new SearchBox.SearchListener() {
-
-            @Override
-            public void onSearchOpened() {
-                // Use this to tint the screen
-
-            }
-
-            @Override
-            public void onSearchClosed() {
-                // Use this to un-tint the screen
-                closeSearch();
-            }
-
-            @Override
-            public void onSearchTermChanged() {
-                // React to the search term changing
-                // Called after it has updated results
-            }
-
-            @Override
-            public void onSearch(String searchTerm) {
-//                Toast.makeText(MainActivity.this, searchTerm + " Searched",
-//                        Toast.LENGTH_LONG).show();
-               // toolbar.setTitle(searchTerm);
-
-                if (searchTerm != null && searchTerm.length() != 0 && searchTerm != "") {
-
-                    searchTerm = searchTerm.replaceAll("\\s", "");
-
-                    String key = urlPre + multiPost + searchTerm;
-
-                    Intent intent = new Intent(MainActivity.this, Multi_Search_Activity.class);
-                    intent.putExtra("tv", key);
-                    startActivity(intent);
-
-                } else {
-                    Toast.makeText(MainActivity.this, "Not Proper Keyword", Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-            }
-
-            @Override
-            public void onSearchCleared() {
-
-            }
-
-        });
-
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == 1234 && resultCode == RESULT_OK) {
-            ArrayList<String> matches = data
-                    .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-            search.populateEditText(matches);
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    protected void closeSearch() {
-        search.hideCircularly(this);
-        if(search.getSearchText().isEmpty())toolbar.setTitle("");
-    }
-
 
 
 }

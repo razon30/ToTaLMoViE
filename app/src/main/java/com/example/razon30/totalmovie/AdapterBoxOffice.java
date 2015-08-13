@@ -1,12 +1,14 @@
 package com.example.razon30.totalmovie;
 
 import android.content.Context;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.VolleyError;
@@ -20,11 +22,11 @@ import java.util.ArrayList;
 public class AdapterBoxOffice extends RecyclerView.Adapter<AdapterBoxOffice.ViewHolderBoxOffice> {
 
 
+    String image_url = "http://image.tmdb.org/t/p/w342";
     private ArrayList<Movie> listMovies = new ArrayList<>();
     private LayoutInflater layoutInflater;
     private VolleySingleton volleySingleton;
     private ImageLoader imageLoader;
-    String image_url = "http://image.tmdb.org/t/p/w342";
     private int previousPosition=0;
 
     public AdapterBoxOffice(Context context) {
@@ -48,6 +50,39 @@ public class AdapterBoxOffice extends RecyclerView.Adapter<AdapterBoxOffice.View
 
     @Override
     public void onBindViewHolder(ViewHolderBoxOffice holder, int position) {
+
+        if (position == 0) {
+            holder.layout.setBackgroundResource(R.color.background2);
+            holder.cardView.setBackgroundResource(R.color.background5);
+            holder.movieThumbnail.setBackgroundResource(R.color.background6);
+        } else if (position == 1) {
+            holder.layout.setBackgroundResource(R.color.background4);
+            holder.cardView.setBackgroundResource(R.color.background6);
+            holder.movieThumbnail.setBackgroundResource(R.color.accentColor);
+        } else if (position % 2 == 0) {
+            holder.layout.setBackgroundResource(R.color.primaryColor);
+            holder.cardView.setBackgroundResource(R.color.accentColor);
+            holder.movieThumbnail.setBackgroundResource(R.color.primaryColorDark);
+        } else if (position % 3 == 0) {
+            holder.layout.setBackgroundResource(R.color.background5);
+            holder.cardView.setBackgroundResource(R.color.primaryColorDark);
+            holder.movieThumbnail.setBackgroundResource(R.color.background2);
+        } else if (position % 4 == 0) {
+            holder.layout.setBackgroundResource(R.color.background2);
+            holder.cardView.setBackgroundResource(R.color.accentColor);
+            holder.movieThumbnail.setBackgroundResource(R.color.background5);
+        } else if (position % 5 == 0) {
+            holder.layout.setBackgroundResource(R.color.background7);
+            holder.cardView.setBackgroundResource(R.color.background6);
+            holder.movieThumbnail.setBackgroundResource(R.color.accentColor);
+        } else {
+            holder.layout.setBackgroundResource(R.color.background2);
+            holder.cardView.setBackgroundResource(R.color.background1);
+            holder.movieThumbnail.setBackgroundResource(R.color.background3);
+        }
+
+
+
         Movie currentMovie = listMovies.get(position);
         holder.movieTitle.setText(currentMovie.getTitle());
         String movieReleaseDate = currentMovie.getReleaseDateTheater();
@@ -116,6 +151,8 @@ public class AdapterBoxOffice extends RecyclerView.Adapter<AdapterBoxOffice.View
         TextView movieTitle;
         TextView movieReleaseDate;
         RatingBar movieAudienceScore;
+        CardView cardView;
+        RelativeLayout layout;
 
         public ViewHolderBoxOffice(View itemView) {
             super(itemView);
@@ -123,6 +160,8 @@ public class AdapterBoxOffice extends RecyclerView.Adapter<AdapterBoxOffice.View
             movieTitle = (TextView) itemView.findViewById(R.id.movieTitle);
             movieReleaseDate = (TextView) itemView.findViewById(R.id.movieReleaseDate);
             movieAudienceScore = (RatingBar) itemView.findViewById(R.id.movieAudienceScore);
+            cardView = (CardView) itemView.findViewById(R.id.card_view);
+            layout = (RelativeLayout) itemView.findViewById(R.id.layout_relative);
         }
     }
 
