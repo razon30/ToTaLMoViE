@@ -653,7 +653,7 @@ public class Movie_Details extends AppCompatActivity {
                                 releaseDate = currentmovie.getString("release_date");
                                 audienceScore = currentmovie.getInt("vote_average");
                                 synopsis = currentmovie.getString("overview");
-                                urlThumbnail = currentmovie.getString("poster_path");
+                                urlThumbnail = currentmovie.getString("backdrop_path");
 
 
                                 Movie movie = new Movie(id, title, releaseDate, audienceScore, synopsis, urlThumbnail);

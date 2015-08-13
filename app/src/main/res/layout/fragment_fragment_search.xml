@@ -1,6 +1,8 @@
-<android.support.v4.widget.NestedScrollView
+<ScrollView
 
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:cardview="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -10,404 +12,484 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/see_more_popular_movie"
+        <android.support.v7.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="7dp"
-            android:background="@color/switch_thumb_normal_material_light"
-            android:gravity="center_vertical"
-            android:paddingTop="8dp"
-            android:paddingBottom="10dp"
-            android:text="Popular Movies"
-            android:textColor="#D2691E"
-            android:textSize="18sp"
-            />
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="5dp">
+            android:background="#FFFFFF"
+            card_view:cardCornerRadius="14.5dp"
+            card_view:cardElevation="14.5dp"
+            card_view:cardPreventCornerOverlap="true"
+            cardview:contentPaddingBottom="14.5dp"
+            android:padding="8dp"
+            android:layout_marginBottom="35dp">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/search_fragment_popular_two"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    />
-
                 <TextView
-                    android:id="@+id/text_search_two"
+                    android:id="@+id/see_more_popular_movie"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
+                    android:background="@color/switch_thumb_normal_material_light"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="7dp"
+                    android:paddingTop="8dp"
+                    android:text="Popular Movies"
+                    android:textColor="#D2691E"
+                    android:textSize="24sp"
                     />
 
-            </LinearLayout>
 
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/search_fragment_popular_three"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    />
-
-                <TextView
-                    android:id="@+id/text_search_three"
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    />
+                    android:layout_marginBottom="5dp"
+                    android:orientation="horizontal">
 
-            </LinearLayout>
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
+                        <ImageView
+                            android:id="@+id/search_fragment_popular_two"
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            />
 
-                <ImageView
-                    android:id="@+id/search_fragment_popular_one"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    />
+                        <TextView
+                            android:id="@+id/text_search_two"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/search_fragment_popular_three"
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/text_search_three"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/search_fragment_popular_one"
+                            android:layout_width="match_parent"
+                            android:layout_height="100dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/text_search_one"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
 
                 <TextView
-                    android:id="@+id/text_search_one"
+                    android:id="@+id/see_more_popular_movies"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
+                    android:layout_height="35dp"
+                    android:background="@color/switch_thumb_normal_material_light"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="7dp"
+                    android:text="See More Popular Movies>>"
+                    android:textColor="@color/primary_dark_material_dark"
+                    android:textSize="14sp"
+
                     />
-
             </LinearLayout>
+        </android.support.v7.widget.CardView>
 
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/see_more_popular_movies"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="7dp"
-            android:background="@color/switch_thumb_normal_material_light"
-            android:gravity="center_vertical"
+        <android.support.v7.widget.CardView
             android:layout_marginBottom="35dp"
-            android:textColor="@color/primary_dark_material_dark"
-            android:textSize="14sp"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp"
-            android:text="See More Popular Movies>>"
-
-            />
-
-        <TextView
-            android:id="@+id/box_office_imd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="7dp"
-            android:background="@color/switch_thumb_normal_material_light"
-            android:gravity="center_vertical"
-            android:paddingBottom="8dp"
-            android:paddingTop="5dp"
-            android:text="Popular Persons"
-            android:textColor="#D2691E"
-            android:textSize="18sp"
-            />
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:background="#FFFFFF"
+            card_view:cardCornerRadius="14.5dp"
+            card_view:cardElevation="14.5dp"
+            card_view:cardPreventCornerOverlap="true"
+            cardview:contentPaddingBottom="14.5dp"
+            android:padding="8dp">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/search_fragment_popular_person_two"
-                    android:layout_width="match_parent"
-                    android:layout_height="90dp"
-                    />
-
                 <TextView
-                    android:id="@+id/text_search_popular_person_two"
+                    android:id="@+id/box_office_imd"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
+                    android:background="@color/switch_thumb_normal_material_light"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="7dp"
+                    android:paddingTop="5dp"
+                    android:text="Popular Persons"
+                    android:textColor="#D2691E"
+                    android:textSize="24sp"
+                    />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/search_fragment_popular_person_two"
+                            android:layout_width="match_parent"
+                            android:layout_height="90dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/text_search_popular_person_two"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/search_fragment_popular_person_three"
+                            android:layout_width="match_parent"
+                            android:layout_height="90dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/text_search_popular_person_three"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            />
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/search_fragment_popular_person_one"
+                            android:layout_width="match_parent"
+                            android:layout_height="90dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/text_search_popular_person_one"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/box_office_imdb"
+                    android:layout_width="match_parent"
+                    android:layout_height="35dp"
+
+                    android:background="@color/switch_thumb_normal_material_light"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="7dp"
+
+                    android:text="More Popular Persons>>"
+                    android:textColor="@color/abc_primary_text_disable_only_material_light"
+                    android:textSize="14sp"
                     />
 
             </LinearLayout>
+        </android.support.v7.widget.CardView>
 
+        <android.support.v7.widget.CardView
+            android:layout_marginBottom="35dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            card_view:cardCornerRadius="14.5dp"
+            card_view:cardElevation="14.5dp"
+            card_view:cardPreventCornerOverlap="true"
+            cardview:contentPaddingBottom="14.5dp"
+            android:padding="8dp">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/search_fragment_popular_person_three"
+                <TextView
+                    android:id="@+id/trailer_imd"
                     android:layout_width="match_parent"
-                    android:layout_height="90dp"
+                    android:layout_height="wrap_content"
+                    android:background="@color/switch_thumb_normal_material_light"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="7dp"
+                    android:paddingTop="8dp"
+                    android:text="TRAILERS (IMDB)"
+                    android:textColor="#D2691E"
+                    android:textSize="18sp"
+                    />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/search_fragment_trailer_one"
+                            android:layout_width="match_parent"
+                            android:layout_height="90dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/text_trailer_one"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            />
+
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/search_fragment_trailer_two"
+                            android:layout_width="match_parent"
+                            android:layout_height="90dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/text_trailer_two"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            />
+
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <ImageView
+                            android:id="@+id/search_fragment_trailer_three"
+                            android:layout_width="match_parent"
+                            android:layout_height="90dp"
+                            />
+
+                        <TextView
+                            android:id="@+id/text_trailer_three"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/trailer_imdb"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
+                    android:background="@color/switch_thumb_normal_material_light"
+                    android:gravity="center_vertical"
+                    android:paddingLeft="7dp"
+                    android:paddingTop="3dp"
+                    android:text="More Trailers>>"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_marginBottom="35dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            card_view:cardCornerRadius="14.5dp"
+            card_view:cardElevation="14.5dp"
+            card_view:cardPreventCornerOverlap="true"
+            cardview:contentPaddingBottom="14.5dp"
+            android:padding="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/top_ten"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="30dp"
+                    android:background="@color/switch_thumb_normal_material_light"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="8dp"
+                    android:paddingLeft="7dp"
+                    android:paddingTop="8dp"
+                    android:text="TOP 10 (IMDB)"
+                    android:textColor="#D2691E"
+                    android:textSize="18sp"
                     />
 
                 <TextView
-                    android:id="@+id/text_search_popular_person_three"
+                    android:id="@+id/bottom_ten"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
+                    android:layout_marginBottom="30dp"
+                    android:background="@color/switch_thumb_normal_material_light"
+                    android:gravity="center_vertical"
+
+                    android:paddingLeft="7dp"
+                    android:paddingTop="8dp"
+                    android:text="BOTTOM 10 (IMDB)"
+                    android:textColor="#D2691E"
+                    android:textSize="18sp"
                     />
 
             </LinearLayout>
+        </android.support.v7.widget.CardView>
 
+        <android.support.v7.widget.CardView
+            android:layout_marginBottom="35dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#FFFFFF"
+            card_view:cardCornerRadius="14.5dp"
+            card_view:cardElevation="14.5dp"
+            card_view:cardPreventCornerOverlap="true"
+            cardview:contentPaddingBottom="14.5dp"
+            android:padding="8dp">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/search_fragment_popular_person_one"
-                    android:layout_width="match_parent"
-                    android:layout_height="90dp"
-                    />
-
                 <TextView
-                    android:id="@+id/text_search_popular_person_one"
+                    android:id="@+id/btn_search_genre_list"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginBottom="3dp"
+                    android:layout_marginTop="5dp"
+                    android:gravity="bottom"
+                    android:paddingLeft="15dp"
+                    android:text="Movies By Genre:"
+                    android:textColor="#DAA520"
+                    android:textSize="18sp"
+                    android:textStyle="bold"/>
+
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    />
+                    android:layout_marginBottom="20dp"
+                    android:orientation="horizontal">
 
+                    <ListView
+                        android:id="@+id/search_genre_list1"
+                        android:layout_width="0dp"
+                        android:layout_height="350dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        />
+
+                    <ListView
+                        android:id="@+id/search_genre_list2"
+                        android:layout_width="0dp"
+                        android:layout_height="350dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        />
+
+                    <ListView
+                        android:id="@+id/search_genre_list3"
+                        android:layout_width="0dp"
+                        android:layout_height="350dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        />
+
+
+                </LinearLayout>
             </LinearLayout>
+        </android.support.v7.widget.CardView>
 
 
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/box_office_imdb"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:paddingLeft="7dp"
-            android:background="@color/switch_thumb_normal_material_light"
-            android:gravity="center_vertical"
-            android:paddingBottom="8dp"
-            android:paddingTop="5dp"
-            android:text="More Popular Persons>>"
-            android:textColor="@color/abc_primary_text_disable_only_material_light"
-            android:textSize="14sp"
-            />
-
-
-
-        <TextView
-            android:id="@+id/trailer_imd"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="7dp"
-            android:background="@color/switch_thumb_normal_material_light"
-            android:gravity="center_vertical"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp"
-            android:text="TRAILERS (IMDB)"
-            android:textColor="#D2691E"
-            android:textSize="18sp"
-            />
-
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/search_fragment_trailer_one"
-                    android:layout_width="match_parent"
-                    android:layout_height="90dp"
-                    />
-
-                <TextView
-                    android:id="@+id/text_trailer_one"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    />
-
-
-            </LinearLayout>
-
-
-
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/search_fragment_trailer_two"
-                    android:layout_width="match_parent"
-                    android:layout_height="90dp"
-                    />
-
-                <TextView
-                    android:id="@+id/text_trailer_two"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    />
-
-
-            </LinearLayout>
-
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:id="@+id/search_fragment_trailer_three"
-                    android:layout_width="match_parent"
-                    android:layout_height="90dp"
-                    />
-
-                <TextView
-                    android:id="@+id/text_trailer_three"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
-                    />
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-        <TextView
-            android:id="@+id/trailer_imdb"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingLeft="7dp"
-            android:layout_marginBottom="30dp"
-            android:background="@color/switch_thumb_normal_material_light"
-            android:gravity="center_vertical"
-            android:paddingBottom="8dp"
-            android:paddingTop="3dp"
-            android:text="More Trailers>>"
-            android:textColor="#000000"
-            android:textSize="14sp"
-            />
-
-
-        <TextView
-            android:id="@+id/top_ten"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:paddingLeft="7dp"
-            android:background="@color/switch_thumb_normal_material_light"
-            android:gravity="center_vertical"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp"
-            android:text="TOP 10 (IMDB)"
-            android:textColor="#D2691E"
-            android:textSize="18sp"
-            />
-
-        <TextView
-            android:id="@+id/bottom_ten"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="30dp"
-            android:paddingLeft="7dp"
-            android:background="@color/switch_thumb_normal_material_light"
-            android:gravity="center_vertical"
-            android:paddingBottom="8dp"
-            android:paddingTop="8dp"
-            android:text="BOTTOM 10 (IMDB)"
-            android:textColor="#D2691E"
-            android:textSize="18sp"
-            />
-
-
-    <TextView
-        android:id="@+id/btn_search_genre_list"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_marginBottom="3dp"
-        android:paddingLeft="15dp"
-        android:layout_marginTop="5dp"
-        android:gravity="bottom"
-        android:text="Movies By Genre:"
-        android:textColor="#DAA520"
-        android:textSize="18sp"
-        android:textStyle="bold"/>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginBottom="20dp">
-
-        <ListView
-            android:id="@+id/search_genre_list1"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="350dp"
-            android:layout_marginLeft="5dp"
-            />
-
-        <ListView
-            android:id="@+id/search_genre_list2"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="350dp"
-            android:layout_marginLeft="5dp"
-            />
-
-        <ListView
-            android:id="@+id/search_genre_list3"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="350dp"
-            android:layout_marginLeft="5dp"
-            />
-
-
-
-    </LinearLayout>
-
-
-    <!--<LinearLayout-->
+        <!--<LinearLayout-->
         <!--android:layout_width="0dp"-->
         <!--android:layout_height="wrap_content"-->
         <!--android:layout_weight="1"-->
@@ -417,16 +499,16 @@
         <!-- -->
 
         <!--<View-->
-            <!--android:id="@+id/view1"-->
-            <!--android:layout_width="225dp"-->
-            <!--android:layout_height="3dp"-->
-            <!--android:background="#FFA000"/>-->
+        <!--android:id="@+id/view1"-->
+        <!--android:layout_width="225dp"-->
+        <!--android:layout_height="3dp"-->
+        <!--android:background="#FFA000"/>-->
 
 
         <!-- -->
         <!--</ListView>-->
 
-    <!--</LinearLayout>-->
+        <!--</LinearLayout>-->
     </LinearLayout>
 
-</android.support.v4.widget.NestedScrollView>
+</ScrollView>

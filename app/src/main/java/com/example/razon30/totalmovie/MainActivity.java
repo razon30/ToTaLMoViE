@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
 //        }
 
 
-        setting_floating_action_button_and_menu();
+      //  setting_floating_action_button_and_menu();
 
 
 

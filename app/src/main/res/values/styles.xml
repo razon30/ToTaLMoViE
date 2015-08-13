@@ -37,6 +37,9 @@
 
     </style>
 
-
+    <style name="menu_labels_style">
+        <item name="android:background">@drawable/refresh</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
 
 </resources>

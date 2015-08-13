@@ -184,7 +184,7 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                                 releaseDate = currentmovie.getString("release_date");
                                 audienceScore = currentmovie.getInt("vote_average");
                                 synopsis = currentmovie.getString("overview");
-                                urlThumbnail = currentmovie.getString("poster_path");
+                                urlThumbnail = currentmovie.getString("backdrop_path");
 
 
                                 Movie movie = new Movie(id, title, releaseDate, audienceScore, synopsis, urlThumbnail);
@@ -195,9 +195,9 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                             }
 
 
-                            String image1 = jsonArray.getJSONObject(0).getString("backdrop_path");
-                            String image2 = jsonArray.getJSONObject(1).getString("backdrop_path");
-                            String image3 = jsonArray.getJSONObject(2).getString("backdrop_path");
+                            String image1 = jsonArray.getJSONObject(0).getString("poster_path");
+                            String image2 = jsonArray.getJSONObject(1).getString("poster_path");
+                            String image3 = jsonArray.getJSONObject(2).getString("poster_path");
 
 
                             String text1 = jsonArray.getJSONObject(0).getString("title");
@@ -209,12 +209,9 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                             id3 = jsonArray.getJSONObject(2).getString("id");
 
 
-                            Picasso.with(getActivity()).load(image_url + image1).resize(120, 100)
-                                    .into(view1);
-                            Picasso.with(getActivity()).load(image_url + image2).resize(120, 100)
-                                    .into(view2);
-                            Picasso.with(getActivity()).load(image_url + image3).resize(120, 100)
-                                    .into(view3);
+                            Picasso.with(getActivity()).load(image_url + image1).into(view1);
+                            Picasso.with(getActivity()).load(image_url + image2).into(view2);
+                            Picasso.with(getActivity()).load(image_url + image3).into(view3);
 
                             tv1.setText(text1);
                             tv2.setText(text2);

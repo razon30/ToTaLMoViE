@@ -3,8 +3,11 @@ package com.example.razon30.totalmovie;
 
 import android.content.Context;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,10 +18,13 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
 
@@ -29,7 +35,7 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class FragmentBoxOffice extends android.support.v4.app.Fragment implements Sort,
-        BoxOfficeMoviesLoadedListener,SwipeRefreshLayout.OnRefreshListener{
+        BoxOfficeMoviesLoadedListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -93,9 +99,11 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_fragment_box_office, container, false);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe);
+      //  swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe);
 
-        swipeRefreshLayout.setOnRefreshListener(this);
+       // swipeRefreshLayout.setOnRefreshListener(this);
+
+        workingOnFAB(view);
 
         listMovieHits = (RecyclerView) view.findViewById(R.id.box_office);
         listMovieHits.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -122,15 +130,14 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
         listMovieHits.addOnItemTouchListener(new RecyclerTOuchListener(getActivity(), listMovieHits, new ClickListener() {
             @Override
             public void onCLick(View v, int position) {
-              //  Toast.makeText(getActivity(), "Touched on: " + position, Toast.LENGTH_LONG)
-              // .show();
+                //  Toast.makeText(getActivity(), "Touched on: " + position, Toast.LENGTH_LONG)
+                // .show();
 
                 Movie movie = listMovies.get(position);
                 String id = String.valueOf(movie.getId());
 
                 Intent intent = new Intent(getActivity(), Movie_Details.class);
-                intent.putExtra("tv",id);
-
+                intent.putExtra("tv", id);
 
 
                 startActivity(intent);
@@ -141,8 +148,8 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
             @Override
             public void onLongClick(View v, int position) {
 
-              //  Toast.makeText(getActivity(), "Long Touched on: " + position, Toast.LENGTH_LONG)
-                   //     .show();
+                //  Toast.makeText(getActivity(), "Long Touched on: " + position, Toast.LENGTH_LONG)
+                //     .show();
 
             }
         }));
@@ -150,6 +157,48 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
 
 
         return view;
+    }
+
+    private void workingOnFAB(final View view) {
+        FloatingActionsMenu menuMultipleActions = (FloatingActionsMenu) view.findViewById(R.id
+                .multiple_actions);
+
+       // menuMultipleActions.setBackgroundResource(R.drawable.refresh);
+
+        com.getbase.floatingactionbutton.FloatingActionButton action_a = (com.getbase
+                .floatingactionbutton.FloatingActionButton) view.findViewById(R.id.action_a);
+        final RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.layout);
+
+        action_a.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               Snackbar.make(layout,"Sorting Alphabetically",Snackbar.LENGTH_SHORT).show();
+                sortByName();
+            }
+        });
+
+        com.getbase.floatingactionbutton.FloatingActionButton action_b = (com.getbase
+                .floatingactionbutton.FloatingActionButton) view.findViewById(R.id.action_b);
+        action_b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
+                Snackbar.make(layout,"Sorting By Date",Snackbar.LENGTH_SHORT).show();
+                sortByDate();
+            }
+        });
+
+        com.getbase.floatingactionbutton.FloatingActionButton action_c = (com.getbase
+                .floatingactionbutton.FloatingActionButton) view.findViewById(R.id.action_c);
+        action_c.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(layout, "Sorting By Ratings", Snackbar.LENGTH_SHORT)
+                        .show();
+                sortByRatings();
+            }
+        });
+
     }
 
     @Override
@@ -188,11 +237,11 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
     @Override
     public void onBoxOfficeMoviesLoaded(ArrayList<Movie> listMovies) {
 
-        if (swipeRefreshLayout.isRefreshing())
-        {
-            swipeRefreshLayout.setRefreshing(false);
-            adapterBoxOffice.notifyDataSetChanged();
-        }
+//        if (swipeRefreshLayout.isRefreshing())
+//        {
+//            swipeRefreshLayout.setRefreshing(false);
+//            adapterBoxOffice.notifyDataSetChanged();
+//        }
 
         adapterBoxOffice.setMovies(listMovies);
         adapterBoxOffice.notifyDataSetChanged();
@@ -200,13 +249,6 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
     }
 
 
-    @Override
-    public void onRefresh() {
-
-        new TaskLoadMoviesBoxOffice(this).execute();
-        adapterBoxOffice.notifyDataSetChanged();
-
-    }
 
     public static interface ClickListener{
 

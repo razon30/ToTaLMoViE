@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,15 +14,17 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
 
 
 public class FragmentUpcoming extends android.support.v4.app.Fragment implements Sort,
-        UpcomingMoviesLoadedListener,SwipeRefreshLayout.OnRefreshListener {
+        UpcomingMoviesLoadedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -45,7 +48,7 @@ public class FragmentUpcoming extends android.support.v4.app.Fragment implements
     public MovieSorter movieSorter = new MovieSorter();
     private static final String STATE_MOVIE_UPCOMING = "state_movie_upcoming";
 
-    private SwipeRefreshLayout swipeRefreshLayout;
+   // private SwipeRefreshLayout swipeRefreshLayout;
 
     public static FragmentUpcoming newInstance(String param1, String param2) {
         FragmentUpcoming fragment = new FragmentUpcoming();
@@ -72,9 +75,11 @@ public class FragmentUpcoming extends android.support.v4.app.Fragment implements
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_fragment_upcoming, container, false);
 
-        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_upcoming);
+//        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_upcoming);
+//
+//        swipeRefreshLayout.setOnRefreshListener(this);
 
-        swipeRefreshLayout.setOnRefreshListener(this);
+        workingOnFAB(view);
 
         listMovieHits = (RecyclerView) view.findViewById(R.id.upcoming);
         listMovieHits.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -165,23 +170,69 @@ public class FragmentUpcoming extends android.support.v4.app.Fragment implements
     @Override
     public void onUpcomingMoviesLoaded(ArrayList<Movie> listMovies) {
 
-        if (swipeRefreshLayout.isRefreshing())
-        {
-            swipeRefreshLayout.setRefreshing(false);
-            adapterBoxOffice.notifyDataSetChanged();
-        }
+//        if (swipeRefreshLayout.isRefreshing())
+//        {
+//            swipeRefreshLayout.setRefreshing(false);
+//            adapterBoxOffice.notifyDataSetChanged();
+//        }
 
         adapterBoxOffice.setMovies(listMovies);
 
     }
 
 
-    @Override
-    public void onRefresh() {
+    private void workingOnFAB(final View view) {
+        FloatingActionsMenu menuMultipleActions = (FloatingActionsMenu) view.findViewById(R.id
+                .multiple_actions);
 
-        new TaskLoadMoviesUpcoming(this).execute();
+        // menuMultipleActions.setBackgroundResource(R.drawable.refresh);
+
+        com.getbase.floatingactionbutton.FloatingActionButton action_a = (com.getbase
+                .floatingactionbutton.FloatingActionButton) view.findViewById(R.id.action_a);
+        final RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.layout);
+
+        action_a.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(layout, "Sorting Alphabetically", Snackbar.LENGTH_SHORT).show();
+                sortByName();
+            }
+        });
+
+        com.getbase.floatingactionbutton.FloatingActionButton action_b = (com.getbase
+                .floatingactionbutton.FloatingActionButton) view.findViewById(R.id.action_b);
+        action_b.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
+                Snackbar.make(layout,"Sorting By Date",Snackbar.LENGTH_SHORT).show();
+                sortByDate();
+            }
+        });
+
+        com.getbase.floatingactionbutton.FloatingActionButton action_c = (com.getbase
+                .floatingactionbutton.FloatingActionButton) view.findViewById(R.id.action_c);
+        action_c.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Snackbar.make(layout, "Sorting By Ratings", Snackbar.LENGTH_SHORT).setText
+                        ("Hocce")
+                        .show();
+                sortByRatings();
+            }
+        });
 
     }
+
+
+
+
+//    @Override
+//    public void onRefresh() {
+//
+//        new TaskLoadMoviesUpcoming(this).execute();
+//
+//    }
 
     public static interface ClickListener{
 

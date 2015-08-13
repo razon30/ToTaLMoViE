@@ -10,7 +10,9 @@
         <item name="android:windowTransitionBackgroundFadeDuration">5000</item>
 
     </style>
-
-
+    <style name="menu_labels_style">
+        <item name="android:background">@drawable/selector_button_red</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
 
 </resources>
