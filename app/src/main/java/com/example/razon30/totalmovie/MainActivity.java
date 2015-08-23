@@ -1,16 +1,18 @@
 package com.example.razon30.totalmovie;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
-import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.speech.RecognizerIntent;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.TabLayout;
@@ -24,8 +26,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Base64;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -38,6 +38,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -54,6 +55,7 @@ import com.facebook.ProfileTracker;
 import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
+import com.facebook.login.widget.LoginButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
 import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
@@ -63,8 +65,6 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -99,6 +99,12 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
     AccessTokenTracker accessTokenTracker;
     ProfileTracker profileTracker;
     String profile_link;
+    RelativeLayout imageCoverLayout;
+    LinearLayout logInDemoLayout;
+    LoginButton button;
+    Button logout, logIn;
+    boolean login = false;
+
     //for drawer menu
     LinearLayout drawer_discover, drawer_box, drawer_upcoming, drawer_watch, drawer_wish;
     DBMovies dbMovies;
@@ -112,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
     //FLoating Button
     FloatingActionButton actionButton;
     FloatingActionMenu actionMenu;
+    SharedPreferences sharedPreferences;
     //for search
     private SearchBox search;
     private Toolbar toolbar;
@@ -131,6 +138,58 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
         setContentView(R.layout.activity_main);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
+        //progressDialouge();
+
+
+        if (!isNetworkAvailable()) {
+
+            AlertDialog.Builder builderAlertDialog = new AlertDialog.Builder(
+                    MainActivity.this);
+
+            builderAlertDialog.setTitle("Connection Failed")
+                    .setMessage("Try for connecting?")
+                    .setIcon(R.drawable.ic_action_warning)
+                    .setPositiveButton("Setting", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+
+                        }
+                    })
+                    .setNegativeButton("Skip", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .show();
+
+
+//            new MaterialDialog.Builder(this)
+//                    .title(R.string.title)
+//                    .content(R.string.content)
+//                    .positiveText(R.string.agree)
+//                    .negativeText(R.string.disagree)
+//                    .callback(new MaterialDialog.ButtonCallback() {
+//                        @Override
+//                        public void onPositive(MaterialDialog dialog) {
+//
+//                            startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+//
+//                        }
+//
+//                        @Override
+//                        public void onNegative(MaterialDialog dialog) {
+//                        }
+//                    })
+//                    .show();
+
+        }
+
+
+        sharedPreferences = PreferenceManager
+                .getDefaultSharedPreferences(MainActivity.this);
         //for search
         search = (SearchBox) findViewById(R.id.searchbox);
         // search.enableVoiceRecognition(this);
@@ -142,14 +201,37 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                openSearch();
+
+                dbMovies = new DBMovies(MainActivity.this);
+
+                if (item.getItemId() == R.id.action_search) {
+                    openSearch();
+                }
+                if (item.getItemId() == R.id.refresh) {
+                    Intent intent = new Intent(MainActivity.this, MainActivity.class);
+                    startActivity(intent);
+                }
+                if (item.getItemId() == R.id.clearWatch) {
+
+                    dbMovies.deleteAllWatch();
+                    Toast.makeText(MainActivity.this, "Watch List cleared", Toast.LENGTH_LONG).show();
+                }
+                if (item.getItemId() == R.id.clearWish) {
+                    dbMovies.deleteAllWish();
+                    Toast.makeText(MainActivity.this, "Wish List cleared", Toast.LENGTH_LONG).show();
+                }
+                if (item.getItemId() == R.id.about) {
+                    Intent intent = new Intent(MainActivity.this, Credit.class);
+                    startActivity(intent);
+                }
+
                 return true;
             }
         });
 
         worksOnDrawer();
         worksOnDrawerHeader();
-        worksOnDrawerMenu();
+        // worksOnDrawerMenu();
 
 
         //toolbar setting
@@ -422,35 +504,106 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
         });
 
 
-
     }
 
     private void worksOnDrawerHeader() {
 
+
         LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList
                 ("public_profile", "user_friends"));
+        //Profile profile = Profile.getCurrentProfile();
+
+//        logout = (Button) findViewById(R.id.logout);
+//        logIn = (Button) findViewById(R.id.logIn);
+//        button = (LoginButton) findViewById(R.id.login_button);
+//        button.setReadPermissions("user_friends");
+//        button.setReadPermissions("public_profile");
+//        button.setVisibility(button.GONE);
+
+        imageCoverLayout = (RelativeLayout) findViewById(R.id.imageHeaderLayout);
+        // logInDemoLayout = (LinearLayout) findViewById(R.id.logInCoverLayout);
+
 
         drawer_cover_image = (ImageView) findViewById(R.id.fb_cover_image);
         drawer_profile_image = (ImageView) findViewById(R.id.fb_profile_image);
         drawer_name = (TextView) findViewById(R.id.fb_profile_name);
         drawer_profile = (TextView) findViewById(R.id.fb_profile);
 
-        try {
-            PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.example.razon30.totalmovie",
-                    PackageManager.GET_SIGNATURES);
-            for (android.content.pm.Signature signature : info.signatures) {
-                MessageDigest md = MessageDigest.getInstance("SHA");
-                md.update(signature.toByteArray());
-                Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-                // Toast.makeText(MainActivity.this,"KeyHash: "+Base64.encodeToString(md.digest(),
-                //       Base64.DEFAULT),Toast.LENGTH_SHORT).show();
-            }
-        } catch (PackageManager.NameNotFoundException e) {
+//        if (!sharedPreferences.contains("log")) {
+//
+//
+//            displayMessage(profile);
+//        }
 
-        } catch (NoSuchAlgorithmException e) {
+//
+//        try {
+//            PackageInfo info = getPackageManager().getPackageInfo(
+//                    "com.example.razon30.totalmovie",
+//                    PackageManager.GET_SIGNATURES);
+//            for (android.content.pm.Signature signature : info.signatures) {
+//                MessageDigest md = MessageDigest.getInstance("SHA");
+//                md.update(signature.toByteArray());
+//                Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+//                // Toast.makeText(MainActivity.this,"KeyHash: "+Base64.encodeToString(md.digest(),
+//                //       Base64.DEFAULT),Toast.LENGTH_SHORT).show();
+//            }
+//        } catch (PackageManager.NameNotFoundException e) {
+//
+//        } catch (NoSuchAlgorithmException e) {
+//
+//        }
 
-        }
+//        logIn.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                LoginManager.getInstance().logInWithReadPermissions(MainActivity.this,Arrays.asList
+//                        ("public_profile", "user_friends"));
+//
+//                SharedPreferences sharedPreferences = PreferenceManager
+//                        .getDefaultSharedPreferences(MainActivity.this);
+//                login = false;
+//                sharedPreferences.edit().putBoolean("log", login).apply();
+//            }
+//        });
+//
+//        logout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                LoginManager.getInstance().logOut();
+//
+//                SharedPreferences sharedPreferences = PreferenceManager
+//                        .getDefaultSharedPreferences(MainActivity.this);
+//                login = true;
+//                sharedPreferences.edit().putBoolean("log", login).apply();
+//
+//                Intent intent = new Intent(MainActivity.this, MainActivity.class);
+//                startActivity(intent);
+//
+//            }
+//        });
+
+//        button.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
+//            @Override
+//            public void onSuccess(LoginResult loginResult) {
+//
+//                // logInDemoLayout.setVisibility(logInDemoLayout.GONE);
+//                accessToken = loginResult.getAccessToken();
+//                Profile profile = Profile.getCurrentProfile();
+//                displayMessage(profile);
+//            }
+//
+//            @Override
+//            public void onCancel() {
+//                // App code
+//                drawer_cover_image.setBackgroundResource(R.drawable.default_image);
+//            }
+//
+//            @Override
+//            public void onError(FacebookException exception) {
+//                // App code
+//            }
+//        });
 
 
         LoginManager.getInstance().registerCallback(callbackManager,
@@ -576,19 +729,19 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
         mDrawer.setNavigationItemSelectedListener(this);
 
 
-        ColorStateList textStateList = new ColorStateList(
-                new int[][]{
-                        new int[]{android.R.attr.state_checked},
-                        new int[]{}
-                },
-                new int[]{
-                        getResources().getColor(R.color.primaryColor),
-                        getResources().getColor(R.color.accentColor)
-                }
-        );
-
-        // mDrawer.setItemIconTintList(iconStateList);
-        mDrawer.setItemTextColor(textStateList);
+//        ColorStateList textStateList = new ColorStateList(
+//                new int[][]{
+//                        new int[]{android.R.attr.state_checked},
+//                        new int[]{}
+//                },
+//                new int[]{
+//                        getResources().getColor(R.color.primaryColor),
+//                        getResources().getColor(R.color.primary_color)
+//                }
+//        );
+//
+//        // mDrawer.setItemIconTintList(iconStateList);
+//        mDrawer.setItemTextColor(textStateList);
 
         //drawer 1st time or not
         if (!didUserSeeDrawer()) {
@@ -613,6 +766,14 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
 
     }
 
+    private void markLogInTrue() {
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        login = true;
+        sharedPreferences.edit().putBoolean("log", login).apply();
+
+    }
+
     private void showDrawer() {
 
         drawerLayout.openDrawer(GravityCompat.START);
@@ -622,7 +783,14 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
     private boolean didUserSeeDrawer() {
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        mUserSawDrawer = sharedPreferences.getBoolean(FIRST_TIME, false);
+        login = sharedPreferences.getBoolean("log", false);
+        return mUserSawDrawer;
+    }
+
+    private boolean markLoginFalse() {
+
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mUserSawDrawer = sharedPreferences.getBoolean("log", false);
         return mUserSawDrawer;
     }
 
@@ -639,26 +807,174 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
 
         if (menuItem.getItemId() == R.id.drawer_discover) {
 
-            // drawerLayout.closeDrawer(GravityCompat.START);
+            drawerLayout.closeDrawer(GravityCompat.START);
+            viewPager.setCurrentItem(0);
         }
         if (menuItem.getItemId() == R.id.drawe_box_office) {
 
-            // drawerLayout.closeDrawer(GravityCompat.START);
+            drawerLayout.closeDrawer(GravityCompat.START);
+            viewPager.setCurrentItem(1);
         }
 
         if (menuItem.getItemId() == R.id.drawer_upcomin) {
 
-            // drawerLayout.closeDrawer(GravityCompat.START);
+            drawerLayout.closeDrawer(GravityCompat.START);
+            viewPager.setCurrentItem(2);
 
         }
         if (menuItem.getItemId() == R.id.drawer_watch_list) {
+            dbMovies = new DBMovies(MainActivity.this);
 
-            Toast.makeText(MainActivity.this, "clicked on item 0", Toast.LENGTH_LONG).show();
+            View view1 = getLayoutInflater().inflate(R.layout.watch_wish_list,
+                    null);
+            ListView listView = (ListView) view1.findViewById(R.id.watch_list);
+            final ArrayList<Movie> watch_list = dbMovies.searchWatch();
+            BaseAdapter adapter = new BaseAdapter() {
+                @Override
+                public int getCount() {
+                    return watch_list.size();
+                }
+
+                @Override
+                public Object getItem(int position) {
+                    return watch_list.get(position);
+                }
+
+                @Override
+                public long getItemId(int position) {
+                    return position;
+                }
+
+                @Override
+                public View getView(int position, View view, ViewGroup parent) {
+
+                    view = getLayoutInflater().inflate(R.layout.watch_wish_item,
+                            null);
+                    TextView textView = (TextView) view.findViewById(R.id.watchwltv);
+
+                    textView.setText(watch_list.get(position).getText());
+
+                    return view;
+                }
+            };
+
+            listView.setAdapter(adapter);
+
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    String m_id = watch_list.get(position).getAuthor();
+                    // String link = movie.getVideoURL();
+
+
+                    if (m_id != null && m_id.length() != 0) {
+                        // startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
+                        Intent intent = new Intent(MainActivity.this, Movie_Details.class);
+                        intent.putExtra("tv", m_id);
+                        startActivity(intent);
+                    } else {
+                        return;
+                    }
+
+                }
+            });
+
+
+            AlertDialog.Builder builderAlertDialog = new AlertDialog.Builder(
+                    MainActivity.this);
+
+            if (watch_list == null || watch_list.size() == 0) {
+                Toast.makeText(MainActivity.this, watch_list.toString() + "No Watch List " +
+                        "found", Toast
+                        .LENGTH_LONG).show();
+
+
+            } else {
+
+                builderAlertDialog
+                        .setView(view1)
+                        .show();
+            }
         }
 
         if (menuItem.getItemId() == R.id.drawer_wish_list) {
 
-            Toast.makeText(MainActivity.this, "clicked on item 0", Toast.LENGTH_LONG).show();
+            dbMovies = new DBMovies(MainActivity.this);
+            View view1 = getLayoutInflater().inflate(R.layout.watch_wish_list,
+                    null);
+            ListView listView = (ListView) view1.findViewById(R.id.watch_list);
+            final ArrayList<Movie> watch_list = dbMovies.searchWish();
+            BaseAdapter adapter = new BaseAdapter() {
+                @Override
+                public int getCount() {
+                    return watch_list.size();
+                }
+
+                @Override
+                public Object getItem(int position) {
+                    return watch_list.get(position);
+                }
+
+                @Override
+                public long getItemId(int position) {
+                    return position;
+                }
+
+                @Override
+                public View getView(int position, View view, ViewGroup parent) {
+
+                    view = getLayoutInflater().inflate(R.layout.watch_wish_item,
+                            null);
+
+                    TextView textView = (TextView) view.findViewById(R.id.watchwltv);
+
+                    textView.setText(watch_list.get(position).getText());
+
+                    return view;
+                }
+            };
+
+            listView.setAdapter(adapter);
+
+
+            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    String m_id = watch_list.get(position).getAuthor();
+                    // String link = movie.getVideoURL();
+
+
+                    if (m_id != null && m_id.length() != 0) {
+                        // startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(link)));
+                        Intent intent = new Intent(MainActivity.this, Movie_Details.class);
+                        intent.putExtra("tv", m_id);
+                        startActivity(intent);
+                    } else {
+                        return;
+                    }
+
+                }
+            });
+//                Toast.makeText(MainActivity.this, watch_list.get(0).getText() +"", Toast
+//                        .LENGTH_LONG).show();
+//
+//
+
+            AlertDialog.Builder builderAlertDialog = new AlertDialog.Builder(
+                    MainActivity.this);
+
+            if (watch_list == null || watch_list.size() == 0) {
+                Toast.makeText(MainActivity.this, watch_list.toString() + "No Wish List " +
+                        "found", Toast
+                        .LENGTH_LONG).show();
+
+            } else {
+
+                builderAlertDialog
+                        .setView(view1)
+                        .show();
+            }
         }
 
 
@@ -743,8 +1059,9 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.refresh) {
+            Intent intent = new Intent(MainActivity.this, MainActivity.class);
+            startActivity(intent);
         }
 
         return super.onOptionsItemSelected(item);
@@ -886,6 +1203,13 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
         if (search.getSearchText().isEmpty()) toolbar.setTitle("");
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
     class ViewPagerAdapter extends FragmentStatePagerAdapter {
 
         // String[] tabs = getResources().getStringArray(R.array.tabs);
@@ -936,6 +1260,5 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
             return getResources().getDrawable(icon[position]);
         }
     }
-
 
 }

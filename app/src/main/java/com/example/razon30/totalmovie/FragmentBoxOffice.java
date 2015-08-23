@@ -1,14 +1,11 @@
 package com.example.razon30.totalmovie;
 
 
+import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
-import android.app.Fragment;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,10 +15,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -40,30 +34,11 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-
-    //recycle
-    private RecyclerView listMovieHits;
-    private AdapterBoxOffice adapterBoxOffice;
-
-    //VOlley-Json
-    private VolleySingleton volleySingleton;
-    private RequestQueue requestQueue;
+    private static final String STATE_MOVIE = "state_movie";
     public ArrayList<Movie> listMovies = new ArrayList<Movie>();
-
     //sorting
     public MovieSorter movieSorter = new MovieSorter();
-    private static final String STATE_MOVIE = "state_movie";
-
-    private SwipeRefreshLayout swipeRefreshLayout;
-
     Toolbar toolbar;
-
-
     String urlPreId = "http://api.themoviedb.org/3/movie/";
     long id;
     String urlLaterId = "?api_key=f246d5e5105e9934d3cd4c4c181d618d";
@@ -73,6 +48,16 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
     String image_post = "/images?api_key=f246d5e5105e9934d3cd4c4c181d618d";
     String similar_post = "/similar?api_key=f246d5e5105e9934d3cd4c4c181d618d";
     String reviews_post = "/reviews?api_key=f246d5e5105e9934d3cd4c4c181d618d";
+    // TODO: Rename and change types of parameters
+    private String mParam1;
+    private String mParam2;
+    //recycle
+    private RecyclerView listMovieHits;
+    private AdapterBoxOffice adapterBoxOffice;
+    //VOlley-Json
+    private VolleySingleton volleySingleton;
+    private RequestQueue requestQueue;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     public static FragmentBoxOffice newInstance(String param1, String param2) {
         FragmentBoxOffice fragment = new FragmentBoxOffice();
@@ -249,11 +234,11 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
     }
 
 
+    public interface ClickListener {
 
-    public static interface ClickListener{
+        void onCLick(View v, int position);
 
-        public void onCLick(View v, int position);
-        public void onLongClick(View v, int position);
+        void onLongClick(View v, int position);
 
     }
 
@@ -305,6 +290,13 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
         public void onTouchEvent(RecyclerView rv, MotionEvent e) {
 
         }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+        }
+
+
     }
 
 

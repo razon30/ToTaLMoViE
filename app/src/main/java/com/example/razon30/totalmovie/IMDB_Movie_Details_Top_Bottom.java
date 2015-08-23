@@ -1057,6 +1057,13 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
         public void onTouchEvent(RecyclerView rv, MotionEvent e) {
 
         }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+        }
+
+
     }
 
 

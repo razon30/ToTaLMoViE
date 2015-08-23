@@ -9,8 +9,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/darker_gray"
     android:orientation="vertical">
+
 
     <!--<android.support.v7.widget.CardView-->
 
@@ -25,7 +25,8 @@
     <!-->-->
 
     <RelativeLayout
-        android:layout_width="match_parent"
+        android:id="@+id/imageHeaderLayout"
+            android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
 
@@ -33,8 +34,7 @@
             android:id="@+id/fb_cover_image"
             android:layout_width="match_parent"
             android:layout_height="210dp"
-            android:background="@android:color/black"
-            android:src="@drawable/photo"/>
+            android:background="@drawable/default_image"/>
 
         <ImageView
             android:id="@+id/fb_profile_image"
@@ -43,7 +43,6 @@
             android:layout_alignBottom="@+id/fb_cover_image"
             android:layout_alignParentStart="true"
             android:layout_marginLeft="15dp"
-            android:background="@android:color/darker_gray"
             android:src="@drawable/profile1"
             />
 
@@ -51,7 +50,6 @@
             android:id="@+id/fb_profile_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-
             android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/fb_profile_image"
             android:padding="6dp"
@@ -77,188 +75,214 @@
 
     <!--</android.support.v7.widget.CardView>-->
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="210dp"-->
+    <!--android:id="@+id/logInCoverLayout"-->
+    <!--android:orientation="vertical"-->
+    <!-->-->
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/card_view"
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-            android:layout_marginTop="10dp"
-            card_view:cardCornerRadius="8.5dp"
-            >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/darker_gray"
-                android:orientation="vertical"
-                android:paddingLeft="15dp"
-                >
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:gravity="center_vertical"
-                    android:text="Home"
-                    android:textColor="@color/accentColor"
-                    android:textSize="@dimen/drawer_head_size"/>
-
-                <LinearLayout
-                    android:id="@+id/drawer_layout_discover"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="3"
-                        android:gravity="center_vertical"
-                        android:text="Discover"
-                        android:textColor="@android:color/black"
-                        android:textSize="@dimen/drawer_text_size"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/drawer_layout_Box_Office"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="3"
-                        android:gravity="center_vertical"
-                        android:text="Box Office"
-                        android:textColor="@android:color/black"
-                        android:textSize="@dimen/drawer_text_size"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/drawer_layout_Upcoming"
-                    android:layout_width="match_parent"
-                    android:layout_height="30dp"
-                    android:layout_marginBottom="10dp"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="3"
-                        android:gravity="center_vertical"
-                        android:text="Upcoming"
-                        android:textColor="@android:color/black"
-                        android:textSize="@dimen/drawer_text_size"/>
-                </LinearLayout>
+    <!--<com.facebook.login.widget.LoginButton-->
+    <!--android:id="@+id/login_button"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="0dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:layout_gravity="center_horizontal"-->
+    <!--android:layout_marginTop="30dp"-->
+    <!--android:layout_marginBottom="30dp" />-->
+    <!--<Button-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="50dp"-->
+    <!--android:id="@+id/logIn"-->
+    <!--android:text="log In"/>-->
 
 
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
-
-        <android.support.v7.widget.CardView
-
-            xmlns:card_view="http://schemas.android.com/apk/res-auto"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="10dp"
-            android:layout_marginLeft="6dp"
-            android:layout_marginRight="6dp"
-
-            android:background="#B6B6B6"
-            card_view:cardCornerRadius="8.5dp"
-            >
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@android:color/darker_gray"
-                android:orientation="vertical"
-                android:paddingLeft="15dp"
-                >
-
-                <LinearLayout
-                    android:id="@+id/drawer_layout_watchList"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="3"
-                        android:gravity="center_vertical"
-                        android:text="Watch List"
-                        android:textColor="@android:color/black"
-                        android:textSize="@dimen/drawer_head_size"/>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/drawer_layout_wishList"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"
-                    android:orientation="horizontal"
-                    >
-
-                    <ImageView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical"
-                        />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="3"
-                        android:gravity="center_vertical"
-                        android:text="Wish List"
-                        android:textColor="@android:color/black"
-                        android:textSize="@dimen/drawer_head_size"/>
-                </LinearLayout>
+    <!--<Button-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="50dp"-->
+    <!--android:id="@+id/logout"-->
+    <!--android:text="log Out"/>-->
 
 
-            </LinearLayout>
-        </android.support.v7.widget.CardView>
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="vertical">-->
+
+    <!--<android.support.v7.widget.CardView-->
+    <!--android:id="@+id/card_view"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_marginBottom="10dp"-->
+    <!--android:layout_marginLeft="6dp"-->
+    <!--android:layout_marginRight="6dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!-->-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="vertical"-->
+    <!--android:paddingLeft="15dp"-->
+    <!--android:background="@color/chrome_custom_background_alpha"-->
+    <!-->-->
+
+    <!--<TextView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:text="Home"-->
+    <!--android:textColor="@color/accent_color"-->
+    <!--android:textSize="@dimen/drawer_head_size"/>-->
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/drawer_layout_discover"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:orientation="horizontal">-->
+
+    <!--<ImageView-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_weight="1"-->
+    <!--android:gravity="center_vertical"-->
+    <!--/>-->
+
+    <!--<TextView-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_weight="3"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:text="Discover"-->
+    <!--android:textColor="@android:color/black"-->
+    <!--android:textSize="@dimen/drawer_text_size"/>-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
+
+    <!--android:id="@+id/drawer_layout_Box_Office"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:orientation="horizontal">-->
+
+    <!--<ImageView-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_weight="1"-->
+    <!--android:gravity="center_vertical"-->
+    <!--/>-->
+
+    <!--<TextView-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_weight="3"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:text="Box Office"-->
+    <!--android:textColor="@android:color/black"-->
+    <!--android:textSize="@dimen/drawer_text_size"/>-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/drawer_layout_Upcoming"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="30dp"-->
+    <!--android:layout_marginBottom="10dp"-->
+    <!--android:orientation="horizontal">-->
+
+    <!--<ImageView-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_weight="1"-->
+    <!--android:gravity="center_vertical"-->
+    <!--/>-->
+
+    <!--<TextView-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_weight="3"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:text="Upcoming"-->
+    <!--android:textColor="@android:color/black"-->
+    <!--android:textSize="@dimen/drawer_text_size"/>-->
+    <!--</LinearLayout>-->
 
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
+    <!--</android.support.v7.widget.CardView>-->
+
+    <!--<android.support.v7.widget.CardView-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_marginBottom="10dp"-->
+    <!--android:layout_marginLeft="6dp"-->
+    <!--android:layout_marginRight="6dp"-->
+    <!--android:background="#B6B6B6"-->
+    <!-->-->
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="vertical"-->
+    <!--android:paddingLeft="15dp"-->
+    <!--android:background="@color/chrome_custom_background_alpha"-->
+    <!-->-->
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/drawer_layout_watchList"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:orientation="horizontal">-->
+
+    <!--<ImageView-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_weight="1"-->
+    <!--android:gravity="center_vertical"-->
+    <!--/>-->
+
+    <!--<TextView-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_weight="3"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:text="Watch List"-->
+    <!--android:textColor="@android:color/black"-->
+    <!--android:textSize="@dimen/drawer_head_size"/>-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/drawer_layout_wishList"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:orientation="horizontal"-->
+    <!-->-->
+
+    <!--<ImageView-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_weight="1"-->
+    <!--android:gravity="center_vertical"-->
+    <!--/>-->
+
+    <!--<TextView-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:layout_weight="3"-->
+    <!--android:gravity="center_vertical"-->
+    <!--android:text="Wish List"-->
+    <!--android:textColor="@android:color/black"-->
+    <!--android:textSize="@dimen/drawer_head_size"/>-->
+    <!--</LinearLayout>-->
 
 
+    <!--</LinearLayout>-->
+    <!--</android.support.v7.widget.CardView>-->
+
+
+    <!--</LinearLayout>-->
+
+    <!--</LinearLayout>-->
 </LinearLayout>
     <!--</ScrollView>-->

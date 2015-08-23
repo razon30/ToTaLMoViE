@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
         android:name=".MyApplication"
@@ -11,8 +12,6 @@
         android:icon="@drawable/movie_icon"
         android:label="ToTaL MoViE"
         android:theme="@style/AppTheme">
-
-
         <provider
             android:name="com.facebook.FacebookContentProvider"
             android:authorities="com.facebook.app.FacebookContentProvider505284192967672"
@@ -22,40 +21,10 @@
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id"/>
 
-
         <activity
             android:name=".MainActivity"
-            android:label="@string/app_name"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name=".Movie_Details"
-            android:icon="@drawable/a_movie"
             android:screenOrientation="portrait"
             android:theme="@style/MyCustomToolBarMovieDetails">
-        </activity>
-        <activity
-            android:name=".Person_Details"
-            android:icon="@drawable/a_movie"
-            android:screenOrientation="portrait"
-            android:theme="@style/MyCustomToolBarMovieDetails">
-        </activity>
-        <activity
-            android:name=".Search_List_Activity"
-            android:icon="@drawable/a_movie"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name=".Multi_Search_Activity"
-            android:icon="@drawable/a_movie"
-            android:screenOrientation="portrait">
-        </activity>
-        <activity
-            android:name=".Splash_Activity"
-            android:icon="@drawable/a_movie"
-            android:noHistory="true"
-            android:screenOrientation="portrait"
-            android:theme="@style/MyCustomToolBaSplash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -63,18 +32,43 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".IMDB_Movie_Details_Top_Bottom"
-            android:icon="@drawable/a_movie"
+            android:name=".Movie_Details"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyCustomToolBarMovieDetails">
+        </activity>
+        <activity
+            android:name=".Person_Details"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyCustomToolBarMovieDetails">
+        </activity>
+        <activity
+            android:name=".Search_List_Activity"
             android:screenOrientation="portrait">
         </activity>
-
+        <activity
+            android:name=".Multi_Search_Activity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".Splash_Activity"
+            android:noHistory="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyCustomToolBaSplash">
+        </activity>
+        <activity
+            android:name=".IMDB_Movie_Details_Top_Bottom"
+            android:screenOrientation="portrait">
+        </activity>
         <activity
             android:name="com.facebook.FacebookActivity"
-            android:configChanges=
-                "keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
-
+        <activity
+            android:name=".Credit"
+            android:label="@string/title_activity_credit"
+            android:theme="@style/MyCustomToolBarMovieDetails">
+        </activity>
     </application>
 
 </manifest>

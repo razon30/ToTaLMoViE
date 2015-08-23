@@ -1250,6 +1250,13 @@ public class Movie_Details extends AppCompatActivity {
         public void onTouchEvent(RecyclerView rv, MotionEvent e) {
 
         }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+        }
+
+
     }
 
 

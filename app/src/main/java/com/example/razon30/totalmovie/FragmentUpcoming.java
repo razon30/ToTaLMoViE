@@ -281,6 +281,13 @@ public class FragmentUpcoming extends android.support.v4.app.Fragment implements
         public void onTouchEvent(RecyclerView rv, MotionEvent e) {
 
         }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+        }
+
+
     }
 
 

@@ -2,7 +2,6 @@ package com.example.razon30.totalmovie;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,39 +11,26 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ListView;
-import android.widget.Toast;
 
-import com.android.volley.Request;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-
-import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 
 public class Search_List_Activity extends AppCompatActivity implements SearchingMoviesLoadedListener{
 
+    private static final String STATE_MOVIE = "state_movie_search_list";
+    public ArrayList<Movie> listMovies = new ArrayList<Movie>();
     String urlPreId = "http://api.themoviedb.org/3/genre/";
     String urlPostId = "/movies?api_key=f246d5e5105e9934d3cd4c4c181d618d";
     String id;
     String image_url = "http://image.tmdb.org/t/p/w500";
-
-    private static final String STATE_MOVIE = "state_movie_search_list";
-
     //recycle
     private RecyclerView listMovieHits;
     private AdapterBoxOffice adapterBoxOffice;
-
     //VOlley-Json
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
-    public ArrayList<Movie> listMovies = new ArrayList<Movie>();
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -208,10 +194,11 @@ public class Search_List_Activity extends AppCompatActivity implements Searching
     }
 
 
-    public static interface ClickListener{
+    public interface ClickListener {
 
-        public void onCLick(View v, int position);
-        public void onLongClick(View v, int position);
+        void onCLick(View v, int position);
+
+        void onLongClick(View v, int position);
 
     }
 
@@ -263,6 +250,13 @@ public class Search_List_Activity extends AppCompatActivity implements Searching
         public void onTouchEvent(RecyclerView rv, MotionEvent e) {
 
         }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+        }
+
+
     }
 
 

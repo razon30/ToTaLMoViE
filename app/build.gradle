@@ -47,4 +47,5 @@ dependencies {
     compile 'com.quinny898.library.persistentsearch:library:1.0.0-SNAPSHOT'
     compile 'com.getbase:floatingactionbutton:1.10.0'
     compile 'com.facebook.android:facebook-android-sdk:4.1.0'
+    compile 'com.afollestad:material-dialogs:0.7.8.1'
 }

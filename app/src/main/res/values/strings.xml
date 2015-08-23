@@ -23,4 +23,10 @@
     <string name="title_activity_imdb__movie__details__top__bottom">IMDB_Movie_Details_Top_Bottom
     </string>
     <string name="facebook_app_id">505284192967672</string>
+    <string name="color_chooser">Choose the Color</string>
+    <string name="title">Connection Failed</string>
+    <string name="content">Internet Connection Failed. Please try again</string>
+    <string name="agree">Setting</string>
+    <string name="disagree">Okey</string>
+    <string name="title_activity_credit">Credit</string>
 </resources>

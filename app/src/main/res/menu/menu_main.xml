@@ -3,12 +3,31 @@
       xmlns:tools="http://schemas.android.com/tools"
       tools:context=".MainActivity">
 
+    <item
+        android:id="@+id/refresh"
+        android:title="Refresh">
+    </item>
 
-      <item
+    <item
+        android:id="@+id/clearWatch"
+        android:title="Clear Watch List">
+    </item>
+
+    <item
+        android:id="@+id/clearWish"
+        android:title="Clear Wish List">
+    </item>
+
+    <item
+        android:id="@+id/about"
+        android:title="Credit">
+    </item>
+
+    <item
           android:id="@+id/action_search"
+          android:icon="@drawable/abc_ic_search_api_mtrl_alpha"
           android:orderInCategory="100"
           android:title="search"
-          android:icon="@drawable/abc_ic_search_api_mtrl_alpha"
           app:showAsAction="always"/>
 
 

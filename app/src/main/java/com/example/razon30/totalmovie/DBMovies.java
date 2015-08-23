@@ -435,6 +435,26 @@ public class DBMovies extends SQLiteOpenHelper {
 
     }
 
+    public int deleteAllWatch() {
+        // TODO Auto-generated method stub
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        //int dlt = db.delete(DB_TABLE_NAME_WATCH, W_ID + "=?", new String[]{""
+        //    + address});
+
+//        String selectQuery = "DELETE FROM " + DB_TABLE_NAME_WISH + " WHERE " + address + "=" +
+//                W_ID;
+
+        //  db.rawQuery(selectQuery, null);
+
+        int dlt = db.delete(DB_TABLE_NAME_WATCH, null, null);
+
+        db.close();
+        return dlt;
+
+    }
+
     public long insertWish(Movie movie) {
         // TODO Auto-generated method stub
 
@@ -546,6 +566,17 @@ public class DBMovies extends SQLiteOpenHelper {
         //  db.rawQuery(selectQuery, null);
 
         //int dlt = db.delete(DB_TABLE_NAME_WATCH, null, null);
+
+        db.close();
+        return dlt;
+
+    }
+
+    public int deleteAllWish() {
+        // TODO Auto-generated method stub
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        int dlt = db.delete(DB_TABLE_NAME_WISH, null, null);
 
         db.close();
         return dlt;

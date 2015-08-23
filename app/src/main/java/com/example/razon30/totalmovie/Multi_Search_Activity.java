@@ -2,7 +2,6 @@ package com.example.razon30.totalmovie;
 
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,27 +16,22 @@ import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 
 
 public class Multi_Search_Activity extends AppCompatActivity implements SearchingMultiLoadedListener{
 
+    private static final String STATE_MOVIE = "multi_search_list";
+    public ArrayList<Movie> listMovies = new ArrayList<Movie>();
     String urlPre = "http://api.themoviedb.org/3/search/";
     String multiPost = "multi?api_key=f246d5e5105e9934d3cd4c4c181d618d&query=";
-    private static final String STATE_MOVIE = "multi_search_list";
-
+    Adapter_KKeyword_Search adapter_kKeyword_search;
+    TextView tv;
     //recycle
     private RecyclerView listMovieHits;
-    Adapter_KKeyword_Search adapter_kKeyword_search;
-
     //VOlley-Json
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
-    public ArrayList<Movie> listMovies = new ArrayList<Movie>();
-
-    TextView tv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,23 +129,46 @@ public class Multi_Search_Activity extends AppCompatActivity implements Searchin
 
         if (listMovies==null || listMovies.size()==0){
 
-            listMovieHits.setVisibility(listMovieHits.GONE);
-            tv.setVisibility(tv.VISIBLE);
+            listMovieHits.setVisibility(View.GONE);
+            tv.setVisibility(View.VISIBLE);
             tv.setText("No Person Or Movie Found Or No Network Access");
 
         }else {
 
-            listMovieHits.setVisibility(listMovieHits.VISIBLE);
-            tv.setVisibility(tv.GONE);
+            listMovieHits.setVisibility(View.VISIBLE);
+            tv.setVisibility(View.GONE);
             this.listMovies = listMovies;
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_multi__search_, menu);
+        return true;
+    }
 
-    public static interface ClickListener{
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
 
-        public void onCLick(View v, int position);
-        public void onLongClick(View v, int position);
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+
+    public interface ClickListener {
+
+        void onCLick(View v, int position);
+
+        void onLongClick(View v, int position);
 
     }
 
@@ -203,28 +220,12 @@ public class Multi_Search_Activity extends AppCompatActivity implements Searchin
         public void onTouchEvent(RecyclerView rv, MotionEvent e) {
 
         }
-    }
 
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_multi__search_, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
         }
 
-        return super.onOptionsItemSelected(item);
+
     }
 }

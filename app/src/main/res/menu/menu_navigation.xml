@@ -1,42 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-      xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
     <item
-        android:id="@+id/home"
-        android:title="Home"
+        android:id="@+id/drawer_discover"
+        android:icon="@drawable/ic_btn_movie"
+        android:title="Discover"
         >
-        <menu>
+    </item>
 
-            <item
-                android:id="@+id/drawer_discover"
-                android:title="Discover"
-                >
-            </item>
 
-            <item
-                android:id="@+id/drawe_box_office"
-                android:title="Box Office"
-                app:itemTextColor="#FFFFFF"
-                >
-            </item>
-
-            <item
-                android:id="@+id/drawer_upcomin"
-                android:title="Upcoming"
-                >
-            </item>
-
-        </menu>
+    <item
+        android:id="@+id/drawe_box_office"
+        android:icon="@drawable/ic_btn_watchlist"
+        android:title="Box Office"
+        >
     </item>
 
     <item
+        android:id="@+id/drawer_upcomin"
+        android:icon="@drawable/ic_btn_collection"
+        android:title="Upcoming"
+        >
+    </item>
+    <item
         android:id="@+id/drawer_watch_list"
+        android:icon="@drawable/ic_btn_seen"
         android:title="Watch List"
         ></item>
     <item
         android:id="@+id/drawer_wish_list"
+        android:icon="@drawable/ic_action_watchlist"
         android:title="Wish List"
         ></item>
 
