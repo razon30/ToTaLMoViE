@@ -12,10 +12,10 @@
 
     </style>
 
-    <style name="MyCustomToolBarThem" parent="ThemeOverlay.AppCompat.Light">
+    <style name="MyCustomToolBarThem" parent="ThemeOverlay.AppCompat.Dark">
 
-        <item name="android:textColorPrimary">#F00</item>
-        <item name="android:textColorSecondary">#00F</item>
+        <item name="android:textColorPrimary">#FFFFFF</item>
+        <item name="android:textColorSecondary">#FFFFFF</item>
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowTransitionBackgroundFadeDuration">5000</item>
 
@@ -23,13 +23,10 @@
     </style>
 
     <style name="MyCustomToolBarMovieDetails" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:colorEdgeEffect">@color/primaryColor</item>
-        <item name="colorPrimary">#fff59d</item>
-        <item name="colorPrimaryDark">#fff59d</item>
-        <item name="colorAccent">#fff59d</item>
-        <item name="android:windowContentTransitions">true</item>
+
+
+    <item name="android:windowContentTransitions">true</item>
         <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowTransitionBackgroundFadeDuration">5000</item>
 
 
     </style>

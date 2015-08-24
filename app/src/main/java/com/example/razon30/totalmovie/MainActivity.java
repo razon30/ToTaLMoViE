@@ -9,6 +9,7 @@ import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
@@ -67,6 +68,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 import it.neokree.materialtabs.MaterialTab;
 import it.neokree.materialtabs.MaterialTabListener;
@@ -119,6 +121,7 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
     FloatingActionButton actionButton;
     FloatingActionMenu actionMenu;
     SharedPreferences sharedPreferences;
+    View view;
     //for search
     private SearchBox search;
     private Toolbar toolbar;
@@ -139,7 +142,6 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
         //progressDialouge();
-
 
         if (!isNetworkAvailable()) {
 
@@ -194,9 +196,13 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
         search = (SearchBox) findViewById(R.id.searchbox);
         // search.enableVoiceRecognition(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
+        tabHost = (TabLayout) findViewById(R.id.materialTabHost);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
         this.setSupportActionBar(toolbar);
-        toolbar.setLogo(R.drawable.a_movie);
-        toolbar.setTitle("");
+        view = findViewById(R.id.view);
+
+        worksOnColor();
+
 
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -246,8 +252,7 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
 
 
         //tab and viewPager setting
-        tabHost = (TabLayout) findViewById(R.id.materialTabHost);
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
+
 
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
         viewPager.setAdapter(adapter);
@@ -304,6 +309,7 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
 
 
     }
+
 
     private void worksOnDrawerMenu() {
 
@@ -1208,6 +1214,145 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
                 = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    private void worksOnColor() {
+
+        Random random = new Random();
+        int i = random.nextInt(11 - 1 + 1) + 1;
+
+        if (i == 1) {
+
+            view.setBackgroundColor(getResources().getColor(R.color.Style_one_view));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.Style_one_toolbar));
+            tabHost.setBackgroundColor(getResources().getColor(R.color.Style_one_tab));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                // getWindow().setStatusBarColor(getResources().getColor(R.color.accent_material_dark));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color.Style_one_navigationBar));
+            }
+        }
+        if (i == 2) {
+
+            view.setBackgroundColor(getResources().getColor(R.color.Style_two_view));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.Style_two_toolbar));
+            tabHost.setBackgroundColor(getResources().getColor(R.color.Style_two_tab));
+
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                // getWindow().setStatusBarColor(getResources().getColor(R.color.accent_material_dark));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_two_navigationBar));
+            }
+        }
+        if (i == 3) {
+
+            view.setBackgroundColor(getResources().getColor(R.color.Style_three_view));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
+            tabHost.setBackgroundColor(getResources().getColor(R.color.Style_three_tab));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                // getWindow().setStatusBarColor(getResources().getColor(R.color.accent_material_dark));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_three_navigationBar));
+            }
+        }
+        if (i == 4) {
+
+            view.setBackgroundColor(getResources().getColor(R.color.Style_four_view));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.Style_four_toolbar));
+            tabHost.setBackgroundColor(getResources().getColor(R.color.Style_four_tab));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                // getWindow().setStatusBarColor(getResources().getColor(R.color.accent_material_dark));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_four_navigationBar));
+            }
+        }
+        if (i == 5) {
+
+            view.setBackgroundColor(getResources().getColor(R.color.Style_five_view));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.Style_five_toolbar));
+            tabHost.setBackgroundColor(getResources().getColor(R.color.Style_five_tab));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                // getWindow().setStatusBarColor(getResources().getColor(R.color.accent_material_dark));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_five_navigationBar));
+            }
+        }
+        if (i == 6) {
+
+            view.setBackgroundColor(getResources().getColor(R.color.Style_six_view));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.Style_six_toolbar));
+            tabHost.setBackgroundColor(getResources().getColor(R.color.Style_six_tab));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                // getWindow().setStatusBarColor(getResources().getColor(R.color.accent_material_dark));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_six_navigationBar));
+            }
+        }
+        if (i == 7) {
+
+            view.setBackgroundColor(getResources().getColor(R.color.Style_seven_view));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.Style_seven_toolbar));
+            tabHost.setBackgroundColor(getResources().getColor(R.color.Style_seven_tab));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                // getWindow().setStatusBarColor(getResources().getColor(R.color.accent_material_dark));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_seven_navigationBar));
+            }
+        }
+        if (i == 8) {
+
+            view.setBackgroundColor(getResources().getColor(R.color.Style_eight_view));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.Style_eight_toolbar));
+            tabHost.setBackgroundColor(getResources().getColor(R.color.Style_eight_tab));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                // getWindow().setStatusBarColor(getResources().getColor(R.color.accent_material_dark));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_eight_navigationBar));
+            }
+        }
+        if (i == 9) {
+
+            view.setBackgroundColor(getResources().getColor(R.color.Style_nine_view));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.Style_nine_toolbar));
+            tabHost.setBackgroundColor(getResources().getColor(R.color.Style_nine_tab));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                // getWindow().setStatusBarColor(getResources().getColor(R.color.accent_material_dark));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_nine_navigationBar));
+            }
+        }
+        if (i == 10) {
+
+            view.setBackgroundColor(getResources().getColor(R.color.Style_ten_view));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.Style_ten_toolbar));
+            tabHost.setBackgroundColor(getResources().getColor(R.color.Style_ten_tab));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                // getWindow().setStatusBarColor(getResources().getColor(R.color.accent_material_dark));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_ten_navigationBar));
+            }
+        }
+        if (i == 11) {
+
+            view.setBackgroundColor(getResources().getColor(R.color.Style_eleven_view));
+            toolbar.setBackgroundColor(getResources().getColor(R.color.Style_eleven_view));
+            tabHost.setBackgroundColor(getResources().getColor(R.color.Style_eleven_view));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                // getWindow().setStatusBarColor(getResources().getColor(R.color.accent_material_dark));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color.Style_eleven_view));
+            }
+        }
+
     }
 
     class ViewPagerAdapter extends FragmentStatePagerAdapter {

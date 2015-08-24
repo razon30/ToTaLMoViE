@@ -297,7 +297,7 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
 
                             if (revenue != null && revenue.length() != 0 && revenue != "" && revenue
                                     != "0") {
-                                tvRevenue.setText(revenue);
+                                tvRevenue.setText("$" + revenue);
                             } else {
                                 tvRevenue.setText("Still Running, NO total Revenue");
                             }

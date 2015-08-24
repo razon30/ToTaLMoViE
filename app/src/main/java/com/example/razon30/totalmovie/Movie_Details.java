@@ -270,7 +270,7 @@ public class Movie_Details extends AppCompatActivity {
 
                             if (revenue != null && revenue.length() != 0 && revenue != "" &&
                                     revenue != "0") {
-                                tvRevenue.setText(revenue);
+                                tvRevenue.setText("$" + revenue);
                             } else if (revenue == "0") {
                                 tvRevenue.setText("Revenue Unknown");
                             } else {

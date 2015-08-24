@@ -1,6 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="Style_one_view">#689F38</color>
+    <color name="Style_one_toolbar">#8BC34A</color>
+    <color name="Style_one_tab">#8BC34A</color>
+    <color name="Style_one_navigationBar">#998BC34A</color>
+
+    <color name="Style_two_view">#2962ff</color>
+    <color name="Style_two_toolbar">#2979ff</color>
+    <color name="Style_two_tab">#2979ff</color>
+    <color name="Style_two_navigationBar">#448aff</color>
+
+    <color name="Style_three_view">#009688</color>
+    <color name="Style_three_toolbar">#26a69a</color>
+    <color name="Style_three_tab">#26a69a</color>
+    <color name="Style_three_navigationBar">#4db6ac</color>
+
+    <color name="Style_four_view">#fb8c00</color>
+    <color name="Style_four_toolbar">#ff9800</color>
+    <color name="Style_four_tab">#ff9800</color>
+    <color name="Style_four_navigationBar">#ffa726</color>
+
+    <color name="Style_five_view">#ffd600</color>
+    <color name="Style_five_toolbar">#ffc400</color>
+    <color name="Style_five_tab">#ffc400</color>
+    <color name="Style_five_navigationBar">#ffd740</color>
+
+    <color name="Style_six_view">#0097a7</color>
+    <color name="Style_six_toolbar">#0097a7</color>
+    <color name="Style_six_tab">#0097a7</color>
+    <color name="Style_six_navigationBar">#0097a7</color>
+
+    <color name="Style_seven_view">#00b8d4</color>
+    <color name="Style_seven_toolbar">#00b8d4</color>
+    <color name="Style_seven_tab">#00b8d4</color>
+    <color name="Style_seven_navigationBar">#00b8d4</color>
+
+    <color name="Style_eight_view">#9c27b0</color>
+    <color name="Style_eight_toolbar">#9c27b0</color>
+    <color name="Style_eight_tab">#9c27b0</color>
+    <color name="Style_eight_navigationBar">#9c27b0</color>
+
+    <color name="Style_nine_view">#FF4081</color>
+    <color name="Style_nine_toolbar">#FF4081</color>
+    <color name="Style_nine_tab">#FF4081</color>
+    <color name="Style_nine_navigationBar">#FF4081</color>
+
+    <color name="Style_ten_view">#03a9f4</color>
+    <color name="Style_ten_toolbar">#03a9f4</color>
+    <color name="Style_ten_tab">#03a9f4</color>
+    <color name="Style_ten_navigationBar">#03a9f4</color>
+
+    <color name="Style_eleven_view">#f44336</color>
+
+
     <color name="primaryColor">#3F51B5</color>
     <color name="primaryColorDark">#0288D1</color>
     <color name="accentColor">#F44336</color>
