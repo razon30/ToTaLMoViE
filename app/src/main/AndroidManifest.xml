@@ -23,6 +23,7 @@
 
         <activity
             android:name=".MainActivity"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/MyCustomToolBarMovieDetails">
             <intent-filter>
@@ -33,22 +34,27 @@
         </activity>
         <activity
             android:name=".Movie_Details"
+            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MyCustomToolBarMovieDetails">
+            android:theme="@style/MyCustomToolBarMovieDetails1">
         </activity>
         <activity
             android:name=".Person_Details"
+            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MyCustomToolBarMovieDetails">
+            android:theme="@style/MyCustomToolBarMovieDetails1">
         </activity>
         <activity
             android:name=".Search_List_Activity"
+            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait">
         </activity>
         <activity
             android:name=".Multi_Search_Activity"
+            android:parentActivityName=".MainActivity"
             android:screenOrientation="portrait">
         </activity>
+
         <activity
             android:name=".Splash_Activity"
             android:noHistory="true"
@@ -57,7 +63,9 @@
         </activity>
         <activity
             android:name=".IMDB_Movie_Details_Top_Bottom"
-            android:screenOrientation="portrait">
+            android:parentActivityName=".MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyCustomToolBarMovieDetails1">
         </activity>
         <activity
             android:name="com.facebook.FacebookActivity"
@@ -67,6 +75,7 @@
         <activity
             android:name=".Credit"
             android:label="@string/title_activity_credit"
+            android:parentActivityName=".MainActivity"
             android:theme="@style/MyCustomToolBarMovieDetails">
         </activity>
     </application>

@@ -166,27 +166,6 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
                         }
                     })
                     .show();
-
-
-//            new MaterialDialog.Builder(this)
-//                    .title(R.string.title)
-//                    .content(R.string.content)
-//                    .positiveText(R.string.agree)
-//                    .negativeText(R.string.disagree)
-//                    .callback(new MaterialDialog.ButtonCallback() {
-//                        @Override
-//                        public void onPositive(MaterialDialog dialog) {
-//
-//                            startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
-//
-//                        }
-//
-//                        @Override
-//                        public void onNegative(MaterialDialog dialog) {
-//                        }
-//                    })
-//                    .show();
-
         }
 
 
@@ -238,20 +217,6 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
         worksOnDrawer();
         worksOnDrawerHeader();
         // worksOnDrawerMenu();
-
-
-        //toolbar setting
-//        toolbar = (Toolbar) findViewById(R.id.app_bar);
-//        setSupportActionBar(toolbar);
-        // toolbar.setVisibility(toolbar.VISIBLE);
-        // containerAppBar = (ViewGroup) findViewById(R.id.container_app_bar);
-        // AnimationUtils.animateToolbar(containerAppBar);
-
-//        etSearch = (EditText) findViewById(R.id.et_search);
-//        btnSearch = (Button) findViewById(R.id.btn_search);
-
-
-        //tab and viewPager setting
 
 
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
@@ -962,10 +927,6 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
 
                 }
             });
-//                Toast.makeText(MainActivity.this, watch_list.get(0).getText() +"", Toast
-//                        .LENGTH_LONG).show();
-//
-//
 
             AlertDialog.Builder builderAlertDialog = new AlertDialog.Builder(
                     MainActivity.this);

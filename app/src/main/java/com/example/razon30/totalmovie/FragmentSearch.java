@@ -2,6 +2,7 @@ package com.example.razon30.totalmovie;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
@@ -411,7 +412,7 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                         getActivity());
 
                 if (topten == null || topten.size() == 0) {
-                    Toast.makeText(getActivity(), "No Cast and crew Found or Network Error",
+                    Toast.makeText(getActivity(), "No Movie Found or Network Error",
                             Toast.LENGTH_LONG).show();
                     return;
                 } else {
@@ -628,7 +629,7 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                         getActivity());
 
                 if (bottomten == null || bottomten.size() == 0) {
-                    Toast.makeText(getActivity(), "No Cast and crew Found or Network Error",
+                    Toast.makeText(getActivity(), "No Movie Found or Network Error",
                             Toast.LENGTH_LONG).show();
                     return;
                 } else {
@@ -883,7 +884,9 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                         getActivity());
 
                 if (trailer_list == null || trailer_list.size() == 0) {
-                    Toast.makeText(getActivity(), trailer_list.toString() + "", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Sorry !! Trailer is not available right now",
+                            Toast
+                                    .LENGTH_LONG).show();
 
                     return;
                 } else {
@@ -1422,7 +1425,12 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
 
 
         tv_top10 = (TextView) view.findViewById(R.id.top_ten);
+        Typeface custom_font = Typeface.createFromAsset(getActivity().getAssets(),
+                "roboto_slab_regular" +
+                        ".ttf");
+        tv_top10.setTypeface(custom_font);
         tv_bottom10 = (TextView) view.findViewById(R.id.bottom_ten);
+        tv_bottom10.setTypeface(custom_font);
         tvTrailer = (TextView) view.findViewById(R.id.trailer_imdb);
         tv_popular_movies = (TextView) view.findViewById(R.id.see_more_popular_movies);
         tv_popular_persons = (TextView) view.findViewById(R.id.box_office_imdb);

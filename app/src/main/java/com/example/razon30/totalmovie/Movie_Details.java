@@ -2,14 +2,22 @@ package com.example.razon30.totalmovie;
 
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.speech.RecognizerIntent;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -31,12 +39,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.quinny898.library.persistentsearch.SearchBox;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class Movie_Details extends AppCompatActivity {
@@ -46,15 +56,14 @@ public class Movie_Details extends AppCompatActivity {
     public ArrayList<Movie> similar_list = new ArrayList<Movie>();
     //reviews
     public ArrayList<Movie> reviews = new ArrayList<Movie>();
-    Toolbar toolbar;
     CollapsingToolbarLayout collapsingToolbarLayout;
     CoordinatorLayout rootLayout;
     ImageView coverLayout, coverLayout1;
     ImageView circularImageView, circularImageView1;
     ImageView imageView, imageRating;
     TextView button, btn_moreImage, btn_reviws, btn_similar;
-    TextView tvGenre, tvOverview, tvHomepage, tvProduction, tvGenreDown, tvRevenue, tvTagLine,
-            tvImbdId, tvRating;
+    TextView tvOverview, tvHomepage, tvProduction, tvGenreDown, tvRevenue, tvTagLine,
+            tvImbdId, tvRating, tvBudget, tvRuntime, tvVotenumber;
     String urlPreId = "http://api.themoviedb.org/3/movie/";
     long id;
     String urlLaterId = "?api_key=f246d5e5105e9934d3cd4c4c181d618d";
@@ -64,6 +73,8 @@ public class Movie_Details extends AppCompatActivity {
     String image_post = "/images?api_key=f246d5e5105e9934d3cd4c4c181d618d";
     String similar_post = "/similar?api_key=f246d5e5105e9934d3cd4c4c181d618d";
     String reviews_post = "/reviews?api_key=f246d5e5105e9934d3cd4c4c181d618d";
+    String urlPre = "http://api.themoviedb.org/3/search/";
+    String multiPost = "multi?api_key=f246d5e5105e9934d3cd4c4c181d618d&query=";
     String trailer, homepage;
     String com_URL;
     //more image
@@ -85,14 +96,18 @@ public class Movie_Details extends AppCompatActivity {
     String w_id;
     String w_name;
     int a = 1;
-    ImageView watch;
-    ImageView wish, add;
     DBMovies dbMovies;
     LinearLayout layout1, layout2, layout3;
+    CardView rating_card;
+    ImageView watch;
+    ImageView wish, add;
+    TextView tvGenre;
     private ImageLoader imageLoader;
     //Retriving data
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
+    private SearchBox search;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,8 +117,10 @@ public class Movie_Details extends AppCompatActivity {
         id = Long.parseLong(intent.getStringExtra("tv"));
         w_id = String.valueOf(id);
         initualizing_contents();
-        watch = (ImageView) findViewById(R.id.watch);
-        wish = (ImageView) findViewById(R.id.wish);
+        worksOncolor();
+        worksOnNetwork();
+        worksOnSearch(w_id);
+
         dbMovies = new DBMovies(Movie_Details.this);
         layout1 = (LinearLayout) findViewById(R.id.multiple_layout);
         layout2 = (LinearLayout) findViewById(R.id.watch_layout);
@@ -131,7 +148,6 @@ public class Movie_Details extends AppCompatActivity {
             layout3.setVisibility(View.GONE);
         }
 
-        add = (ImageView) findViewById(R.id.multiple_actions);
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -142,8 +158,6 @@ public class Movie_Details extends AppCompatActivity {
 
 
         //  scrollView = (ScrollView) findViewById(R.id.movie_details);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         rootLayout = (CoordinatorLayout) findViewById(R.id.rootLayout);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbarLayout);
 
@@ -172,8 +186,8 @@ public class Movie_Details extends AppCompatActivity {
                                 Picasso.with(Movie_Details.this).load(image_url + backdrop_path).into
                                         (coverLayout);
 
-                                Picasso.with(Movie_Details.this).load(image_url + backdrop_path).into
-                                        (coverLayout1);
+//                                Picasso.with(Movie_Details.this).load(image_url + backdrop_path).into
+//                                        (coverLayout1);
 
                             } else {
                                 Picasso.with(Movie_Details.this).load(R.drawable.ic_launcher).into
@@ -202,6 +216,32 @@ public class Movie_Details extends AppCompatActivity {
                                 tvHomepage.setText("Home Page:  " + homepage);
                             } else {
                                 tvHomepage.setText("Home Page:  " + "NA");
+                            }
+
+
+                            String vote = "";
+                            vote = jsonObject.getString("vote_count");
+                            if (vote != null) {
+                                tvVotenumber.setText(vote);
+                            } else {
+                                tvVotenumber.setText("");
+                            }
+
+                            String runtime = "";
+                            runtime = jsonObject.getString("runtime");
+                            if (runtime != null) {
+                                tvRuntime.setText(runtime + " minute");
+                            } else {
+                                tvRuntime.setText("Sorry,unknown");
+                            }
+                            String budget = "";
+                            budget = jsonObject.getString("budget");
+
+                            if (budget != null && budget.length() != 0 && budget != "" &&
+                                    budget != "0") {
+                                tvBudget.setText("$" + budget);
+                            } else {
+                                tvBudget.setText("Budget Unknown");
                             }
 
                             String imdb_id = "";
@@ -278,7 +318,6 @@ public class Movie_Details extends AppCompatActivity {
                                 tvRevenue.setText("Still Running, NO total Revenue");
                             }
 
-
                             String tagLine = "";
 
                             tagLine = jsonObject.getString("tagline");
@@ -308,33 +347,7 @@ public class Movie_Details extends AppCompatActivity {
 
                             }
 
-//                            Movie movie = new Movie(title,release_Date,audience_score,
-//                                    backdrop_path,genres,overview,poster_path,revenue,tagLine,
-//                                    imdb_id,homepage,production);
-//
-//                            listMovieDetails.add(movie);
-
-//                            JSONArray movie = jsonObject.getJSONArray("results");
-//                            for (int i = 0; i < movie.length(); i++) {
-//                                JSONObject currentmovie = movie.getJSONObject(i);
-//                                String name = currentmovie.getString("title");
-//                                long id = currentmovie.getLong("id");
-//                                String release_date = currentmovie.getString("release_date");
-//                                int audience_score = -1;
-//                                audience_score = currentmovie.getInt("vote_average");
-//                                String synopsis = currentmovie.getString("overview");
-//                                String urlthumbnile = currentmovie.getString("poster_path");
-//
-//                                Movie movie1 = new Movie(id, name, release_date, audience_score, synopsis, urlthumbnile);
-//                                listMovieDetails.add(movie1);
-//
-//                            }
-                            // Toast.makeText(getActivity(), listMovies.toString(), Toast.LENGTH_LONG).show();
-
-
                         } catch (Exception e) {
-//                            Toast.makeText(Movie_Details.this, e.toString(), Toast.LENGTH_LONG)
-//                                    .show();
 
 
                         }
@@ -345,8 +358,6 @@ public class Movie_Details extends AppCompatActivity {
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-//                        Toast.makeText(Movie_Details.this, volleyError.toString(), Toast.LENGTH_LONG)
-//                                .show();
 
                     }
                 });
@@ -546,6 +557,15 @@ public class Movie_Details extends AppCompatActivity {
                                 image2.setVisibility(View.GONE);
                             }
 
+                            String profile3 = image.getJSONObject(0).getString("file_path");
+                            if (profile3 != null && profile3.length() != 0) {
+                                image3.setVisibility(View.VISIBLE);
+                                Picasso.with(Movie_Details.this).load(image_url + profile3).into
+                                        (image3);
+                            } else {
+
+                                image3.setVisibility(View.GONE);
+                            }
 
                             for (int i = 0; i < image.length(); i++) {
 
@@ -556,17 +576,6 @@ public class Movie_Details extends AppCompatActivity {
                             }
 
                             JSONArray image11 = jsonObject.getJSONArray("posters");
-
-                            String profile3 = image11.getJSONObject(0).getString("file_path");
-                            if (profile3 != null && profile3.length() != 0) {
-                                image3.setVisibility(View.VISIBLE);
-                                Picasso.with(Movie_Details.this).load(image_url + profile3).into
-                                        (image3);
-                            } else {
-
-                                image3.setVisibility(View.GONE);
-                            }
-
 
                             for (int i = 0; i < image11.length(); i++) {
 
@@ -1086,7 +1095,7 @@ public class Movie_Details extends AppCompatActivity {
                 final boolean boo2 = dbMovies.checkWatch(w_id);
                 boolean bool = dbMovies.checkWish(w_id);
                 if (bool) {
-                    Snackbar.make(rootLayout, "Alrea dy in Wish List", Snackbar.LENGTH_LONG)
+                    Snackbar.make(rootLayout, "Already in Wish List", Snackbar.LENGTH_LONG)
                             .setAction("Remove?", new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
@@ -1103,7 +1112,7 @@ public class Movie_Details extends AppCompatActivity {
                     Movie movie = new Movie(w_id, w_name);
                     long fact = dbMovies.insertWish(movie);
                     if (fact != -1) {
-                        wish.setBackgroundResource(R.color.primary_color_dark);
+                        wish.setBackgroundResource(R.color.accent_color);
                         layout1.setVisibility(View.GONE);
                         Snackbar.make(rootLayout, "Added to Wish List", Snackbar.LENGTH_LONG).show();
                     }
@@ -1115,6 +1124,77 @@ public class Movie_Details extends AppCompatActivity {
 
     }
 
+    private void worksOnSearch(final String w_id) {
+        //for search
+        search = (SearchBox) findViewById(R.id.searchbox);
+        // search.enableVoiceRecognition(this);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                dbMovies = new DBMovies(Movie_Details.this);
+
+                if (item.getItemId() == R.id.action_search) {
+                    openSearch();
+                }
+                if (item.getItemId() == R.id.refresh) {
+                    Intent intent = new Intent(Movie_Details.this, Movie_Details.class);
+                    intent.putExtra("tv", w_id);
+                    startActivity(intent);
+                }
+                if (item.getItemId() == R.id.clearWatch) {
+
+                    dbMovies.deleteAllWatch();
+                    Toast.makeText(Movie_Details.this, "Watch List cleared", Toast.LENGTH_LONG).show();
+                }
+                if (item.getItemId() == R.id.clearWish) {
+                    dbMovies.deleteAllWish();
+                    Toast.makeText(Movie_Details.this, "Wish List cleared", Toast.LENGTH_LONG).show();
+                }
+                if (item.getItemId() == R.id.about) {
+                    Intent intent = new Intent(Movie_Details.this, Credit.class);
+                    startActivity(intent);
+                }
+
+                return true;
+            }
+        });
+    }
+
+    private void worksOnNetwork() {
+        //progressDialouge();
+
+        if (!isNetworkAvailable()) {
+
+            AlertDialog.Builder builderAlertDialog = new AlertDialog.Builder(
+                    Movie_Details.this);
+
+            builderAlertDialog.setTitle("Connection Failed")
+                    .setMessage("Try for connecting?")
+                    .setIcon(R.drawable.ic_action_warning)
+                    .setPositiveButton("Setting", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+
+                        }
+                    })
+                    .setNegativeButton("Skip", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .show();
+        }
+
+    }
+
+
     private void worksOnWatchWish(final String w_id, final String w_name) {
 
 
@@ -1122,32 +1202,39 @@ public class Movie_Details extends AppCompatActivity {
 
     private void initualizing_contents() {
 
+        rating_card = (CardView) findViewById(R.id.rating_card);
+        // rating_card.setBackgroundColor(getResources().getColor(R.color.background2));
         rootLayout = (CoordinatorLayout) findViewById(R.id.rootLayout);
         coverLayout = (ImageView) findViewById(R.id.cover);
-        coverLayout1 = (ImageView) findViewById(R.id.cover1);
-        coverLayout1.setVisibility(View.GONE);
+//        coverLayout1 = (ImageView) findViewById(R.id.cover1);
+//        coverLayout1.setVisibility(View.GONE);
         circularImageView = (ImageView) findViewById(R.id.play_trailer);
-        circularImageView1 = (ImageView) findViewById(R.id.play_trailer1);
-        circularImageView1.setVisibility(View.GONE);
+//        circularImageView1 = (ImageView) findViewById(R.id.play_trailer1);
+//        circularImageView1.setVisibility(View.GONE);
         //  ratingBar = (RatingBar) findViewById(R.id.movieAudienceScore_details);
         imageView = (ImageView) findViewById(R.id.postar_image_detail);
         button = (TextView) findViewById(R.id.cast_and_crew);
         // tvTitle = (TextView) findViewById(R.id.title_details);
         tvGenre = (TextView) findViewById(R.id.genre_details);
         tvOverview = (TextView) findViewById(R.id.overview_details);
+        tvRuntime = (TextView) findViewById(R.id.runtime_details);
         tvHomepage = (TextView) findViewById(R.id.homepage_details);
         tvProduction = (TextView) findViewById(R.id.production_details);
         tvGenreDown = (TextView) findViewById(R.id.genre_down_details);
         tvRevenue = (TextView) findViewById(R.id.revenue_details);
+        tvBudget = (TextView) findViewById(R.id.budget_details);
         tvTagLine = (TextView) findViewById(R.id.tagline_details);
         tvImbdId = (TextView) findViewById(R.id.imdb_details);
         tvRating = (TextView) findViewById(R.id.tv_audience);
         imageRating = (ImageView) findViewById(R.id.image_rating);
-        Picasso.with(Movie_Details.this).load(R.drawable.bookmark_toolbar).resize(70, 70)
-                .into(imageRating);
+//        Picasso.with(Movie_Details.this).load(R.drawable.bookmark_toolbar).resize(70, 70)
+//                .into(imageRating);
 
         btn_moreImage = (TextView) findViewById(R.id.more_image);
         btn_reviws = (TextView) findViewById(R.id.review_details);
+        Typeface custom_font = Typeface.createFromAsset(getAssets(), "roboto_slab_regular.ttf");
+        btn_reviws.setTypeface(custom_font);
+
         btn_similar = (TextView) findViewById(R.id.similar_details);
 
 
@@ -1169,6 +1256,10 @@ public class Movie_Details extends AppCompatActivity {
         cast_text1 = (TextView) findViewById(R.id.movie_details_cast_name1);
         cast_text2 = (TextView) findViewById(R.id.movie_details_cast_name2);
         cast_text3 = (TextView) findViewById(R.id.movie_details_cast_name3);
+        watch = (ImageView) findViewById(R.id.watch);
+        wish = (ImageView) findViewById(R.id.wish);
+        add = (ImageView) findViewById(R.id.multiple_actions);
+        tvVotenumber = (TextView) findViewById(R.id.vote_number);
 
     }
 
@@ -1194,6 +1285,285 @@ public class Movie_Details extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void openSearch() {
+        toolbar.setTitle("");
+        search.revealFromMenuItem(R.id.action_search, this);
+//        for (int x = 0; x < 10; x++) {
+//            SearchResult option = new SearchResult("Result "
+//                    + Integer.toString(x), getResources().getDrawable(
+//                    R.drawable.ic_history));
+//            //  search.addSearchable(option);
+//        }
+//        search.setMenuListener(new SearchBox.MenuListener() {
+//
+//            @Override
+//            public void onMenuClick() {
+//                // Hamburger has been clicked
+//                Toast.makeText(MainActivity.this, "Menu click",
+//                        Toast.LENGTH_LONG).show();
+//            }
+//
+//        });
+        search.setSearchListener(new SearchBox.SearchListener() {
+
+            @Override
+            public void onSearchOpened() {
+                // Use this to tint the screen
+
+            }
+
+            @Override
+            public void onSearchClosed() {
+                // Use this to un-tint the screen
+                closeSearch();
+            }
+
+            @Override
+            public void onSearchTermChanged() {
+                // React to the search term changing
+                // Called after it has updated results
+            }
+
+            @Override
+            public void onSearch(String searchTerm) {
+
+                if (searchTerm != null && searchTerm.length() != 0 && searchTerm != "") {
+
+                    String key;
+                    String[] search = searchTerm.split(" ");
+                    StringBuilder builder = new StringBuilder();
+                    for (int i = 0; i < search.length; i++) {
+                        builder.append(search[i]);
+                        if (i < search.length - 1) {
+                            builder.append("+");
+                        }
+                    }
+
+                    //searchTerm = searchTerm.replaceAll("\\s", "");
+
+                    key = urlPre + multiPost + builder;
+
+                    Intent intent = new Intent(Movie_Details.this, Multi_Search_Activity.class);
+                    intent.putExtra("tv", key);
+                    startActivity(intent);
+
+                } else {
+                    Toast.makeText(Movie_Details.this, "Not Proper Keyword", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+            }
+
+            @Override
+            public void onSearchCleared() {
+
+            }
+
+        });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        //callbackManager.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1234 && resultCode == RESULT_OK) {
+            ArrayList<String> matches = data
+                    .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            search.populateEditText(matches);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    protected void closeSearch() {
+        search.hideCircularly(this);
+        if (search.getSearchText().isEmpty()) toolbar.setTitle("");
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    private void worksOncolor() {
+
+        Random random = new Random();
+        int i = random.nextInt(11 - 1 + 1) + 1;
+
+        if (i == 1) {
+
+            tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_one_toolbar));
+            add.setBackgroundColor(getResources().getColor(R.color.Style_one_toolbar));
+            wish.setBackgroundColor(getResources().getColor(R.color.Style_one_toolbar));
+            watch.setBackgroundColor(getResources().getColor(R.color.Style_one_toolbar));
+            rating_card.setBackgroundColor(getResources().getColor(R.color.Style_one_toolbar));
+
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color.Style_one_navigationBar));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color.Style_one_navigationBar));
+            }
+        }
+        if (i == 2) {
+
+            tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
+            add.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
+            wish.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
+            watch.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
+            rating_card.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color
+                        .Style_three_navigationBar));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_three_navigationBar));
+            }
+        }
+        if (i == 3) {
+
+            tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
+            add.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
+            wish.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
+            watch.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
+            rating_card.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color
+                        .Style_three_navigationBar));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_three_navigationBar));
+            }
+        }
+        if (i == 4) {
+
+            tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_four_toolbar));
+            add.setBackgroundColor(getResources().getColor(R.color.Style_four_toolbar));
+            wish.setBackgroundColor(getResources().getColor(R.color.Style_four_toolbar));
+            watch.setBackgroundColor(getResources().getColor(R.color.Style_four_toolbar));
+            rating_card.setBackgroundColor(getResources().getColor(R.color.Style_four_toolbar));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color
+                        .Style_four_navigationBar));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_four_navigationBar));
+            }
+        }
+        if (i == 5) {
+
+            tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_five_toolbar));
+            add.setBackgroundColor(getResources().getColor(R.color.Style_five_toolbar));
+            wish.setBackgroundColor(getResources().getColor(R.color.Style_five_toolbar));
+            watch.setBackgroundColor(getResources().getColor(R.color.Style_five_toolbar));
+            rating_card.setBackgroundColor(getResources().getColor(R.color.Style_five_toolbar));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color
+                        .Style_five_navigationBar));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_five_navigationBar));
+            }
+        }
+        if (i == 6) {
+
+            tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_six_toolbar));
+            add.setBackgroundColor(getResources().getColor(R.color.Style_six_toolbar));
+            wish.setBackgroundColor(getResources().getColor(R.color.Style_six_toolbar));
+            watch.setBackgroundColor(getResources().getColor(R.color.Style_six_toolbar));
+            rating_card.setBackgroundColor(getResources().getColor(R.color.Style_six_toolbar));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color
+                        .Style_six_navigationBar));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_six_navigationBar));
+            }
+        }
+        if (i == 7) {
+
+            tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_seven_toolbar));
+            add.setBackgroundColor(getResources().getColor(R.color.Style_seven_toolbar));
+            wish.setBackgroundColor(getResources().getColor(R.color.Style_seven_toolbar));
+            watch.setBackgroundColor(getResources().getColor(R.color.Style_seven_toolbar));
+            rating_card.setBackgroundColor(getResources().getColor(R.color.Style_seven_toolbar));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color
+                        .Style_seven_navigationBar));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_seven_navigationBar));
+            }
+        }
+        if (i == 8) {
+
+            tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_eight_toolbar));
+            add.setBackgroundColor(getResources().getColor(R.color.Style_eight_toolbar));
+            wish.setBackgroundColor(getResources().getColor(R.color.Style_eight_toolbar));
+            watch.setBackgroundColor(getResources().getColor(R.color.Style_eight_toolbar));
+            rating_card.setBackgroundColor(getResources().getColor(R.color.Style_eight_toolbar));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color
+                        .Style_eight_navigationBar));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_eight_navigationBar));
+            }
+        }
+        if (i == 9) {
+
+            tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_nine_toolbar));
+            add.setBackgroundColor(getResources().getColor(R.color.Style_nine_toolbar));
+            wish.setBackgroundColor(getResources().getColor(R.color.Style_nine_toolbar));
+            watch.setBackgroundColor(getResources().getColor(R.color.Style_nine_toolbar));
+            rating_card.setBackgroundColor(getResources().getColor(R.color.Style_nine_toolbar));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color
+                        .Style_nine_navigationBar));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_nine_navigationBar));
+            }
+        }
+        if (i == 10) {
+
+            tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_ten_toolbar));
+            add.setBackgroundColor(getResources().getColor(R.color.Style_ten_toolbar));
+            wish.setBackgroundColor(getResources().getColor(R.color.Style_ten_toolbar));
+            watch.setBackgroundColor(getResources().getColor(R.color.Style_ten_toolbar));
+            rating_card.setBackgroundColor(getResources().getColor(R.color.Style_ten_toolbar));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color
+                        .Style_ten_navigationBar));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_ten_navigationBar));
+            }
+        }
+        if (i == 11) {
+
+            tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_eleven_view));
+            add.setBackgroundColor(getResources().getColor(R.color.Style_eleven_view));
+            wish.setBackgroundColor(getResources().getColor(R.color.Style_eleven_view));
+            watch.setBackgroundColor(getResources().getColor(R.color.Style_eleven_view));
+            rating_card.setBackgroundColor(getResources().getColor(R.color.Style_eleven_view));
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color.Style_eleven_view));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_eleven_view));
+            }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(Movie_Details.this, MainActivity.class);
+        startActivity(intent);
+    }
 
     public interface ClickListener {
 
@@ -1258,6 +1628,4 @@ public class Movie_Details extends AppCompatActivity {
 
 
     }
-
-
 }

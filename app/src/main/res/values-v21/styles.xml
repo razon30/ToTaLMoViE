@@ -22,13 +22,23 @@
 
     </style>
 
+    <style name="MyCustomToolBarThem1" parent="ThemeOverlay.AppCompat.Dark">
+
+        <item name="android:textColorPrimary">@color/accent_color</item>
+        <item name="android:textColorSecondary">@color/accent_color</item>
+        <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowTransitionBackgroundFadeDuration">5000</item>
+
+
+    </style>
+
     <style name="MyCustomToolBarMovieDetails" parent="Theme.AppCompat.Light.NoActionBar">
-
-
-    <item name="android:windowContentTransitions">true</item>
+        <item name="android:windowContentTransitions">true</item>
         <item name="android:windowTranslucentStatus">true</item>
+    </style>
 
-
+    <style name="MyCustomToolBarMovieDetails1" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
     <style name="MyCustomToolBaSplash" parent="Theme.AppCompat.Light.NoActionBar">
@@ -37,7 +47,6 @@
         <item name="colorPrimaryDark">#fff59d</item>
         <item name="colorAccent">#fff59d</item>
         <item name="android:windowContentTransitions">true</item>
-        <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTransitionBackgroundFadeDuration">5000</item>
 
     </style>
@@ -56,7 +65,7 @@
 
     <style name="ExpandedAppBar" parent="@android:style/TextAppearance.Medium">
         <item name="android:textSize">28sp</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@android:color/black</item>
         <item name="android:textStyle">bold</item>
     </style>
 
@@ -68,7 +77,7 @@
 
     <style name="ExpandedAppBarPlus1" parent="@android:style/TextAppearance.Medium">
         <item name="android:textSize">28sp</item>
-        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColor">@android:color/black</item>
         <item name="android:textStyle">bold</item>
     </style>
 

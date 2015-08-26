@@ -1,8 +1,16 @@
 package com.example.razon30.totalmovie;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.speech.RecognizerIntent;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AlertDialog;
@@ -22,12 +30,14 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.quinny898.library.persistentsearch.SearchBox;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 
 public class Person_Details extends AppCompatActivity {
@@ -37,7 +47,7 @@ public class Person_Details extends AppCompatActivity {
     public ArrayList<Movie> person_more_movie_list = new ArrayList<Movie>();
     //popular
     public ArrayList<Movie> popular_person_list = new ArrayList<Movie>();
-    Toolbar toolbar;
+
     CollapsingToolbarLayout collapsingToolbarLayout;
     CoordinatorLayout rootLayout;
     ImageView image_cover,image_cover1, image_poster, hide, show;
@@ -50,6 +60,8 @@ public class Person_Details extends AppCompatActivity {
     String image_post = "/images?api_key=f246d5e5105e9934d3cd4c4c181d618d";
     String more_movie_post = "/movie_credits?api_key=f246d5e5105e9934d3cd4c4c181d618d";
     String person_popular_post = "popular?api_key=f246d5e5105e9934d3cd4c4c181d618d";
+    String urlPre = "http://api.themoviedb.org/3/search/";
+    String multiPost = "multi?api_key=f246d5e5105e9934d3cd4c4c181d618d&query=";
     //more image
     ListView oddList, evenList;
     ImageView more_image;
@@ -68,6 +80,9 @@ public class Person_Details extends AppCompatActivity {
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
 
+    private SearchBox search;
+    private Toolbar toolbar;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,10 +90,11 @@ public class Person_Details extends AppCompatActivity {
         final Intent intent = getIntent();
         id = Long.parseLong(intent.getStringExtra("tv"));
         initialization();
+        worksOnNetwork();
+        worksOnSearch(id);
+        worksOnColor();
 
 
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         rootLayout = (CoordinatorLayout) findViewById(R.id.rootLayout);
         collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbarLayout);
 
@@ -103,6 +119,17 @@ public class Person_Details extends AppCompatActivity {
                             String name1 = jsonObject.getString("name");
                             name.setText(name1);
                             collapsingToolbarLayout.setTitle(name1);
+                            //tvTitle.setText(w_name);
+                            // setTheme(R.style.MyCustomToolBarMovieDetails);
+                            collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style
+                                    .ExpandedAppBar);
+                            collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style
+                                    .CollapsedAppBar);
+                            collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style
+                                    .ExpandedAppBarPlus1);
+                            collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style
+                                    .CollapsedAppBarPlus1);
+
 
                             profile_path = "";
                             profile_path = jsonObject.getString("profile_path");
@@ -673,6 +700,81 @@ public class Person_Details extends AppCompatActivity {
 
     }
 
+    private void worksOnSearch(final long id) {
+        //for search
+        search = (SearchBox) findViewById(R.id.searchbox);
+        // search.enableVoiceRecognition(this);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
+        final String idd = String.valueOf(id);
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                DBMovies dbMovies;
+
+                dbMovies = new DBMovies(Person_Details.this);
+
+                if (item.getItemId() == R.id.action_search) {
+                    openSearch();
+                }
+                if (item.getItemId() == R.id.refresh) {
+                    Intent intent = new Intent(Person_Details.this, Person_Details.class);
+                    intent.putExtra("tv", idd);
+                    startActivity(intent);
+                }
+                if (item.getItemId() == R.id.clearWatch) {
+
+                    dbMovies.deleteAllWatch();
+                    Toast.makeText(Person_Details.this, "Watch List cleared", Toast.LENGTH_LONG).show();
+                }
+                if (item.getItemId() == R.id.clearWish) {
+                    dbMovies.deleteAllWish();
+                    Toast.makeText(Person_Details.this, "Wish List cleared", Toast.LENGTH_LONG).show();
+                }
+                if (item.getItemId() == R.id.about) {
+                    Intent intent = new Intent(Person_Details.this, Credit.class);
+                    startActivity(intent);
+                }
+
+                return true;
+            }
+        });
+    }
+
+    private void worksOnNetwork() {
+        //progressDialouge();
+
+        if (!isNetworkAvailable()) {
+
+            AlertDialog.Builder builderAlertDialog = new AlertDialog.Builder(
+                    Person_Details.this);
+
+            builderAlertDialog.setTitle("Connection Failed")
+                    .setMessage("Try for connecting?")
+                    .setIcon(R.drawable.ic_action_warning)
+                    .setPositiveButton("Setting", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                            startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+
+                        }
+                    })
+                    .setNegativeButton("Skip", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .show();
+        }
+
+
+    }
+
     private void initialization() {
 
         image_cover = (ImageView) findViewById(R.id.coverPerson);
@@ -690,6 +792,9 @@ public class Person_Details extends AppCompatActivity {
         person_more_image = (TextView) findViewById(R.id.person_more_image);
         person_more_movies = (TextView) findViewById(R.id.person_more_movies);
         popular_person = (TextView) findViewById(R.id.recent_popular_person);
+        Typeface custom_font = Typeface.createFromAsset(getAssets(), "roboto_slab_regular.ttf");
+        popular_person.setTypeface(custom_font);
+
         popular_person.setSelected(true);
 
 
@@ -733,4 +838,225 @@ public class Person_Details extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+    public void openSearch() {
+        toolbar.setTitle("");
+        search.revealFromMenuItem(R.id.action_search, this);
+//        for (int x = 0; x < 10; x++) {
+//            SearchResult option = new SearchResult("Result "
+//                    + Integer.toString(x), getResources().getDrawable(
+//                    R.drawable.ic_history));
+//            //  search.addSearchable(option);
+//        }
+//        search.setMenuListener(new SearchBox.MenuListener() {
+//
+//            @Override
+//            public void onMenuClick() {
+//                // Hamburger has been clicked
+//                Toast.makeText(MainActivity.this, "Menu click",
+//                        Toast.LENGTH_LONG).show();
+//            }
+//
+//        });
+        search.setSearchListener(new SearchBox.SearchListener() {
+
+            @Override
+            public void onSearchOpened() {
+                // Use this to tint the screen
+
+            }
+
+            @Override
+            public void onSearchClosed() {
+                // Use this to un-tint the screen
+                closeSearch();
+            }
+
+            @Override
+            public void onSearchTermChanged() {
+                // React to the search term changing
+                // Called after it has updated results
+            }
+
+            @Override
+            public void onSearch(String searchTerm) {
+//                Toast.makeText(MainActivity.this, searchTerm + " Searched",
+//                        Toast.LENGTH_LONG).show();
+                // toolbar.setTitle(searchTerm);
+
+                if (searchTerm != null && searchTerm.length() != 0 && searchTerm != "") {
+
+                    String key;
+                    String[] search = searchTerm.split(" ");
+                    StringBuilder builder = new StringBuilder();
+                    for (int i = 0; i < search.length; i++) {
+                        builder.append(search[i]);
+                        if (i < search.length - 1) {
+                            builder.append("+");
+                        }
+                    }
+
+                    //searchTerm = searchTerm.replaceAll("\\s", "");
+
+                    key = urlPre + multiPost + builder;
+
+                    Intent intent = new Intent(Person_Details.this, Multi_Search_Activity.class);
+                    intent.putExtra("tv", key);
+                    startActivity(intent);
+
+                } else {
+                    Toast.makeText(Person_Details.this, "Not Proper Keyword", Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+            }
+
+            @Override
+            public void onSearchCleared() {
+
+            }
+
+        });
+
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        //callbackManager.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == 1234 && resultCode == RESULT_OK) {
+            ArrayList<String> matches = data
+                    .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+            search.populateEditText(matches);
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    protected void closeSearch() {
+        search.hideCircularly(this);
+        if (search.getSearchText().isEmpty()) toolbar.setTitle("");
+    }
+
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(Person_Details.this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    private void worksOnColor() {
+
+        Random random = new Random();
+        int i = random.nextInt(11 - 1 + 1) + 1;
+
+        if (i == 1) {
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color.Style_one_navigationBar));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color.Style_one_navigationBar));
+            }
+        }
+        if (i == 2) {
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color
+                        .Style_three_navigationBar));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_three_navigationBar));
+            }
+        }
+        if (i == 3) {
+
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color
+                        .Style_three_navigationBar));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_three_navigationBar));
+            }
+        }
+        if (i == 4) {
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color
+                        .Style_four_navigationBar));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_four_navigationBar));
+            }
+        }
+        if (i == 5) {
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color
+                        .Style_five_navigationBar));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_five_navigationBar));
+            }
+        }
+        if (i == 6) {
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color
+                        .Style_six_navigationBar));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_six_navigationBar));
+            }
+        }
+        if (i == 7) {
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color
+                        .Style_seven_navigationBar));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_seven_navigationBar));
+            }
+        }
+        if (i == 8) {
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color
+                        .Style_eight_navigationBar));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_eight_navigationBar));
+            }
+        }
+        if (i == 9) {
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color
+                        .Style_nine_navigationBar));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_nine_navigationBar));
+            }
+        }
+        if (i == 10) {
+
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color
+                        .Style_ten_navigationBar));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_ten_navigationBar));
+            }
+        }
+        if (i == 11) {
+
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                getWindow().setStatusBarColor(getResources().getColor(R.color.Style_eleven_view));
+                getWindow().setNavigationBarColor(getResources().getColor(R.color
+                        .Style_eleven_view));
+            }
+        }
+
+    }
+
 }
