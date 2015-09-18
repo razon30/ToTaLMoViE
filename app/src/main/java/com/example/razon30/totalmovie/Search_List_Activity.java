@@ -251,11 +251,6 @@ public class Search_List_Activity extends AppCompatActivity implements Searching
 
         }
 
-        @Override
-        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-        }
-
 
     }
 

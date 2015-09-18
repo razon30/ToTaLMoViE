@@ -2,8 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:orientation="vertical"
-    android:background="#727272">
+              android:background="#607d8b"
+              android:orientation="vertical">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/search_recycler"
@@ -13,14 +13,14 @@
     </android.support.v7.widget.RecyclerView>
 
     <TextView
+        android:id="@+id/tv_multi"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:background="@drawable/ic_action_warning"
         android:gravity="center"
         android:textColor="#DAA520"
-        android:textStyle="bold"
         android:textSize="18sp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        android:id="@+id/tv_multi"/>
+        android:textStyle="bold"
+        android:visibility="gone"/>
 
 </LinearLayout>

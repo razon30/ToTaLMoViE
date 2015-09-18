@@ -8,7 +8,7 @@
     xmlns:cardview="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
+    android:background="#607d8b"
     card_view:cardCornerRadius="14.5dp"
     card_view:cardElevation="14.5dp"
     card_view:cardPreventCornerOverlap="true"
@@ -61,12 +61,12 @@
             android:id="@+id/person_movieReleaseDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_below="@id/person_character"
             android:alpha="0.87"
             android:padding="@dimen/size_half_byte"
-            android:textSize="@dimen/size_text_secondary"
-            android:layout_alignParentRight="true"
             android:text="31/31/31"
+            android:textSize="@dimen/size_text_secondary"
            />
     </RelativeLayout>
 </android.support.v7.widget.CardView>

@@ -291,10 +291,6 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
 
         }
 
-        @Override
-        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-        }
 
 
     }

@@ -12,6 +12,15 @@
 
     </style>
 
+    <style name="Custom" parent="android:Theme.DeviceDefault.Dialog">
+        <item name="DialogTitleAppearance">@android:style/TextAppearance.Widget.TextView</item>
+        <item name="DialogTitleText">Loading..Loading...</item>
+        <item name="DialogSpotColor">@color/accent_color</item>
+        <item name="DialogSpotCount">6</item>
+
+    </style>
+
+
     <style name="MyCustomToolBarThem" parent="ThemeOverlay.AppCompat.Dark">
 
         <item name="android:textColorPrimary">#FFFFFF</item>

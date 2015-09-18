@@ -24,6 +24,14 @@
     </item>
 
     <item
+        android:id="@+id/action_share"
+        android:icon="@drawable/abc_ic_menu_share_mtrl_alpha"
+        android:orderInCategory="100"
+        android:title="Share"
+        app:showAsAction="always"/>
+
+
+    <item
         android:id="@+id/action_search"
         android:icon="@drawable/abc_ic_search_api_mtrl_alpha"
         android:orderInCategory="100"

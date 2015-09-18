@@ -6,6 +6,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
@@ -81,6 +82,7 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
     ArrayList<Movie> bottomten = new ArrayList<Movie>();
     ArrayList<Movie> popular_movie_list = new ArrayList<Movie>();
     ArrayList<Movie> popular_person_list = new ArrayList<Movie>();
+    CardView cardView;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -412,6 +414,7 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                         getActivity());
 
                 if (topten == null || topten.size() == 0) {
+
                     Toast.makeText(getActivity(), "No Movie Found or Network Error",
                             Toast.LENGTH_LONG).show();
                     return;
@@ -427,6 +430,7 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
         });
 
         //for bottom 10 IMDB
+
 
         JsonArrayRequest request3 = new JsonArrayRequest(imdb_bottom_100,
 
@@ -1081,9 +1085,11 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getActivity(), Movie_Details.class);
-                intent.putExtra("tv", id1);
-                startActivity(intent);
+                if (id1 != null && id1.length() > 0) {
+                    Intent intent = new Intent(getActivity(), Movie_Details.class);
+                    intent.putExtra("tv", id1);
+                    startActivity(intent);
+                }
 
             }
         });
@@ -1092,9 +1098,11 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getActivity(), Movie_Details.class);
-                intent.putExtra("tv", id2);
-                startActivity(intent);
+                if (id2 != null && id2.length() > 0) {
+                    Intent intent = new Intent(getActivity(), Movie_Details.class);
+                    intent.putExtra("tv", id2);
+                    startActivity(intent);
+                }
 
             }
         });
@@ -1103,9 +1111,11 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getActivity(), Movie_Details.class);
-                intent.putExtra("tv", id3);
-                startActivity(intent);
+                if (id3 != null && id3.length() > 0) {
+                    Intent intent = new Intent(getActivity(), Movie_Details.class);
+                    intent.putExtra("tv", id3);
+                    startActivity(intent);
+                }
 
             }
         });
@@ -1114,9 +1124,11 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getActivity(), Person_Details.class);
-                intent.putExtra("tv", pid1);
-                startActivity(intent);
+                if (pid1 != null && pid1.length() > 0) {
+                    Intent intent = new Intent(getActivity(), Person_Details.class);
+                    intent.putExtra("tv", pid1);
+                    startActivity(intent);
+                }
 
             }
         });
@@ -1125,9 +1137,11 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getActivity(), Person_Details.class);
-                intent.putExtra("tv", pid2);
-                startActivity(intent);
+                if (pid2 != null && pid2.length() > 0) {
+                    Intent intent = new Intent(getActivity(), Person_Details.class);
+                    intent.putExtra("tv", pid2);
+                    startActivity(intent);
+                }
 
             }
         });
@@ -1136,9 +1150,11 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getActivity(), Person_Details.class);
-                intent.putExtra("tv", pid3);
-                startActivity(intent);
+                if (pid3 != null && pid3.length() > 0) {
+                    Intent intent = new Intent(getActivity(), Person_Details.class);
+                    intent.putExtra("tv", pid3);
+                    startActivity(intent);
+                }
 
             }
         });
@@ -1438,6 +1454,8 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
         tvTrailer2 = (TextView) view.findViewById(R.id.text_trailer_two);
         tvTrailer3 = (TextView) view.findViewById(R.id.text_trailer_three);
 
+        cardView = (CardView) view.findViewById(R.id.card_view1);
+        //  cardView.setCardElevation(40);
 
     }
 
@@ -1572,10 +1590,7 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
 
         }
 
-        @Override
-        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
-        }
 
     }
 

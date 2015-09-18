@@ -221,10 +221,6 @@ public class Multi_Search_Activity extends AppCompatActivity implements Searchin
 
         }
 
-        @Override
-        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-
-        }
 
 
     }

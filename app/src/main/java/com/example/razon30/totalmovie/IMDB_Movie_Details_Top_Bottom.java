@@ -9,11 +9,10 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.provider.Settings;
 import android.speech.RecognizerIntent;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
@@ -37,6 +36,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.github.mrengineer13.snackbar.SnackBar;
 import com.quinny898.library.persistentsearch.SearchBox;
 import com.squareup.picasso.Picasso;
 
@@ -54,8 +54,9 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
     public ArrayList<Movie> similar_list = new ArrayList<Movie>();
     //reviews
     public ArrayList<Movie> reviews = new ArrayList<Movie>();
-    CollapsingToolbarLayout collapsingToolbarLayout;
-    CoordinatorLayout rootLayout;
+
+
+    // CoordinatorLayout rootLayout;
     String w_id;
     String w_name;
     int a = 1;
@@ -164,8 +165,7 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
         //  scrollView = (ScrollView) findViewById(R.id.movie_details);
         // toolbar = (Toolbar) findViewById(R.id.toolbar);
 
-        rootLayout = (CoordinatorLayout) findViewById(R.id.rootLayout);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbarLayout);
+        //rootLayout = (CoordinatorLayout) findViewById(R.id.rootLayout);
 
 
 
@@ -342,7 +342,20 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
                             String title = jsonObject.getString("title");
                             w_name = title + "  (" + date[0] + ")";
                             // tvTitle.setText(w_name);
-                            collapsingToolbarLayout.setTitle(title + "  (" + date[0] + ")");
+
+                            if (Build.VERSION.SDK_INT >= 22) {
+                                CollapsingToolbarLayout collapsingToolbarLayout;
+                                collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbarLayout);
+                                collapsingToolbarLayout.setTitle(title + "  (" + date[0] + ")");
+                                collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style
+                                        .ExpandedAppBar);
+                                collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style
+                                        .CollapsedAppBar);
+                                collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style
+                                        .ExpandedAppBarPlus1);
+                                collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style
+                                        .CollapsedAppBarPlus1);
+                            }
 
                             String revenue = "";
                             revenue = jsonObject.getString("revenue");
@@ -1103,27 +1116,35 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
                 boolean bool = dbMovies.checkWatch(w_id);
                 final boolean boo2 = dbMovies.checkWish(w_id);
                 if (bool) {
-
-                    Snackbar.make(rootLayout, "Already in Watch List", Snackbar.LENGTH_LONG)
-                            .setAction("Remove?", new View.OnClickListener() {
+                    new SnackBar.Builder(IMDB_Movie_Details_Top_Bottom.this)
+                            .withMessage("Already in Watch List") // OR
+                            .withActionMessage("Remove") // OR
+                            .withTextColorId(R.color.accent_color)
+                            .withBackgroundColorId(R.color.primaryColor)
+                            .withOnClickListener(new SnackBar.OnMessageClickListener() {
                                 @Override
-                                public void onClick(View v) {
+                                public void onMessageClick(Parcelable parcelable) {
                                     dbMovies.deleteWatch(w_id);
                                     watch.setBackgroundResource(R.color.grey_60);
-                                    if (!boo2) {
-                                        layout1.setVisibility(View.VISIBLE);
-                                        layout2.setVisibility(View.GONE);
-                                        layout3.setVisibility(View.GONE);
-                                    }
                                 }
-                            }).show();
+                            })
+                            .show();
+
+
+
                 } else {
                     Movie movie = new Movie(w_id, w_name);
                     long fact = dbMovies.insertWatch(movie);
                     if (fact != -1) {
                         watch.setBackgroundResource(R.color.accent_color);
-                        layout1.setVisibility(View.GONE);
-                        Snackbar.make(rootLayout, "Added to Watch List", Snackbar.LENGTH_LONG).show();
+
+                        new SnackBar.Builder(IMDB_Movie_Details_Top_Bottom.this)
+                                .withMessage("Added to Watch List") // OR
+                                .withTextColorId(R.color.accent_color)
+                                .withBackgroundColorId(R.color.primaryColor)
+                                .show();
+
+
                     }
                 }
             }
@@ -1137,26 +1158,33 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
                 final boolean boo2 = dbMovies.checkWatch(w_id);
                 boolean bool = dbMovies.checkWish(w_id);
                 if (bool) {
-                    Snackbar.make(rootLayout, "Alrea dy in Wish List", Snackbar.LENGTH_LONG)
-                            .setAction("Remove?", new View.OnClickListener() {
+
+                    new SnackBar.Builder(IMDB_Movie_Details_Top_Bottom.this)
+                            .withMessage("Already in Wish List") // OR
+                            .withActionMessage("Remove") // OR
+                            .withTextColorId(R.color.accent_color)
+                            .withBackgroundColorId(R.color.primaryColor)
+                            .withOnClickListener(new SnackBar.OnMessageClickListener() {
                                 @Override
-                                public void onClick(View v) {
+                                public void onMessageClick(Parcelable parcelable) {
                                     dbMovies.deleteWish(w_id);
                                     wish.setBackgroundResource(R.color.grey_60);
-                                    if (!boo2) {
-                                        layout1.setVisibility(View.VISIBLE);
-                                        layout2.setVisibility(View.GONE);
-                                        layout3.setVisibility(View.GONE);
-                                    }
                                 }
-                            }).show();
+                            })
+                            .show();
+
+
                 } else {
                     Movie movie = new Movie(w_id, w_name);
                     long fact = dbMovies.insertWish(movie);
                     if (fact != -1) {
-                        wish.setBackgroundResource(R.color.primary_color_dark);
-                        layout1.setVisibility(View.GONE);
-                        Snackbar.make(rootLayout, "Added to Wish List", Snackbar.LENGTH_LONG).show();
+                        wish.setBackgroundResource(R.color.accent_color);
+                        new SnackBar.Builder(IMDB_Movie_Details_Top_Bottom.this)
+                                .withMessage("Added to Wish List") // OR
+                                .withTextColorId(R.color.accent_color)
+                                .withBackgroundColorId(R.color.primaryColor)
+                                .show();
+
                     }
                 }
             }
@@ -1239,7 +1267,7 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
 
         rating_card = (CardView) findViewById(R.id.rating_card);
         // rating_card.setBackgroundColor(getResources().getColor(R.color.background2));
-        rootLayout = (CoordinatorLayout) findViewById(R.id.rootLayout);
+        //rootLayout = (CoordinatorLayout) findViewById(R.id.rootLayout);
         coverLayout = (ImageView) findViewById(R.id.cover);
 //        coverLayout1 = (ImageView) findViewById(R.id.cover1);
 //        coverLayout1.setVisibility(View.GONE);
@@ -1592,14 +1620,6 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(IMDB_Movie_Details_Top_Bottom.this, MainActivity.class);
-        startActivity(intent);
-    }
-
-
 
     public interface ClickListener {
 
@@ -1657,10 +1677,7 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
 
         }
 
-        @Override
-        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
-        }
 
 
     }

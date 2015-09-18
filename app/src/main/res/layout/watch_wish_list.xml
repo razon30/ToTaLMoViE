@@ -3,12 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_blue_bright"
+    android:background="#607d8b"
     android:orientation="vertical">
 
     <ListView
         android:id="@+id/watch_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"></ListView>
+        android:layout_height="wrap_content"
+        android:background="#607d8b"></ListView>
 
 </android.support.v7.widget.CardView>

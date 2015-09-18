@@ -14,5 +14,6 @@
     <dimen name="movie_thumbnail_height">80dp</dimen>
     <dimen name="drawer_text_size">16dp</dimen>
     <dimen name="drawer_head_size">18dp</dimen>
+    <dimen name="cardCornerRadius">4dp</dimen>
 
 </resources>

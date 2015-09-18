@@ -141,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
         setContentView(R.layout.activity_main);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
 
+
         //progressDialouge();
 
         if (!isNetworkAvailable()) {
@@ -216,7 +217,7 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
 
         worksOnDrawer();
         worksOnDrawerHeader();
-        // worksOnDrawerMenu();
+        worksOnDrawerMenu();
 
 
         adapter = new ViewPagerAdapter(getSupportFragmentManager());

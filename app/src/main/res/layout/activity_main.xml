@@ -11,7 +11,7 @@
                   xmlns:tools="http://schemas.android.com/tools"
                   android:layout_width="match_parent"
                   android:layout_height="match_parent"
-                  android:background="#FFFFFF"
+
                   android:orientation="vertical"
                   tools:context=".MainActivity">
 
@@ -87,11 +87,11 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/drawer_background"
+        android:background="#607d8b"
         app:headerLayout="@layout/header_layout"
         app:itemIconTint="@color/primary_color_translucent"
         app:itemTextColor="@color/accent_color"
-        app:menu="@menu/menu_navigation"
+
         />
 
 

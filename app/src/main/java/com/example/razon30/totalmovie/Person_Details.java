@@ -12,13 +12,15 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.speech.RecognizerIntent;
 import android.support.design.widget.CollapsingToolbarLayout;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -48,11 +50,11 @@ public class Person_Details extends AppCompatActivity {
     //popular
     public ArrayList<Movie> popular_person_list = new ArrayList<Movie>();
 
-    CollapsingToolbarLayout collapsingToolbarLayout;
-    CoordinatorLayout rootLayout;
+    // CollapsingToolbarLayout collapsingToolbarLayout;
+    // CoordinatorLayout rootLayout;
     ImageView image_cover,image_cover1, image_poster, hide, show;
     TextView name, biography, birth_date, birth_place, height, homepage, person_more_image, person_more_movies;
-    TextView popular_person;
+    WebView popular_person;
     String urlPreId = "http://api.themoviedb.org/3/person/";
     long id;
     String urlLaterId = "?api_key=f246d5e5105e9934d3cd4c4c181d618d";
@@ -95,8 +97,8 @@ public class Person_Details extends AppCompatActivity {
         worksOnColor();
 
 
-        rootLayout = (CoordinatorLayout) findViewById(R.id.rootLayout);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbarLayout);
+//        rootLayout = (CoordinatorLayout) findViewById(R.id.rootLayout);
+//        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbarLayout);
 
 
         volleySingleton = VolleySingleton.getsInstance();
@@ -118,17 +120,19 @@ public class Person_Details extends AppCompatActivity {
 
                             String name1 = jsonObject.getString("name");
                             name.setText(name1);
-                            collapsingToolbarLayout.setTitle(name1);
-                            //tvTitle.setText(w_name);
-                            // setTheme(R.style.MyCustomToolBarMovieDetails);
-                            collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style
-                                    .ExpandedAppBar);
-                            collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style
-                                    .CollapsedAppBar);
-                            collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style
-                                    .ExpandedAppBarPlus1);
-                            collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style
-                                    .CollapsedAppBarPlus1);
+                            if (Build.VERSION.SDK_INT >= 22) {
+                                CollapsingToolbarLayout collapsingToolbarLayout;
+                                collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbarLayout);
+                                collapsingToolbarLayout.setTitle(name1);
+                                collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style
+                                        .ExpandedAppBar);
+                                collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style
+                                        .CollapsedAppBar);
+                                collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style
+                                        .ExpandedAppBarPlus1);
+                                collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style
+                                        .CollapsedAppBarPlus1);
+                            }
 
 
                             profile_path = "";
@@ -619,14 +623,60 @@ public class Person_Details extends AppCompatActivity {
             }
         });
 
-        popular_person.setOnClickListener(new View.OnClickListener() {
+//        popular_person.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Toast.makeText(Person_Details.this, "length " + popular_person_list.size(),
+//                        Toast.LENGTH_LONG)
+//                        .show();
+//
+//                View view1 = getLayoutInflater().inflate(R.layout.review, null);
+//                ListView movieView = (ListView) view1.findViewById(R.id.review_list);
+//
+//                Popular_Person_Adapter adapter = new Popular_Person_Adapter
+//                        (popular_person_list, Person_Details.this);
+//
+//                movieView.setAdapter(adapter);
+//
+//                movieView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//                    @Override
+//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//                        Movie current = popular_person_list.get(position);
+//                        String movie_id = String.valueOf(current.getId());
+//
+//                        Intent intent1 = new Intent(Person_Details.this, Person_Details.class);
+//                        intent1.putExtra("tv", movie_id);
+//                        startActivity(intent1);
+//
+//                    }
+//                });
+//
+//
+//                AlertDialog.Builder builderAlertDialog = new AlertDialog.Builder(
+//                        Person_Details.this);
+//
+//                if (popular_person_list == null || popular_person_list.size() == 0) {
+//                    Toast.makeText(Person_Details.this, "No Popular Person is Found or Network " +
+//                                    "Error",
+//                            Toast.LENGTH_LONG).show();
+//                    return;
+//                } else {
+//
+//                    builderAlertDialog
+//                            .setView(view1)
+//                            .show();
+//
+//                }
+//
+//            }
+//        });
+
+
+        popular_person.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public void onClick(View v) {
-
-                Toast.makeText(Person_Details.this, "length " + popular_person_list.size(),
-                        Toast.LENGTH_LONG)
-                        .show();
-
+            public boolean onTouch(View v, MotionEvent event) {
                 View view1 = getLayoutInflater().inflate(R.layout.review, null);
                 ListView movieView = (ListView) view1.findViewById(R.id.review_list);
 
@@ -657,7 +707,6 @@ public class Person_Details extends AppCompatActivity {
                     Toast.makeText(Person_Details.this, "No Popular Person is Found or Network " +
                                     "Error",
                             Toast.LENGTH_LONG).show();
-                    return;
                 } else {
 
                     builderAlertDialog
@@ -666,9 +715,9 @@ public class Person_Details extends AppCompatActivity {
 
                 }
 
+                return false;
             }
         });
-
 
         movie_image1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -791,11 +840,17 @@ public class Person_Details extends AppCompatActivity {
         show = (ImageView) findViewById(R.id.show);
         person_more_image = (TextView) findViewById(R.id.person_more_image);
         person_more_movies = (TextView) findViewById(R.id.person_more_movies);
-        popular_person = (TextView) findViewById(R.id.recent_popular_person);
+        popular_person = (WebView) findViewById(R.id.recent_popular_person);
         Typeface custom_font = Typeface.createFromAsset(getAssets(), "roboto_slab_regular.ttf");
-        popular_person.setTypeface(custom_font);
+        // popular_person.setTypeface(custom_font);
 
-        popular_person.setSelected(true);
+        popular_person.loadUrl("file:///android_asset/www/app.html");
+
+        WebSettings mWebSettings = popular_person.getSettings();
+
+        mWebSettings.setJavaScriptEnabled(true);
+
+        // popular_person.setSelected(true);
 
 
         image1 = (ImageView) findViewById(R.id.person_details_image1);
@@ -945,12 +1000,12 @@ public class Person_Details extends AppCompatActivity {
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(Person_Details.this, MainActivity.class);
-        startActivity(intent);
-    }
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//        Intent intent = new Intent(Person_Details.this, MainActivity.class);
+//        startActivity(intent);
+//    }
 
     private void worksOnColor() {
 

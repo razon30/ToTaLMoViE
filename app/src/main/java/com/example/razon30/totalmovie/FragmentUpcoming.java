@@ -282,10 +282,7 @@ public class FragmentUpcoming extends android.support.v4.app.Fragment implements
 
         }
 
-        @Override
-        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
-        }
 
 
     }

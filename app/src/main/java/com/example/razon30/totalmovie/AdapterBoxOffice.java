@@ -132,12 +132,12 @@ public class AdapterBoxOffice extends RecyclerView.Adapter<AdapterBoxOffice.View
                 @Override
                 public void onErrorResponse(VolleyError error) {
 
-                    holder.movieThumbnail.setImageResource(R.drawable.clearhistory);
+                    holder.movieThumbnail.setImageResource(R.drawable.default_image);
 
                 }
             });
         }else if (urlThumbnail==null){
-            holder.movieThumbnail.setImageResource(R.drawable.clearhistory);
+            holder.movieThumbnail.setImageResource(R.drawable.default_image);
         }
     }
 
