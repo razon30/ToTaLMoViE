@@ -7,7 +7,6 @@
         <item name="android:colorPrimaryDark">@color/primaryColorDark</item>
         <item name="android:colorAccent">@color/accentColor</item>
         <item name="android:windowContentTransitions">true</item>
-
         <item name="android:windowTransitionBackgroundFadeDuration">5000</item>
 
     </style>
@@ -41,7 +40,7 @@
 
     </style>
 
-    <style name="MyCustomToolBarMovieDetails" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="MyCustomToolBarMovieDetails" parent="AppTheme.Base">
         <item name="android:windowContentTransitions">true</item>
         <item name="android:windowTranslucentStatus">true</item>
     </style>
@@ -70,6 +69,7 @@
     <style name="menu_labels_style">
         <item name="android:background">@drawable/selector_button_red</item>
         <item name="android:textColor">@color/accentColor</item>
+        <item name="android:elevation">20dp</item>
     </style>
 
     <style name="ExpandedAppBar" parent="@android:style/TextAppearance.Medium">

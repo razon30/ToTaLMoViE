@@ -23,10 +23,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -40,14 +42,16 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.etiennelawlor.imagegallery.library.activities.ImageGalleryActivity;
+import com.etiennelawlor.imagegallery.library.enums.PaletteColorType;
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareButton;
 import com.github.mrengineer13.snackbar.SnackBar;
+import com.github.siyamed.shapeimageview.CircularImageView;
+import com.orhanobut.dialogplus.DialogPlus;
+import com.orhanobut.dialogplus.ViewHolder;
 import com.quinny898.library.persistentsearch.SearchBox;
 import com.squareup.picasso.Picasso;
-import com.sromku.simple.fb.Permission;
-import com.sromku.simple.fb.SimpleFacebook;
-import com.sromku.simple.fb.SimpleFacebookConfiguration;
-import com.sromku.simple.fb.entities.Feed;
-import com.sromku.simple.fb.listeners.OnPublishListener;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -56,6 +60,12 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import dmax.dialog.SpotsDialog;
+
+//import com.sromku.simple.fb.Permission;
+//import com.sromku.simple.fb.SimpleFacebook;
+//import com.sromku.simple.fb.SimpleFacebookConfiguration;
+//import com.sromku.simple.fb.entities.Feed;
+//import com.sromku.simple.fb.listeners.OnPublishListener;
 
 //import net.steamcrafted.loadtoast.LoadToast;
 //import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -71,7 +81,7 @@ public class Movie_Details extends AppCompatActivity {
     // CollapsingToolbarLayout collapsingToolbarLayout;
     // CoordinatorLayout rootLayout;
     ImageView coverLayout, coverLayout1;
-    ImageView circularImageView, circularImageView1;
+    CircularImageView circularImageView, ratingCircularImageView1;
     ImageView imageView, imageRating;
     TextView button, btn_moreImage, btn_reviws, btn_similar;
     TextView tvOverview, tvHomepage, tvProduction, tvGenreDown, tvRevenue, tvTagLine,
@@ -100,6 +110,7 @@ public class Movie_Details extends AppCompatActivity {
     ArrayList<String> more_image_array = new ArrayList<String>();
     ScrollView scrollView;
     ImageView image1, image2, image3;
+    String backdrop1, backdrop2, backdrop3;
     String iid1, iid2, iid3;
     ImageView similarImage1, similarImage2, similarImage3;
     String sid1, sid2, sid3;
@@ -114,21 +125,23 @@ public class Movie_Details extends AppCompatActivity {
     DBMovies dbMovies;
     LinearLayout layout1, layout2, layout3;
     CardView rating_card;
-    ImageView watch;
-    ImageView wish, add;
+    Button watch;
+    ImageView wish;
+    //ImageView add;
     TextView tvGenre;
     //for share on facebook
     String movie_name = "", description = "", image_link = "", movie_link = "";
-    SimpleFacebook mSimpleFacebook;
-    Permission[] permissions = new Permission[]{
-            Permission.USER_PHOTOS,
-            Permission.EMAIL,
-            Permission.PUBLISH_ACTION
-    };
+    String shareUrl = "";
+    String about = " ";
+    //    SimpleFacebook mSimpleFacebook;
+//    Permission[] permissions = new Permission[]{
+//            Permission.USER_PHOTOS,
+//            Permission.EMAIL,
+//            Permission.PUBLISH_ACTION
+//    };
     private ImageLoader imageLoader;
     //Retriving data
     private VolleySingleton volleySingleton;
-
     //for Slide
 //    SlideShowView slideShowView;
 //    SlideShowAdapter adapter;
@@ -140,16 +153,22 @@ public class Movie_Details extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie__details);
-        SimpleFacebookConfiguration configuration = new SimpleFacebookConfiguration.Builder()
-                .setAppId("625994234086470")
-                .setNamespace("sromkuapp")
-                .setPermissions(permissions)
-                .build();
-        SimpleFacebook.setConfiguration(configuration);
-        mSimpleFacebook = SimpleFacebook.getInstance();
+//        SimpleFacebookConfiguration configuration = new SimpleFacebookConfiguration.Builder()
+//                .setAppId("625994234086470")
+//                .setNamespace("sromkuapp")
+//                .setPermissions(permissions)
+//                .build();
+//        SimpleFacebook.setConfiguration(configuration);
+//        mSimpleFacebook = SimpleFacebook.getInstance();
 
         final Intent intent = getIntent();
         id = Long.parseLong(intent.getStringExtra("tv"));
+        String shareUrl_demo = intent.getStringExtra("url");
+
+        if (shareUrl_demo != null && shareUrl_demo.length() != 0) {
+            shareUrl = shareUrl_demo;
+        }
+
         w_id = String.valueOf(id);
         initualizing_contents();
         worksOncolor();
@@ -158,7 +177,7 @@ public class Movie_Details extends AppCompatActivity {
 
 
         dbMovies = new DBMovies(Movie_Details.this);
-        layout1 = (LinearLayout) findViewById(R.id.multiple_layout);
+        // layout1 = (LinearLayout) findViewById(R.id.multiple_layout);
         layout2 = (LinearLayout) findViewById(R.id.watch_layout);
         layout3 = (LinearLayout) findViewById(R.id.wish_layout);
         boolean bool1 = dbMovies.checkWatch(w_id);
@@ -1009,33 +1028,33 @@ public class Movie_Details extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                View view1 = getLayoutInflater().inflate(R.layout.custom_more_image, null);
-                ListView oddView = (ListView) view1.findViewById(R.id.odd_list_image);
-                ListView evenView = (ListView) view1.findViewById(R.id.even_list_image);
-
-
-                if (more_image_array != null && more_image_array.size() != 0) {
-
-                    for (int i = 0; i < more_image_array.size(); i++) {
-
-                        if (i % 2 == 0) {
-                            evenArray.add(more_image_array.get(i));
-                        } else {
-                            oddArray.add(more_image_array.get(i));
-                        }
-
-                    }
-
-                }
-
-                Adapter_more_image oddAdapter = new Adapter_more_image(oddArray, Movie_Details.this);
-                Adapter_more_image evenAdapter = new Adapter_more_image(evenArray, Movie_Details.this);
-
-                oddView.setAdapter(oddAdapter);
-                evenView.setAdapter(evenAdapter);
-
-                AlertDialog.Builder builderAlertDialog = new AlertDialog.Builder(
-                        Movie_Details.this);
+//                View view1 = getLayoutInflater().inflate(R.layout.custom_more_image, null);
+//               ListView oddView = (ListView) view1.findViewById(R.id.odd_list_image);
+//                ListView evenView = (ListView) view1.findViewById(R.id.even_list_image);
+//
+//                if (more_image_array != null && more_image_array.size() != 0) {
+//
+//                    for (int i = 0; i < more_image_array.size(); i++) {
+//
+//                        if (i < 50) {
+//                            evenArray.add(more_image_array.get(i));
+//                        }
+//                        } else {
+//                            oddArray.add(more_image_array.get(i));
+//                        }
+//
+//                    }
+//
+//                }
+//
+//                Adapter_more_image oddAdapter = new Adapter_more_image(oddArray, Movie_Details.this);
+//                Adapter_more_image evenAdapter = new Adapter_more_image(evenArray, Movie_Details.this);
+//
+//                oddView.setAdapter(oddAdapter);
+//                evenView.setAdapter(evenAdapter);
+//
+//                AlertDialog.Builder builderAlertDialog = new AlertDialog.Builder(
+//                        Movie_Details.this);
 
                 if (more_image_array == null || more_image_array.size() == 0) {
                     Toast.makeText(Movie_Details.this, "No image Found or Network Error",
@@ -1043,9 +1062,20 @@ public class Movie_Details extends AppCompatActivity {
                     return;
                 } else {
 
-                    builderAlertDialog
-                            .setView(view1)
-                            .show();
+//                    builderAlertDialog
+//                            .setView(view1)
+//                            .show();
+
+                    Intent intent = new Intent(Movie_Details.this, ImageGalleryActivity.class);
+                    // Intent intent = new Intent(MainActivity.this, ImageGalleryActivity.class);
+
+//
+                    intent.putStringArrayListExtra("images", more_image_array);
+// optionally set background color using Palette
+                    intent.putExtra("palette_color_type", PaletteColorType.VIBRANT);
+
+                    startActivity(intent);
+
 
                 }
 
@@ -1073,9 +1103,11 @@ public class Movie_Details extends AppCompatActivity {
 
                         Movie movie = similar_list.get(position);
                         String id = String.valueOf(movie.getId());
+                        String image = image_url + movie.getUrlThumbnail();
 
                         Intent intent = new Intent(Movie_Details.this, Movie_Details.class);
                         intent.putExtra("tv", id);
+                        intent.putExtra("url", image);
 
 
                         startActivity(intent);
@@ -1179,6 +1211,7 @@ public class Movie_Details extends AppCompatActivity {
                 if (sid1 != null && sid1.length() > 0) {
                     Intent intent1 = new Intent(Movie_Details.this, Movie_Details.class);
                     intent1.putExtra("tv", sid1);
+                    intent1.putExtra("url", backdrop1);
                     startActivity(intent1);
                 }
             }
@@ -1190,6 +1223,7 @@ public class Movie_Details extends AppCompatActivity {
                 if (sid2 != null && sid2.length() > 0) {
                     Intent intent1 = new Intent(Movie_Details.this, Movie_Details.class);
                     intent1.putExtra("tv", sid2);
+                    intent1.putExtra("url", backdrop2);
                     startActivity(intent1);
                 }
             }
@@ -1201,6 +1235,7 @@ public class Movie_Details extends AppCompatActivity {
                 if (sid3 != null && sid3.length() > 0) {
                     Intent intent1 = new Intent(Movie_Details.this, Movie_Details.class);
                     intent1.putExtra("tv", sid3);
+                    intent1.putExtra("url", backdrop3);
                     startActivity(intent1);
                 }
             }
@@ -1208,26 +1243,89 @@ public class Movie_Details extends AppCompatActivity {
 
 //Toast.makeText(Movie_Details.this,w_name,Toast.LENGTH_LONG).show();
 
+//        Bitmap img = BitmapFactory.decodeResource(getResources(), );
+//        img = BitmapFactory.
+
+        final View view = getLayoutInflater().inflate(R.layout.aboutshare, null);
+        final TextView remove = (TextView) view.findViewById(R.id.remove);
+        final ShareButton shareButton = (ShareButton) view.findViewById(R.id.okShare);
+        final TextView tag = (TextView) view.findViewById(R.id.fbAbout);
+
+        final ShareLinkContent content = new ShareLinkContent.Builder()
+                //.setContentUrl(Uri.parse("http://t1.gstatic" +
+                // ".com/images?q=tbn:ANd9GcQm-J_KZ9tj4WTHJY7jYGKtDHsMYa4OBvTJJ6VaGzIW7Xvg7snQYA"))
+                .setContentUrl(Uri.parse(shareUrl))
+                .setContentTitle("Watching")
+                .setContentDescription("Amazing")
+                        //.setContentDescription(editText.getText().toString())
+                .build();
+
+
+
         watch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dbMovies = new DBMovies(Movie_Details.this);
+                if (shareUrl == null || shareUrl.length() == 0) {
+
+                    new SnackBar.Builder(Movie_Details.this)
+                            .withMessage("Sorry,No link is Available to share") // OR
+                            .withTextColorId(R.color.accent_color)
+                            .withBackgroundColorId(R.color.primaryColor)
+                            .show();
+                }
+
                 boolean bool = dbMovies.checkWatch(w_id);
                 final boolean boo2 = dbMovies.checkWish(w_id);
                 if (bool) {
-                    new SnackBar.Builder(Movie_Details.this)
-                            .withMessage("Already in Watch List") // OR
-                            .withActionMessage("Remove") // OR
-                            .withTextColorId(R.color.accent_color)
-                            .withBackgroundColorId(R.color.primaryColor)
-                            .withOnClickListener(new SnackBar.OnMessageClickListener() {
-                                @Override
-                                public void onMessageClick(Parcelable parcelable) {
-                                    dbMovies.deleteWatch(w_id);
-                                    watch.setBackgroundResource(R.color.grey_60);
-                                }
-                            })
-                            .show();
+//                    new SnackBar.Builder(Movie_Details.this)
+//                            .withMessage("Already in Watch List") // OR
+//                            .withActionMessage("Remove") // OR
+//                            .withTextColorId(R.color.accent_color)
+//                            .withBackgroundColorId(R.color.primaryColor)
+//                            .withOnClickListener(new SnackBar.OnMessageClickListener() {
+//                                @Override
+//                                public void onMessageClick(Parcelable parcelable) {
+//                                    dbMovies.deleteWatch(w_id);
+//                                    watch.setBackgroundResource(R.color.grey_60);
+//                                }
+//                            })
+//                            .show();
+
+
+                    tag.setText("Already in Watch List");
+                    remove.setVisibility(View.VISIBLE);
+                    final DialogPlus dialog = DialogPlus.newDialog(Movie_Details.this)
+
+                            .setContentHolder(new ViewHolder(view))
+                            .setExpanded(true)  // This will enable the expand feature, (similar to
+                                    // android L share dialog)
+                            .setMargin(100, 5, 100, 5)
+                            .setGravity(Gravity.CENTER)
+                            .setCancelable(true)
+                            .setInAnimation(R.anim.slide_in_bottom)
+                            .setOutAnimation(R.anim.slide_out_bottom)
+                            .create();
+                    dialog.show();
+                    shareButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            shareButton.setShareContent(content);
+                        }
+                    });
+
+                    remove.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            dbMovies.deleteWatch(w_id);
+                            dialog.dismiss();
+                            new SnackBar.Builder(Movie_Details.this)
+                                    .withMessage("Removed Successfully") // OR
+                                    .withTextColorId(R.color.accent_color)
+                                    .withBackgroundColorId(R.color.primaryColor)
+                                    .show();
+                        }
+                    });
 
 
                 } else {
@@ -1236,11 +1334,53 @@ public class Movie_Details extends AppCompatActivity {
                     if (fact != -1) {
                         watch.setBackgroundResource(R.color.accent_color);
 
-                        new SnackBar.Builder(Movie_Details.this)
-                                .withMessage("Added to Watch List") // OR
-                                .withTextColorId(R.color.accent_color)
-                                .withBackgroundColorId(R.color.primaryColor)
-                                .show();
+
+                        remove.setVisibility(View.GONE);
+
+                        // watch.setShareContent(content);
+                        tag.setText("Share On Facebook?");
+
+                        final DialogPlus dialog = DialogPlus.newDialog(Movie_Details.this)
+
+                                .setContentHolder(new ViewHolder(view))
+                                .setExpanded(true)  // This will enable the expand feature, (similar to
+                                        // android L share dialog)
+                                .setMargin(100, 5, 100, 5)
+                                .setGravity(Gravity.CENTER)
+                                .setCancelable(true)
+                                .setInAnimation(R.anim.slide_in_bottom)
+                                .setOutAnimation(R.anim.slide_out_bottom)
+                                .create();
+                        dialog.show();
+                        shareButton.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                shareButton.setShareContent(content);
+                            }
+                        });
+
+//                        textView.setOnClickListener(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View v) {
+//                                about = editText.getText().toString();
+//
+//                            }
+//                        });
+
+//                        ShareLinkContent content = new ShareLinkContent.Builder()
+//                                //.setContentUrl(Uri.parse("http://t1.gstatic" +
+//                                // ".com/images?q=tbn:ANd9GcQm-J_KZ9tj4WTHJY7jYGKtDHsMYa4OBvTJJ6VaGzIW7Xvg7snQYA"))
+//                                .setContentUrl(Uri.parse(shareUrl))
+//                                .setContentTitle("Watching")
+//                                .setContentDescription("Amazing")
+//                                //.setContentDescription(editText.getText().toString())
+//                                .build();
+//                        textView.setShareContent(content);
+//                        new SnackBar.Builder(Movie_Details.this)
+//                                .withMessage("Added to Watch List") // OR
+//                                .withTextColorId(R.color.accent_color)
+//                                .withBackgroundColorId(R.color.primaryColor)
+//                                .show();
 
 
                     }
@@ -1289,38 +1429,38 @@ public class Movie_Details extends AppCompatActivity {
         });
 
         // worksOnWatchWish(w_id,w_name);
+//
+//        final OnPublishListener onPublishListener = new OnPublishListener() {
+//            @Override
+//            public void onComplete(String postId) {
+//                //Log.i(TAG, "Published successfully. The new post id = " + postId);
+//            }
+//        };
+//
+//
+//        final Feed feed1 = new Feed.Builder()
+//                .setMessage("Watching")
+//                .setName(movie_name)
+//                .setCaption("Enjoying")
+//                .setDescription(description)
+//                .setPicture(image_link)
+////                .setLink(movie_link)
+////                .addAction("", movie_link)
+////                .addProperty("Full documentation", "https://github.com/razon30")
+////                .addProperty("Stars", "14")
+//                .build();
+//
 
-        final OnPublishListener onPublishListener = new OnPublishListener() {
-            @Override
-            public void onComplete(String postId) {
-                //Log.i(TAG, "Published successfully. The new post id = " + postId);
-            }
-        };
-
-
-        final Feed feed1 = new Feed.Builder()
-                .setMessage("Watching")
-                .setName(movie_name)
-                .setCaption("Enjoying")
-                .setDescription(description)
-                .setPicture(image_link)
-//                .setLink(movie_link)
-//                .addAction("", movie_link)
-//                .addProperty("Full documentation", "https://github.com/razon30")
-//                .addProperty("Stars", "14")
-                .build();
-
-
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                layout2.setVisibility(View.VISIBLE);
-//                layout3.setVisibility(View.VISIBLE);
-
-                mSimpleFacebook.publish(feed1, true, onPublishListener);
-
-            }
-        });
+//        add.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+////                layout2.setVisibility(View.VISIBLE);
+////                layout3.setVisibility(View.VISIBLE);
+//
+//                //mSimpleFacebook.publish(feed1, true, onPublishListener);
+//
+//            }
+//        });
 
     }
 
@@ -1346,6 +1486,7 @@ public class Movie_Details extends AppCompatActivity {
 
                                 Picasso.with(Movie_Details.this).load(image_url + backdrop_path).into
                                         (coverLayout);
+
 
 //                                Picasso.with(Movie_Details.this).load(image_url + backdrop_path).into
 //                                        (coverLayout1);
@@ -1762,15 +1903,11 @@ public class Movie_Details extends AppCompatActivity {
                             for (int i = 0; i < image_slide.length(); i++) {
 
                                 JSONObject obj = image_slide.getJSONObject(i);
-                                String im = obj.getString("file_path");
+                                String im = image_url + obj.getString("file_path");
                                 more_image_array.add(im);
 
                             }
 
-//                            adapter = new PicassoBitmapAdapter(Movie_Details.this, Arrays.asList
-//                                    (arrayList));
-//                            slideShowView.setAdapter(adapter);
-//                            slideShowView.play();
 
                             JSONArray image = jsonObject.getJSONArray("posters");
 
@@ -1807,20 +1944,20 @@ public class Movie_Details extends AppCompatActivity {
                             for (int i = 0; i < image.length(); i++) {
 
                                 JSONObject obj = image.getJSONObject(i);
-                                String im = obj.getString("file_path");
+                                String im = image_url + obj.getString("file_path");
                                 more_image_array.add(im);
 
                             }
 
-                            JSONArray image11 = jsonObject.getJSONArray("posters");
-
-                            for (int i = 0; i < image11.length(); i++) {
-
-                                JSONObject obj = image11.getJSONObject(i);
-                                String im = obj.getString("file_path");
-                                more_image_array.add(im);
-
-                            }
+//                            JSONArray image11 = jsonObject.getJSONArray("posters");
+//
+//                            for (int i = 0; i < image11.length(); i++) {
+//
+//                                JSONObject obj = image11.getJSONObject(i);
+//                                String im = obj.getString("file_path");
+//                                more_image_array.add(im);
+//
+//                            }
 
                         } catch (Exception e) {
 //                            Toast.makeText(Movie_Details.this, e.toString(), Toast.LENGTH_LONG)
@@ -1871,6 +2008,8 @@ public class Movie_Details extends AppCompatActivity {
                                 similar_text1.setText(name1);
                                 Picasso.with(Movie_Details.this).load(image_url + profile1).into
                                         (similarImage1);
+                                backdrop1 = image_url + profile1;
+
                             } else {
 
                                 similar_text1.setVisibility(View.GONE);
@@ -1888,6 +2027,7 @@ public class Movie_Details extends AppCompatActivity {
                                 similar_text2.setText(name2);
                                 Picasso.with(Movie_Details.this).load(image_url + profile2).into
                                         (similarImage2);
+                                backdrop2 = image_url + profile2;
                             } else {
 
                                 similar_text2.setVisibility(View.GONE);
@@ -1905,6 +2045,7 @@ public class Movie_Details extends AppCompatActivity {
                                 similar_text3.setText(name3);
                                 Picasso.with(Movie_Details.this).load(image_url + profile3).into
                                         (similarImage3);
+                                backdrop3 = image_url + profile3;
                             } else {
 
                                 similar_text3.setVisibility(View.GONE);
@@ -2171,7 +2312,8 @@ public class Movie_Details extends AppCompatActivity {
         coverLayout = (ImageView) findViewById(R.id.cover);
 //        coverLayout1 = (ImageView) findViewById(R.id.cover1);
 //        coverLayout1.setVisibility(View.GONE);
-        circularImageView = (ImageView) findViewById(R.id.play_trailer);
+        circularImageView = (CircularImageView) findViewById(R.id.play_trailer);
+        ratingCircularImageView1 = (CircularImageView) findViewById(R.id.image_rating);
 //        circularImageView1 = (ImageView) findViewById(R.id.play_trailer1);
 //        circularImageView1.setVisibility(View.GONE);
         //  ratingBar = (RatingBar) findViewById(R.id.movieAudienceScore_details);
@@ -2220,9 +2362,9 @@ public class Movie_Details extends AppCompatActivity {
         cast_text1 = (TextView) findViewById(R.id.movie_details_cast_name1);
         cast_text2 = (TextView) findViewById(R.id.movie_details_cast_name2);
         cast_text3 = (TextView) findViewById(R.id.movie_details_cast_name3);
-        watch = (ImageView) findViewById(R.id.watch);
+        watch = (Button) findViewById(R.id.watch);
         wish = (ImageView) findViewById(R.id.wish);
-        add = (ImageView) findViewById(R.id.multiple_actions);
+        //add = (ImageView) findViewById(R.id.multiple_actions);
         tvVotenumber = (TextView) findViewById(R.id.vote_number);
 
     }
@@ -2331,7 +2473,7 @@ public class Movie_Details extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
         //callbackManager.onActivityResult(requestCode, resultCode, data);
-        mSimpleFacebook.onActivityResult(requestCode, resultCode, data);
+        //mSimpleFacebook.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 1234 && resultCode == RESULT_OK) {
             ArrayList<String> matches = data
                     .getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
@@ -2364,6 +2506,8 @@ public class Movie_Details extends AppCompatActivity {
             wish.setBackgroundColor(getResources().getColor(R.color.Style_one_toolbar));
             watch.setBackgroundColor(getResources().getColor(R.color.Style_one_toolbar));
             rating_card.setBackgroundColor(getResources().getColor(R.color.Style_one_toolbar));
+            ratingCircularImageView1.setBackgroundColor(getResources().getColor(R.color.Style_one_navigationBar));
+
 
 
             if (Build.VERSION.SDK_INT >= 21) {
@@ -2373,17 +2517,19 @@ public class Movie_Details extends AppCompatActivity {
         }
         if (i == 2) {
 
-            tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
+            tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_two_toolbar));
             // add.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
-            wish.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
-            watch.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
-            rating_card.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
+            wish.setBackgroundColor(getResources().getColor(R.color.Style_two_toolbar));
+            watch.setBackgroundColor(getResources().getColor(R.color.Style_two_toolbar));
+            rating_card.setBackgroundColor(getResources().getColor(R.color.Style_two_toolbar));
+            ratingCircularImageView1.setBackgroundColor(getResources().getColor(R.color
+                    .Style_two_navigationBar));
 
             if (Build.VERSION.SDK_INT >= 21) {
                 getWindow().setStatusBarColor(getResources().getColor(R.color
-                        .Style_three_navigationBar));
+                        .Style_two_navigationBar));
                 getWindow().setNavigationBarColor(getResources().getColor(R.color
-                        .Style_three_navigationBar));
+                        .Style_two_navigationBar));
             }
         }
         if (i == 3) {
@@ -2393,7 +2539,8 @@ public class Movie_Details extends AppCompatActivity {
             wish.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
             watch.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
             rating_card.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
-
+            ratingCircularImageView1.setBackgroundColor(getResources().getColor(R.color
+                    .Style_three_navigationBar));
             if (Build.VERSION.SDK_INT >= 21) {
                 getWindow().setStatusBarColor(getResources().getColor(R.color
                         .Style_three_navigationBar));
@@ -2408,7 +2555,8 @@ public class Movie_Details extends AppCompatActivity {
             wish.setBackgroundColor(getResources().getColor(R.color.Style_four_toolbar));
             watch.setBackgroundColor(getResources().getColor(R.color.Style_four_toolbar));
             rating_card.setBackgroundColor(getResources().getColor(R.color.Style_four_toolbar));
-
+            ratingCircularImageView1.setBackgroundColor(getResources().getColor(R.color
+                    .Style_four_navigationBar));
             if (Build.VERSION.SDK_INT >= 21) {
                 getWindow().setStatusBarColor(getResources().getColor(R.color
                         .Style_four_navigationBar));
@@ -2423,7 +2571,8 @@ public class Movie_Details extends AppCompatActivity {
             wish.setBackgroundColor(getResources().getColor(R.color.Style_five_toolbar));
             watch.setBackgroundColor(getResources().getColor(R.color.Style_five_toolbar));
             rating_card.setBackgroundColor(getResources().getColor(R.color.Style_five_toolbar));
-
+            ratingCircularImageView1.setBackgroundColor(getResources().getColor(R.color
+                    .Style_five_navigationBar));
             if (Build.VERSION.SDK_INT >= 21) {
                 getWindow().setStatusBarColor(getResources().getColor(R.color
                         .Style_five_navigationBar));
@@ -2438,7 +2587,8 @@ public class Movie_Details extends AppCompatActivity {
             wish.setBackgroundColor(getResources().getColor(R.color.Style_six_toolbar));
             watch.setBackgroundColor(getResources().getColor(R.color.Style_six_toolbar));
             rating_card.setBackgroundColor(getResources().getColor(R.color.Style_six_toolbar));
-
+            ratingCircularImageView1.setBackgroundColor(getResources().getColor(R.color
+                    .Style_six_navigationBar));
             if (Build.VERSION.SDK_INT >= 21) {
                 getWindow().setStatusBarColor(getResources().getColor(R.color
                         .Style_six_navigationBar));
@@ -2453,7 +2603,8 @@ public class Movie_Details extends AppCompatActivity {
             wish.setBackgroundColor(getResources().getColor(R.color.Style_seven_toolbar));
             watch.setBackgroundColor(getResources().getColor(R.color.Style_seven_toolbar));
             rating_card.setBackgroundColor(getResources().getColor(R.color.Style_seven_toolbar));
-
+            ratingCircularImageView1.setBackgroundColor(getResources().getColor(R.color
+                    .Style_seven_navigationBar));
             if (Build.VERSION.SDK_INT >= 21) {
                 getWindow().setStatusBarColor(getResources().getColor(R.color
                         .Style_seven_navigationBar));
@@ -2532,7 +2683,7 @@ public class Movie_Details extends AppCompatActivity {
     @Override
     public void onResume() {
         super.onResume();
-        mSimpleFacebook = SimpleFacebook.getInstance(this);
+        //mSimpleFacebook = SimpleFacebook.getInstance(this);
     }
 
     public interface ClickListener {
@@ -2588,6 +2739,11 @@ public class Movie_Details extends AppCompatActivity {
 
         @Override
         public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+        }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
         }
 

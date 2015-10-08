@@ -2,6 +2,7 @@
 <LinearLayout
     android:id="@+id/rating_layout1"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="70dp"
     android:orientation="horizontal">
@@ -39,13 +40,16 @@
         android:layout_weight="2"
         android:gravity="center_vertical">
 
-        <ImageView
+        <com.github.siyamed.shapeimageview.CircularImageView
             android:id="@+id/image_rating"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             android:alpha="1.0"
             android:src="@drawable/bookmark_toolbar"
+            app:siBorderColor="@color/sb__button_text_color_yellow"
+            app:siBorderType="fill"
+            app:siBorderWidth="4dp"
             />
 
     </LinearLayout>

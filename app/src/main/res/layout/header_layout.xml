@@ -7,6 +7,7 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -36,23 +37,26 @@
             android:layout_height="210dp"
             android:background="@drawable/default_image"/>
 
-        <ImageView
+        <com.github.siyamed.shapeimageview.CircularImageView
             android:id="@+id/fb_profile_image"
             android:layout_width="80dp"
             android:layout_height="80dp"
-            android:layout_alignBottom="@+id/fb_cover_image"
             android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:layout_marginLeft="15dp"
-            android:src="@drawable/profile1"
-            />
+            android:layout_marginTop="48dp"
+            android:src="@drawable/com_facebook_profile_picture_blank_square"
+            app:siBorderColor="@color/button_material_light"
+            app:siBorderWidth="4dp"/>
 
         <TextView
             android:id="@+id/fb_profile_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_above="@+id/fb_profile"
             android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/fb_profile_image"
             android:padding="6dp"
+
             android:textColor="#FFFFFF"
             android:textSize="@dimen/drawer_text_size"/>
 
@@ -61,9 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/fb_cover_image"
-            android:layout_alignParentEnd="true"
-            android:layout_alignStart="@+id/fb_profile_name"
-            android:layout_below="@+id/fb_profile_name"
+            android:layout_alignEnd="@+id/fb_profile_name"
             android:padding="6dp"
             android:text="Profile"
             android:textColor="@color/accentColor"
@@ -121,12 +123,11 @@
             <ImageButton
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
-                android:background="#B5B5"
+                android:background="#607d8b"
                 android:gravity="center_vertical|left"
-                android:paddingLeft="10dp"
+
                 android:src="@drawable/ic_btn_movie"
                 />
 
@@ -136,7 +137,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="3"
-                android:background="#B5B5"
+
                 android:gravity="center|left"
                 android:paddingRight="10dp"
                 android:text="Discover"
@@ -154,12 +155,12 @@
             <ImageButton
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
-                android:background="#B5B5"
+                android:background="#607d8b"
+
                 android:gravity="center_vertical|left"
-                android:paddingLeft="10dp"
+
                 android:src="@drawable/ic_btn_watchlist"
                 />
 
@@ -170,7 +171,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="3"
-                android:background="#B5B5"
+
                 android:gravity="center|left"
                 android:paddingRight="10dp"
                 android:text="Box Office"
@@ -187,12 +188,12 @@
             <ImageButton
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
-                android:background="#B5B5"
+                android:background="#607d8b"
+
                 android:gravity="center_vertical|left"
-                android:paddingLeft="10dp"
+
                 android:src="@drawable/ic_btn_collection"
                 />
 
@@ -203,7 +204,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="3"
-                android:background="#B5B5"
+
                 android:gravity="center|left"
                 android:paddingRight="10dp"
                 android:text="Upcoming"
@@ -220,12 +221,12 @@
             <ImageButton
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
-                android:background="#B5B5"
+                android:background="#607d8b"
+
                 android:gravity="center_vertical|left"
-                android:paddingLeft="10dp"
+
                 android:src="@drawable/ic_btn_seen"
                 />
 
@@ -235,7 +236,7 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="3"
-                android:background="#B5B5"
+
                 android:gravity="center|left"
                 android:paddingRight="10dp"
                 android:text="Watch List"
@@ -253,12 +254,10 @@
             <ImageButton
                 android:layout_width="0dp"
                 android:layout_height="40dp"
-                android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="1"
-                android:background="#B5B5"
+                android:background="#607d8b"
                 android:gravity="center_vertical|left"
-                android:paddingLeft="10dp"
                 android:src="@drawable/ic_action_watchlist"
                 />
 
@@ -268,7 +267,6 @@
                 android:layout_marginRight="10dp"
                 android:layout_marginTop="10dp"
                 android:layout_weight="3"
-                android:background="#B5B5"
                 android:gravity="center|left"
                 android:paddingRight="10dp"
                 android:text="Wish List"

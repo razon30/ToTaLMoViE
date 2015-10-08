@@ -141,22 +141,22 @@
                             android:orientation="horizontal"
                             >
 
-                            <LinearLayout
-                                android:id="@+id/multiple_layout"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center_vertical|center">
+                            <!--<LinearLayout-->
+                            <!--android:id="@+id/multiple_layout"-->
+                            <!--android:layout_width="0dp"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_weight="1"-->
+                            <!--android:gravity="center_vertical|center">-->
 
-                                <ImageView
-                                    android:id="@+id/multiple_actions"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="@color/translucent_black_light"
-                                    android:src="@drawable/ic_action_collection"
-                                    android:textSize="18sp">
-                                </ImageView>
-                            </LinearLayout>
+                            <!--<ImageView-->
+                            <!--android:id="@+id/multiple_actions"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:background="@color/translucent_black_light"-->
+                            <!--android:src="@drawable/ic_action_collection"-->
+                            <!--android:textSize="18sp">-->
+                            <!--</ImageView>-->
+                            <!--</LinearLayout>-->
 
                             <LinearLayout
                                 android:id="@+id/watch_layout"

@@ -82,6 +82,7 @@ public class Multi_Search_Activity extends AppCompatActivity implements Searchin
                         if ("person".equalsIgnoreCase(type)){
 
                             String id = String.valueOf(movie.getId());
+
                             Intent intent1 = new Intent(Multi_Search_Activity.this,Person_Details
                                     .class);
                             intent1.putExtra("tv",id);
@@ -90,8 +91,10 @@ public class Multi_Search_Activity extends AppCompatActivity implements Searchin
                         }else if ("movie".equalsIgnoreCase(type)){
 
                             String id = String.valueOf(movie.getId());
+                            String image = "http://image.tmdb.org/t/p/w500" + movie.getUrlThumbnail();
                             Intent intent1 = new Intent(Multi_Search_Activity.this,Movie_Details
                                     .class);
+                            intent1.putExtra("url", image);
                             intent1.putExtra("tv",id);
                             startActivity(intent1);
 
@@ -221,6 +224,10 @@ public class Multi_Search_Activity extends AppCompatActivity implements Searchin
 
         }
 
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+        }
 
 
     }

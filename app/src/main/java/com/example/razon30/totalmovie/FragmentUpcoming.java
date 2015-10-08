@@ -3,8 +3,8 @@ package com.example.razon30.totalmovie;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.GestureDetector;
@@ -15,7 +15,9 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.android.volley.RequestQueue;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
+import com.github.mrengineer13.snackbar.SnackBar;
 
 import java.util.ArrayList;
 
@@ -102,9 +104,10 @@ public class FragmentUpcoming extends android.support.v4.app.Fragment implements
 
                 Movie movie = listMovies.get(position);
                 String id = String.valueOf(movie.getId());
-
+                String image = "http://image.tmdb.org/t/p/w500" + movie.getUrlThumbnail();
                 Intent intent = new Intent(getActivity(), Movie_Details.class);
-                intent.putExtra("tv",id);
+                intent.putExtra("tv", id);
+                intent.putExtra("url", image);
 
 
 
@@ -174,40 +177,54 @@ public class FragmentUpcoming extends android.support.v4.app.Fragment implements
 
 
     private void workingOnFAB(final View view) {
-        FloatingActionsMenu menuMultipleActions = (FloatingActionsMenu) view.findViewById(R.id
+        FloatingActionMenu menuMultipleActions = (FloatingActionMenu) view.findViewById(R.id
                 .multiple_actions);
 
         // menuMultipleActions.setBackgroundResource(R.drawable.refresh);
 
-        com.getbase.floatingactionbutton.FloatingActionButton action_a = (com.getbase
-                .floatingactionbutton.FloatingActionButton) view.findViewById(R.id.action_a);
+        FloatingActionButton action_a = (FloatingActionButton) view.findViewById(R.id.action_a);
         final RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.layout);
 
         action_a.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(layout, "Sorting Alphabetically", Snackbar.LENGTH_SHORT).show();
+
+
+                new SnackBar.Builder(getActivity())
+                        .withMessage("Sorting Alphabetically") // OR
+                        .withTextColorId(R.color.translucent_black_light)
+                        .withBackgroundColorId(R.color.accent_color)
+                        .withTypeFace(Typeface.SANS_SERIF)
+                        .show();
                 sortByName();
+
             }
         });
 
-        com.getbase.floatingactionbutton.FloatingActionButton action_b = (com.getbase
-                .floatingactionbutton.FloatingActionButton) view.findViewById(R.id.action_b);
+        FloatingActionButton action_b = (FloatingActionButton) view.findViewById(R.id.action_b);
         action_b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
-                Snackbar.make(layout,"Sorting By Date",Snackbar.LENGTH_SHORT).show();
+                new SnackBar.Builder(getActivity())
+                        .withMessage("Sorting By Date") // OR
+                        .withTextColorId(R.color.translucent_black_light)
+                        .withBackgroundColorId(R.color.accent_color)
+                        .withTypeFace(Typeface.SANS_SERIF)
+                        .show();
                 sortByDate();
             }
         });
 
-        com.getbase.floatingactionbutton.FloatingActionButton action_c = (com.getbase
-                .floatingactionbutton.FloatingActionButton) view.findViewById(R.id.action_c);
+        FloatingActionButton action_c = (FloatingActionButton) view.findViewById(R.id.action_c);
         action_c.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(layout, "Sorting By Ratings", Snackbar.LENGTH_SHORT)
+                new SnackBar.Builder(getActivity())
+                        .withMessage("Sorting By Ratings") // OR
+                        .withTextColorId(R.color.translucent_black_light)
+                        .withBackgroundColorId(R.color.accent_color)
+                        .withTypeFace(Typeface.SANS_SERIF)
                         .show();
                 sortByRatings();
             }
@@ -282,7 +299,10 @@ public class FragmentUpcoming extends android.support.v4.app.Fragment implements
 
         }
 
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
+        }
 
 
     }

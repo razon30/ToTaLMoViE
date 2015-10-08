@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
@@ -31,9 +32,12 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
+//import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
 
 
 public class FragmentSearch extends android.support.v4.app.Fragment {
@@ -42,6 +46,8 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     private static final String STATE_MOVIE = "state_genre";
+    public VolleySingleton volleySingleton;
+    public RequestQueue requestQueue;
     //    String genreUrl = "http://api.themoviedb.org/3/genre/movie/list?api_key=f246d5e5105e9934d3cd4c4c181d618d";
 //
     ArrayList<Movie> trailer_list = new ArrayList<Movie>();
@@ -83,11 +89,13 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
     ArrayList<Movie> popular_movie_list = new ArrayList<Movie>();
     ArrayList<Movie> popular_person_list = new ArrayList<Movie>();
     CardView cardView;
+    String url25;
+    String backdrop1, backdrop2, backdrop3;
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private VolleySingleton volleySingleton;
-    private RequestQueue requestQueue;
+
+    // private ProgressBar progressBar;
 
 
 //
@@ -124,7 +132,7 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_fragment_search, container, false);
@@ -136,179 +144,12 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
         requestQueue = volleySingleton.getmRequestQueue();
 
 
-        JsonObjectRequest request1 = new JsonObjectRequest(Request.Method.GET, popular_movie, null,
+//        circleView = new AnimatedCircleLoadingView(getActivity());
+//        new DownloadWebPageTask().execute();
 
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject jsonObject) {
+        DownloadWebPageTask download = new DownloadWebPageTask(view);
+        download.execute();
 
-                        if (jsonObject == null || jsonObject.length() == 0) {
-                            Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
-                                    .show();
-
-                        }
-
-                        try {
-
-                            JSONArray jsonArray = jsonObject.getJSONArray("results");
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                long id = -1;
-                                String title = "NA";
-                                String releaseDate = "NA";
-                                int audienceScore = -1;
-                                String synopsis = "NA";
-                                String urlThumbnail = "NA";
-
-                                JSONObject currentmovie = jsonArray.getJSONObject(i);
-                                title = currentmovie.getString("title");
-                                id = currentmovie.getLong("id");
-                                releaseDate = currentmovie.getString("release_date");
-                                audienceScore = currentmovie.getInt("vote_average");
-                                synopsis = currentmovie.getString("overview");
-                                urlThumbnail = currentmovie.getString("backdrop_path");
-
-
-                                Movie movie = new Movie(id, title, releaseDate, audienceScore, synopsis, urlThumbnail);
-
-                                if (id != -1 && !title.equals("NA")) {
-                                    popular_movie_list.add(movie);
-                                }
-                            }
-
-
-                            String image1 = jsonArray.getJSONObject(0).getString("poster_path");
-                            String image2 = jsonArray.getJSONObject(1).getString("poster_path");
-                            String image3 = jsonArray.getJSONObject(2).getString("poster_path");
-
-
-                            String text1 = jsonArray.getJSONObject(0).getString("title");
-                            String text2 = jsonArray.getJSONObject(1).getString("title");
-                            String text3 = jsonArray.getJSONObject(2).getString("title");
-
-                            id1 = jsonArray.getJSONObject(0).getString("id");
-                            id2 = jsonArray.getJSONObject(1).getString("id");
-                            id3 = jsonArray.getJSONObject(2).getString("id");
-
-
-                            Picasso.with(getActivity()).load(image_url + image1).into(view1);
-                            Picasso.with(getActivity()).load(image_url + image2).into(view2);
-                            Picasso.with(getActivity()).load(image_url + image3).into(view3);
-
-                            tv1.setText(text1);
-                            tv2.setText(text2);
-                            tv3.setText(text3);
-
-                        } catch (Exception e) {
-
-                        }
-
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-
-                    }
-                });
-
-        requestQueue.add(request1);
-
-        JsonArrayRequest request2 = new JsonArrayRequest(imdb_top_250,
-
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray jsonArray) {
-
-                        if (jsonArray == null || jsonArray.length() == 0) {
-                            Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
-                                    .show();
-                        }
-
-                        try {
-
-                            for (int i = 0; i < jsonArray.length(); i++) {
-
-                                JSONObject current = jsonArray.getJSONObject(i);
-
-                                String imdb_id = current.getString("idIMDB");
-                                String title = current.getString("title");
-                                String urlPoster = current.getString("urlPoster");
-                                int rating = current.getInt("rating");
-                                String year = current.getString("year");
-
-
-//                                JsonObjectRequest request0 = new JsonObjectRequest(Request.Method.GET,
-//                                        item_of_top_250_of_imdb+ "tt0478970" +itemPost, null,
-//
-//                                        new Response.Listener<JSONObject>() {
-//                                            @Override
-//                                            public void onResponse(JSONObject jsonObject) {
-//
-//                                                if (jsonObject == null || jsonObject.length() == 0) {
-//                                                    Toast.makeText(getActivity(), "Problem to load", Toast
-//                                                            .LENGTH_LONG)
-//                                                            .show();
-//
-//                                                }
-//
-//                                                try {
-//
-//
-//                                                    JSONArray array = jsonObject.getJSONArray("movie_results");
-//
-//                                                    for (int j=0;j<array.length();j++){
-//
-//                                                        JSONObject cur = array.getJSONObject(j);
-//
-//                                                        DB_id = ["movie_results"][0]["id"];
-//
-//
-//                                                    }
-//
-//
-//
-//                                                } catch (Exception e) {
-////                            Toast.makeText(Movie_Details.this, e.toString(), Toast.LENGTH_LONG)
-////                                    .show();
-//
-//
-//                                                }
-//
-//
-//                                            }
-//                                        },
-//                                        new Response.ErrorListener() {
-//                                            @Override
-//                                            public void onErrorResponse(VolleyError volleyError) {
-////                        Toast.makeText(Movie_Details.this, volleyError.toString(), Toast.LENGTH_LONG)
-////                                .show();
-//
-//                                            }
-//                                        });
-//
-//                                requestQueue.add(request0);
-
-                                Movie movie = new Movie(imdb_id, title, urlPoster, rating, year);
-                                topten.add(movie);
-
-                            }
-
-                        } catch (Exception e) {
-
-                        }
-
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-
-                    }
-                });
-
-        requestQueue.add(request2);
 
         tv_top10.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -432,102 +273,6 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
         //for bottom 10 IMDB
 
 
-        JsonArrayRequest request3 = new JsonArrayRequest(imdb_bottom_100,
-
-                new Response.Listener<JSONArray>() {
-                    @Override
-                    public void onResponse(JSONArray jsonArray) {
-
-                        if (jsonArray == null || jsonArray.length() == 0) {
-                            Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
-                                    .show();
-                        }
-
-                        try {
-
-                            for (int i = 0; i < jsonArray.length(); i++) {
-
-                                JSONObject current = jsonArray.getJSONObject(i);
-
-                                String imdb_id = current.getString("idIMDB");
-                                String title = current.getString("title");
-                                String urlPoster = current.getString("urlPoster");
-                                int rating = current.getInt("rating");
-                                String year = current.getString("year");
-
-
-//                                JsonObjectRequest request0 = new JsonObjectRequest(Request.Method.GET,
-//                                        item_of_top_250_of_imdb+ "tt0478970" +itemPost, null,
-//
-//                                        new Response.Listener<JSONObject>() {
-//                                            @Override
-//                                            public void onResponse(JSONObject jsonObject) {
-//
-//                                                if (jsonObject == null || jsonObject.length() == 0) {
-//                                                    Toast.makeText(getActivity(), "Problem to load", Toast
-//                                                            .LENGTH_LONG)
-//                                                            .show();
-//
-//                                                }
-//
-//                                                try {
-//
-//
-//                                                    JSONArray array = jsonObject.getJSONArray("movie_results");
-//
-//                                                    for (int j=0;j<array.length();j++){
-//
-//                                                        JSONObject cur = array.getJSONObject(j);
-//
-//                                                        DB_id = ["movie_results"][0]["id"];
-//
-//
-//                                                    }
-//
-//
-//
-//                                                } catch (Exception e) {
-////                            Toast.makeText(Movie_Details.this, e.toString(), Toast.LENGTH_LONG)
-////                                    .show();
-//
-//
-//                                                }
-//
-//
-//                                            }
-//                                        },
-//                                        new Response.ErrorListener() {
-//                                            @Override
-//                                            public void onErrorResponse(VolleyError volleyError) {
-////                        Toast.makeText(Movie_Details.this, volleyError.toString(), Toast.LENGTH_LONG)
-////                                .show();
-//
-//                                            }
-//                                        });
-//
-//                                requestQueue.add(request0);
-
-                                Movie movie = new Movie(imdb_id, title, urlPoster, rating, year);
-                                bottomten.add(movie);
-
-                            }
-
-                        } catch (Exception e) {
-
-                        }
-
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-
-                    }
-                });
-
-        requestQueue.add(request3);
-
         tv_bottom10.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -648,212 +393,6 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
         });
 
 
-        //trailers IMDB
-
-        JsonObjectRequest request4 = new JsonObjectRequest(Request.Method.GET, trailer, null,
-
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject jsonObject) {
-
-                        if (jsonObject == null || jsonObject.length() == 0) {
-
-                        }
-
-                        try {
-
-                            JSONArray traailer_array = jsonObject.getJSONArray("trailers");
-
-                            JSONObject current_trailer0 = traailer_array.getJSONObject(0);
-                            String idIMDB0 = current_trailer0.getString("idIMDB");
-                            String url0 = "http://api.themoviedb.org/3/movie/" + idIMDB0 + "?external_source=imdb_id&api_key=f246d5e5105e9934d3cd4c4c181d618d";
-                            tid1 = current_trailer0.getString("videoURL");
-
-
-                            JsonObjectRequest request0 = new JsonObjectRequest(Request.Method
-                                    .GET, url0, null,
-
-                                    new Response.Listener<JSONObject>() {
-                                        @Override
-                                        public void onResponse(JSONObject jsonObject) {
-
-                                            if (jsonObject == null || jsonObject.length() == 0) {
-                                                Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
-                                                        .show();
-
-                                            }
-
-                                            try {
-
-
-                                                String posterpath = jsonObject.getString("poster_path");
-                                                String title = jsonObject.getString("title");
-                                                //tid1 = jsonObject.getString("id");
-
-                                                if (posterpath != null && !posterpath.isEmpty() &&
-                                                        posterpath.length() != 0) {
-
-                                                    Picasso.with(getActivity()).load
-                                                            (image_url + posterpath).into(trialerImageView1);
-                                                    tvTrailer1.setText(title);
-                                                }
-
-
-                                            } catch (Exception e) {
-
-                                            }
-
-
-                                        }
-                                    },
-                                    new Response.ErrorListener() {
-                                        @Override
-                                        public void onErrorResponse(VolleyError volleyError) {
-
-                                        }
-                                    });
-
-                            requestQueue.add(request0);
-
-
-                            JSONObject current_trailer1 = traailer_array.getJSONObject(1);
-                            String idIMDB1 = current_trailer1.getString("idIMDB");
-                            String url1 = "http://api.themoviedb" +
-                                    ".org/3/movie/" + idIMDB1 + "?external_source=imdb_id&api_key" +
-                                    "=f246d5e5105e9934d3cd4c4c181d618d";
-                            tid2 = current_trailer1.getString("videoURL");
-
-                            JsonObjectRequest request1 = new JsonObjectRequest(Request.Method
-                                    .GET, url1, null,
-
-                                    new Response.Listener<JSONObject>() {
-                                        @Override
-                                        public void onResponse(JSONObject jsonObject) {
-
-                                            if (jsonObject == null || jsonObject.length() == 0) {
-                                                Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
-                                                        .show();
-
-                                            }
-
-                                            try {
-
-
-                                                String posterpath = jsonObject.getString("poster_path");
-                                                String title = jsonObject.getString("title");
-                                                // tid2 = jsonObject.getString("id");
-
-                                                if (posterpath != null && !posterpath.isEmpty() &&
-                                                        posterpath.length() != 0) {
-
-                                                    Picasso.with(getActivity()).load
-                                                            (image_url + posterpath).into
-                                                            (trialerImageView2);
-                                                    tvTrailer2.setText(title);
-                                                }
-
-
-                                            } catch (Exception e) {
-
-                                            }
-
-
-                                        }
-                                    },
-                                    new Response.ErrorListener() {
-                                        @Override
-                                        public void onErrorResponse(VolleyError volleyError) {
-
-                                        }
-                                    });
-
-                            requestQueue.add(request1);
-
-
-                            JSONObject current_trailer2 = traailer_array.getJSONObject(2);
-                            String idIMDB2 = current_trailer2.getString("idIMDB");
-                            String url2 = "http://api.themoviedb" +
-                                    ".org/3/movie/" + idIMDB2 + "?external_source=imdb_id&api_key" +
-                                    "=f246d5e5105e9934d3cd4c4c181d618d";
-                            tid3 = current_trailer2.getString("videoURL");
-
-                            JsonObjectRequest request2 = new JsonObjectRequest(Request.Method
-                                    .GET, url2, null,
-
-                                    new Response.Listener<JSONObject>() {
-                                        @Override
-                                        public void onResponse(JSONObject jsonObject) {
-
-                                            if (jsonObject == null || jsonObject.length() == 0) {
-                                                Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
-                                                        .show();
-
-                                            }
-
-                                            try {
-
-
-                                                String posterpath = jsonObject.getString("poster_path");
-                                                String title = jsonObject.getString("title");
-                                                // tid3 = jsonObject.getString("id");
-
-                                                if (posterpath != null && !posterpath.isEmpty() &&
-                                                        posterpath.length() != 0) {
-
-                                                    Picasso.with(getActivity()).load
-                                                            (image_url + posterpath).into
-                                                            (trialerImageView3);
-                                                    tvTrailer3.setText(title);
-                                                }
-
-                                            } catch (Exception e) {
-
-                                            }
-
-
-                                        }
-                                    },
-                                    new Response.ErrorListener() {
-                                        @Override
-                                        public void onErrorResponse(VolleyError volleyError) {
-
-                                        }
-                                    });
-
-                            requestQueue.add(request2);
-
-
-                            for (int i = 0; i < traailer_array.length(); i++) {
-
-                                JSONObject current_trailer = traailer_array.getJSONObject(i);
-
-                                String duration = current_trailer.getString("duration");
-                                String title = current_trailer.getString("title");
-                                String url = current_trailer.getString("videoURL");
-
-
-                                Movie movie = new Movie(title, duration, url);
-                                trailer_list.add(movie);
-
-                            }
-
-
-                        } catch (Exception e) {
-
-                        }
-
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-
-                    }
-                });
-
-        requestQueue.add(request4);
-
         tvTrailer.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -921,13 +460,15 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                         recyclerView, new ClickListener() {
                     @Override
                     public void onCLick(View v, int position) {
-                        Toast.makeText(getActivity(), "Touched on: " + position, Toast.LENGTH_LONG).show();
+//                        Toast.makeText(getActivity(), "Touched on: " + position, Toast.LENGTH_LONG).show();
 
                         Movie movie = popular_movie_list.get(position);
                         String id = String.valueOf(movie.getId());
+                        String image = image_url + movie.getUrlThumbnail();
 
                         Intent intent = new Intent(getActivity(), Movie_Details.class);
                         intent.putExtra("tv", id);
+                        intent.putExtra("url", image);
 
 
                         startActivity(intent);
@@ -962,77 +503,6 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
             }
         });
 
-        //popular person
-        JsonObjectRequest request5 = new JsonObjectRequest(Request.Method.GET, popular_person, null,
-
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject jsonObject) {
-
-                        if (jsonObject == null || jsonObject.length() == 0) {
-                            Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
-                                    .show();
-
-                        }
-
-                        try {
-
-                            JSONArray jsonArray = jsonObject.getJSONArray("results");
-
-                            for (int i = 0; i < jsonArray.length(); i++) {
-                                JSONObject current_result = jsonArray.getJSONObject(i);
-
-                                String name = current_result.getString("name");
-                                String profile_path = current_result.getString("profile_path");
-                                long id = current_result.getLong("id");
-                                String job = current_result.getString("popularity");
-
-                                job = job.substring(0, 4);
-
-
-                                Movie movie = new Movie(job, profile_path, id, name);
-                                popular_person_list.add(movie);
-
-                            }
-
-
-                            String image1 = jsonArray.getJSONObject(0).getString("profile_path");
-                            String image2 = jsonArray.getJSONObject(1).getString("profile_path");
-                            String image3 = jsonArray.getJSONObject(2).getString("profile_path");
-
-
-                            String text1 = jsonArray.getJSONObject(0).getString("name");
-                            String text2 = jsonArray.getJSONObject(1).getString("name");
-                            String text3 = jsonArray.getJSONObject(2).getString("name");
-
-                            pid1 = jsonArray.getJSONObject(0).getString("id");
-                            pid2 = jsonArray.getJSONObject(1).getString("id");
-                            pid3 = jsonArray.getJSONObject(2).getString("id");
-
-
-                            Picasso.with(getActivity()).load(image_url + image1).into(view4);
-                            Picasso.with(getActivity()).load(image_url + image2).into(view5);
-                            Picasso.with(getActivity()).load(image_url + image3).into(view6);
-
-                            tv4.setText(text1);
-                            tv5.setText(text2);
-                            tv6.setText(text3);
-
-                        } catch (Exception e) {
-
-                        }
-
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-
-                    }
-                });
-
-        requestQueue.add(request5);
 
         tv_popular_persons.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -1087,6 +557,9 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
 
                 if (id1 != null && id1.length() > 0) {
                     Intent intent = new Intent(getActivity(), Movie_Details.class);
+
+                    intent.putExtra("url", backdrop1);
+
                     intent.putExtra("tv", id1);
                     startActivity(intent);
                 }
@@ -1100,6 +573,8 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
 
                 if (id2 != null && id2.length() > 0) {
                     Intent intent = new Intent(getActivity(), Movie_Details.class);
+
+                    intent.putExtra("url", backdrop2);
                     intent.putExtra("tv", id2);
                     startActivity(intent);
                 }
@@ -1113,6 +588,8 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
 
                 if (id3 != null && id3.length() > 0) {
                     Intent intent = new Intent(getActivity(), Movie_Details.class);
+
+                    intent.putExtra("url", backdrop3);
                     intent.putExtra("tv", id3);
                     startActivity(intent);
                 }
@@ -1414,6 +891,603 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
         return view;
     }
 
+    private String getImageUrl(String id1) {
+
+
+        JsonObjectRequest requesturl = new JsonObjectRequest(Request.Method.GET, "http://api.themoviedb.org/3/movie/" + id1 +
+                "?api_key=f246d5e5105e9934d3cd4c4c181d618d", null,
+
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+
+                        if (jsonObject == null || jsonObject.length() == 0) {
+                            Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
+                                    .show();
+
+                        }
+
+
+                        String backdrop_path = null;
+                        try {
+                            backdrop_path = jsonObject.getString("backdrop_path");
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+                        url25 = image_url + backdrop_path;
+
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+
+                    }
+                });
+
+        requestQueue.add(requesturl);
+        return url25;
+    }
+
+    private void WOrksOnData() {
+
+        JsonObjectRequest request1 = new JsonObjectRequest(Request.Method.GET, popular_movie, null,
+
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+
+                        if (jsonObject == null || jsonObject.length() == 0) {
+                            Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
+                                    .show();
+
+                        }
+
+                        try {
+
+                            JSONArray jsonArray = jsonObject.getJSONArray("results");
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                long id = -1;
+                                String title = "NA";
+                                String releaseDate = "NA";
+                                int audienceScore = -1;
+                                String synopsis = "NA";
+                                String urlThumbnail = "NA";
+
+                                JSONObject currentmovie = jsonArray.getJSONObject(i);
+                                title = currentmovie.getString("title");
+                                id = currentmovie.getLong("id");
+                                releaseDate = currentmovie.getString("release_date");
+                                audienceScore = currentmovie.getInt("vote_average");
+                                synopsis = currentmovie.getString("overview");
+                                urlThumbnail = currentmovie.getString("backdrop_path");
+
+
+                                Movie movie = new Movie(id, title, releaseDate, audienceScore, synopsis, urlThumbnail);
+
+                                if (id != -1 && !title.equals("NA")) {
+                                    popular_movie_list.add(movie);
+                                }
+                            }
+
+
+                            String image1 = jsonArray.getJSONObject(0).getString("poster_path");
+                            String image2 = jsonArray.getJSONObject(1).getString("poster_path");
+                            String image3 = jsonArray.getJSONObject(2).getString("poster_path");
+
+
+                            String text1 = jsonArray.getJSONObject(0).getString("title");
+                            String text2 = jsonArray.getJSONObject(1).getString("title");
+                            String text3 = jsonArray.getJSONObject(2).getString("title");
+
+                            id1 = jsonArray.getJSONObject(0).getString("id");
+                            id2 = jsonArray.getJSONObject(1).getString("id");
+                            id3 = jsonArray.getJSONObject(2).getString("id");
+
+
+                            Picasso.with(getActivity()).load(image_url + image1).into(view1);
+                            Picasso.with(getActivity()).load(image_url + image2).into(view2);
+                            Picasso.with(getActivity()).load(image_url + image3).into(view3);
+
+                            backdrop1 = image_url + image1;
+                            backdrop2 = image_url + image2;
+                            backdrop3 = image_url + image3;
+
+                            tv1.setText(text1);
+                            tv2.setText(text2);
+                            tv3.setText(text3);
+
+                        } catch (Exception e) {
+
+                        }
+
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+
+                    }
+                });
+
+        requestQueue.add(request1);
+
+        JsonArrayRequest request2 = new JsonArrayRequest(imdb_top_250,
+
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray jsonArray) {
+
+                        if (jsonArray == null || jsonArray.length() == 0) {
+                            Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
+                                    .show();
+                        }
+
+                        try {
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+
+                                JSONObject current = jsonArray.getJSONObject(i);
+
+                                String imdb_id = current.getString("idIMDB");
+                                String title = current.getString("title");
+                                String urlPoster = current.getString("urlPoster");
+                                int rating = current.getInt("rating");
+                                String year = current.getString("year");
+
+
+//                                JsonObjectRequest request0 = new JsonObjectRequest(Request.Method.GET,
+//                                        item_of_top_250_of_imdb+ "tt0478970" +itemPost, null,
+//
+//                                        new Response.Listener<JSONObject>() {
+//                                            @Override
+//                                            public void onResponse(JSONObject jsonObject) {
+//
+//                                                if (jsonObject == null || jsonObject.length() == 0) {
+//                                                    Toast.makeText(getActivity(), "Problem to load", Toast
+//                                                            .LENGTH_LONG)
+//                                                            .show();
+//
+//                                                }
+//
+//                                                try {
+//
+//
+//                                                    JSONArray array = jsonObject.getJSONArray("movie_results");
+//
+//                                                    for (int j=0;j<array.length();j++){
+//
+//                                                        JSONObject cur = array.getJSONObject(j);
+//
+//                                                        DB_id = ["movie_results"][0]["id"];
+//
+//
+//                                                    }
+//
+//
+//
+//                                                } catch (Exception e) {
+////                            Toast.makeText(Movie_Details.this, e.toString(), Toast.LENGTH_LONG)
+////                                    .show();
+//
+//
+//                                                }
+//
+//
+//                                            }
+//                                        },
+//                                        new Response.ErrorListener() {
+//                                            @Override
+//                                            public void onErrorResponse(VolleyError volleyError) {
+////                        Toast.makeText(Movie_Details.this, volleyError.toString(), Toast.LENGTH_LONG)
+////                                .show();
+//
+//                                            }
+//                                        });
+//
+//                                requestQueue.add(request0);
+
+                                Movie movie = new Movie(imdb_id, title, urlPoster, rating, year);
+                                topten.add(movie);
+
+                            }
+
+                        } catch (Exception e) {
+
+                        }
+
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+
+                    }
+                });
+
+        requestQueue.add(request2);
+
+        JsonArrayRequest request3 = new JsonArrayRequest(imdb_bottom_100,
+
+                new Response.Listener<JSONArray>() {
+                    @Override
+                    public void onResponse(JSONArray jsonArray) {
+
+                        if (jsonArray == null || jsonArray.length() == 0) {
+                            Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
+                                    .show();
+                        }
+
+                        try {
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+
+                                JSONObject current = jsonArray.getJSONObject(i);
+
+                                String imdb_id = current.getString("idIMDB");
+                                String title = current.getString("title");
+                                String urlPoster = current.getString("urlPoster");
+                                int rating = current.getInt("rating");
+                                String year = current.getString("year");
+
+
+//                                JsonObjectRequest request0 = new JsonObjectRequest(Request.Method.GET,
+//                                        item_of_top_250_of_imdb+ "tt0478970" +itemPost, null,
+//
+//                                        new Response.Listener<JSONObject>() {
+//                                            @Override
+//                                            public void onResponse(JSONObject jsonObject) {
+//
+//                                                if (jsonObject == null || jsonObject.length() == 0) {
+//                                                    Toast.makeText(getActivity(), "Problem to load", Toast
+//                                                            .LENGTH_LONG)
+//                                                            .show();
+//
+//                                                }
+//
+//                                                try {
+//
+//
+//                                                    JSONArray array = jsonObject.getJSONArray("movie_results");
+//
+//                                                    for (int j=0;j<array.length();j++){
+//
+//                                                        JSONObject cur = array.getJSONObject(j);
+//
+//                                                        DB_id = ["movie_results"][0]["id"];
+//
+//
+//                                                    }
+//
+//
+//
+//                                                } catch (Exception e) {
+////                            Toast.makeText(Movie_Details.this, e.toString(), Toast.LENGTH_LONG)
+////                                    .show();
+//
+//
+//                                                }
+//
+//
+//                                            }
+//                                        },
+//                                        new Response.ErrorListener() {
+//                                            @Override
+//                                            public void onErrorResponse(VolleyError volleyError) {
+////                        Toast.makeText(Movie_Details.this, volleyError.toString(), Toast.LENGTH_LONG)
+////                                .show();
+//
+//                                            }
+//                                        });
+//
+//                                requestQueue.add(request0);
+
+                                Movie movie = new Movie(imdb_id, title, urlPoster, rating, year);
+                                bottomten.add(movie);
+
+                            }
+
+                        } catch (Exception e) {
+
+                        }
+
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+
+                    }
+                });
+
+        requestQueue.add(request3);
+
+        //trailers IMDB
+
+        JsonObjectRequest request4 = new JsonObjectRequest(Request.Method.GET, trailer, null,
+
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+
+                        if (jsonObject == null || jsonObject.length() == 0) {
+
+                        }
+
+                        try {
+
+                            JSONArray traailer_array = jsonObject.getJSONArray("trailers");
+
+                            JSONObject current_trailer0 = traailer_array.getJSONObject(0);
+                            String idIMDB0 = current_trailer0.getString("idIMDB");
+                            String url0 = "http://api.themoviedb.org/3/movie/" + idIMDB0 + "?external_source=imdb_id&api_key=f246d5e5105e9934d3cd4c4c181d618d";
+                            tid1 = current_trailer0.getString("videoURL");
+
+
+                            JsonObjectRequest request0 = new JsonObjectRequest(Request.Method
+                                    .GET, url0, null,
+
+                                    new Response.Listener<JSONObject>() {
+                                        @Override
+                                        public void onResponse(JSONObject jsonObject) {
+
+                                            if (jsonObject == null || jsonObject.length() == 0) {
+                                                Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
+                                                        .show();
+
+                                            }
+
+                                            try {
+
+
+                                                String posterpath = jsonObject.getString("poster_path");
+                                                String title = jsonObject.getString("title");
+                                                //tid1 = jsonObject.getString("id");
+
+                                                if (posterpath != null && !posterpath.isEmpty() &&
+                                                        posterpath.length() != 0) {
+
+                                                    Picasso.with(getActivity()).load
+                                                            (image_url + posterpath).into(trialerImageView1);
+                                                    tvTrailer1.setText(title);
+                                                }
+
+
+                                            } catch (Exception e) {
+
+                                            }
+
+
+                                        }
+                                    },
+                                    new Response.ErrorListener() {
+                                        @Override
+                                        public void onErrorResponse(VolleyError volleyError) {
+
+                                        }
+                                    });
+
+                            requestQueue.add(request0);
+
+
+                            JSONObject current_trailer1 = traailer_array.getJSONObject(1);
+                            String idIMDB1 = current_trailer1.getString("idIMDB");
+                            String url1 = "http://api.themoviedb" +
+                                    ".org/3/movie/" + idIMDB1 + "?external_source=imdb_id&api_key" +
+                                    "=f246d5e5105e9934d3cd4c4c181d618d";
+                            tid2 = current_trailer1.getString("videoURL");
+
+                            JsonObjectRequest request1 = new JsonObjectRequest(Request.Method
+                                    .GET, url1, null,
+
+                                    new Response.Listener<JSONObject>() {
+                                        @Override
+                                        public void onResponse(JSONObject jsonObject) {
+
+                                            if (jsonObject == null || jsonObject.length() == 0) {
+                                                Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
+                                                        .show();
+
+                                            }
+
+                                            try {
+
+
+                                                String posterpath = jsonObject.getString("poster_path");
+                                                String title = jsonObject.getString("title");
+                                                // tid2 = jsonObject.getString("id");
+
+                                                if (posterpath != null && !posterpath.isEmpty() &&
+                                                        posterpath.length() != 0) {
+
+                                                    Picasso.with(getActivity()).load
+                                                            (image_url + posterpath).into
+                                                            (trialerImageView2);
+                                                    tvTrailer2.setText(title);
+                                                }
+
+
+                                            } catch (Exception e) {
+
+                                            }
+
+
+                                        }
+                                    },
+                                    new Response.ErrorListener() {
+                                        @Override
+                                        public void onErrorResponse(VolleyError volleyError) {
+
+                                        }
+                                    });
+
+                            requestQueue.add(request1);
+
+
+                            JSONObject current_trailer2 = traailer_array.getJSONObject(2);
+                            String idIMDB2 = current_trailer2.getString("idIMDB");
+                            String url2 = "http://api.themoviedb" +
+                                    ".org/3/movie/" + idIMDB2 + "?external_source=imdb_id&api_key" +
+                                    "=f246d5e5105e9934d3cd4c4c181d618d";
+                            tid3 = current_trailer2.getString("videoURL");
+
+                            JsonObjectRequest request2 = new JsonObjectRequest(Request.Method
+                                    .GET, url2, null,
+
+                                    new Response.Listener<JSONObject>() {
+                                        @Override
+                                        public void onResponse(JSONObject jsonObject) {
+
+                                            if (jsonObject == null || jsonObject.length() == 0) {
+                                                Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
+                                                        .show();
+
+                                            }
+
+                                            try {
+
+
+                                                String posterpath = jsonObject.getString("poster_path");
+                                                String title = jsonObject.getString("title");
+                                                // tid3 = jsonObject.getString("id");
+
+                                                if (posterpath != null && !posterpath.isEmpty() &&
+                                                        posterpath.length() != 0) {
+
+                                                    Picasso.with(getActivity()).load
+                                                            (image_url + posterpath).into
+                                                            (trialerImageView3);
+                                                    tvTrailer3.setText(title);
+                                                }
+
+                                            } catch (Exception e) {
+
+                                            }
+
+
+                                        }
+                                    },
+                                    new Response.ErrorListener() {
+                                        @Override
+                                        public void onErrorResponse(VolleyError volleyError) {
+
+                                        }
+                                    });
+
+                            requestQueue.add(request2);
+
+
+                            for (int i = 0; i < traailer_array.length(); i++) {
+
+                                JSONObject current_trailer = traailer_array.getJSONObject(i);
+
+                                String duration = current_trailer.getString("duration");
+                                String title = current_trailer.getString("title");
+                                String url = current_trailer.getString("videoURL");
+
+
+                                Movie movie = new Movie(title, duration, url);
+                                trailer_list.add(movie);
+
+                            }
+
+
+                        } catch (Exception e) {
+
+                        }
+
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+
+                    }
+                });
+
+        requestQueue.add(request4);
+
+        //popular person
+        JsonObjectRequest request5 = new JsonObjectRequest(Request.Method.GET, popular_person, null,
+
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject jsonObject) {
+
+                        if (jsonObject == null || jsonObject.length() == 0) {
+                            Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
+                                    .show();
+
+                        }
+
+                        try {
+
+                            JSONArray jsonArray = jsonObject.getJSONArray("results");
+
+                            for (int i = 0; i < jsonArray.length(); i++) {
+                                JSONObject current_result = jsonArray.getJSONObject(i);
+
+                                String name = current_result.getString("name");
+                                String profile_path = current_result.getString("profile_path");
+                                long id = current_result.getLong("id");
+                                String job = current_result.getString("popularity");
+
+                                job = job.substring(0, 4);
+
+
+                                Movie movie = new Movie(job, profile_path, id, name);
+                                popular_person_list.add(movie);
+
+                            }
+
+
+                            String image1 = jsonArray.getJSONObject(0).getString("profile_path");
+                            String image2 = jsonArray.getJSONObject(1).getString("profile_path");
+                            String image3 = jsonArray.getJSONObject(2).getString("profile_path");
+
+
+                            String text1 = jsonArray.getJSONObject(0).getString("name");
+                            String text2 = jsonArray.getJSONObject(1).getString("name");
+                            String text3 = jsonArray.getJSONObject(2).getString("name");
+
+                            pid1 = jsonArray.getJSONObject(0).getString("id");
+                            pid2 = jsonArray.getJSONObject(1).getString("id");
+                            pid3 = jsonArray.getJSONObject(2).getString("id");
+
+
+                            Picasso.with(getActivity()).load(image_url + image1).into(view4);
+                            Picasso.with(getActivity()).load(image_url + image2).into(view5);
+                            Picasso.with(getActivity()).load(image_url + image3).into(view6);
+
+                            tv4.setText(text1);
+                            tv5.setText(text2);
+                            tv6.setText(text3);
+
+                        } catch (Exception e) {
+
+                        }
+
+
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+
+                    }
+                });
+
+        requestQueue.add(request5);
+
+
+    }
+
     private void initialize(View view) {
 
 //       etSearch = (EditText) view.findViewById(R.id.et_search);
@@ -1590,8 +1664,57 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
 
         }
 
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+        }
+
+    }
+
+    public class DownloadWebPageTask extends AsyncTask<Void, Integer, Void> {
+
+        View view;
+
+        public DownloadWebPageTask(View view) {
+            this.view = view;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            //textView.setText("Hello !!!");
+//            circleView = (AnimatedCircleLoadingView) view.findViewById(R.id.circle_loading_view);
+//            circleView.setVisibility(circleView.VISIBLE);
+//            circleView.startDeterminate();
+//            circleView.startIndeterminate();
+            //  progressBar = (ProgressBar)view.findViewById(R.id.progressBar1);
+            //  progressBar.setVisibility(View.VISIBLE);
+
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+
+        }
 
 
+        @Override
+        protected Void doInBackground(Void... params) {
+
+            WOrksOnData();
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+//            circleView.stopOk();
+//            circleView.setVisibility(circleView.GONE);
+            //  progressBar.setVisibility(View.INVISIBLE);
+
+
+        }
     }
 
 

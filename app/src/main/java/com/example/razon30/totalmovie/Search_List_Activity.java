@@ -136,9 +136,11 @@ public class Search_List_Activity extends AppCompatActivity implements Searching
 
                 Movie movie = listMovies.get(position);
                 String id = String.valueOf(movie.getId());
+                String image = image_url + movie.getUrlThumbnail();
 
                 Intent intent = new Intent(Search_List_Activity.this, Movie_Details.class);
                 intent.putExtra("tv", id);
+                intent.putExtra("url", image);
 
 
                 startActivity(intent);
@@ -248,6 +250,11 @@ public class Search_List_Activity extends AppCompatActivity implements Searching
 
         @Override
         public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+
+        }
+
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
         }
 

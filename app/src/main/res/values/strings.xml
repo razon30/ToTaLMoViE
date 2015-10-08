@@ -29,4 +29,6 @@
     <string name="agree">Setting</string>
     <string name="disagree">Okey</string>
     <string name="title_activity_credit">Credit</string>
+    <string name="title_activity_luncher">LuncherActivity</string>
+    <string name="title_activity_image_gallery">ImageGalleryActivity</string>
 </resources>

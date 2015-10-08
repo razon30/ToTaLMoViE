@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/Style_three_tab"
+              android:orientation="vertical"
+    >
+
+
+    <!--<com.wrapp.floatlabelededittext.FloatLabeledEditText-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="70dp"-->
+
+    <!-->-->
+
+
+    <TextView
+        android:id="@+id/fbAbout"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_marginLeft="10dp"
+        android:gravity="center_vertical"
+        android:text="Already in Watch List"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
+    <!--</com.wrapp.floatlabelededittext.FloatLabeledEditText>-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp">
+
+        <TextView
+            android:id="@+id/remove"
+            android:layout_width="90dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="40dp"
+            android:background="@drawable/myrect"
+            android:elevation="15dp"
+            android:gravity="center"
+            android:text="Remove"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            />
+
+
+        <com.facebook.share.widget.ShareButton
+            android:id="@+id/okShare"
+            android:layout_width="90dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="15dp"
+            android:background="@drawable/myrect"
+            android:elevation="15dp"
+            android:gravity="center"
+            android:text="Post"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"/>
+    </RelativeLayout>
+
+
+</LinearLayout>

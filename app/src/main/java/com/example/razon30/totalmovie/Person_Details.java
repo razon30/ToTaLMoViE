@@ -32,6 +32,8 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.etiennelawlor.imagegallery.library.activities.ImageGalleryActivity;
+import com.etiennelawlor.imagegallery.library.enums.PaletteColorType;
 import com.quinny898.library.persistentsearch.SearchBox;
 import com.squareup.picasso.Picasso;
 
@@ -78,6 +80,7 @@ public class Person_Details extends AppCompatActivity {
     TextView movie_name1, movie_name2, movie_name3;
     String mid1, mid2, mid3;
     TextView imagesPerson, moviesPerson;
+    String backdrop1, backdrop2, backdrop3;
     //Retriving data
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
@@ -258,7 +261,7 @@ public class Person_Details extends AppCompatActivity {
                             for (int i = 0; i < image.length(); i++) {
 
                                 JSONObject obj = image.getJSONObject(i);
-                                String im = obj.getString("file_path");
+                                String im = image_url + obj.getString("file_path");
                                 more_image_array.add(im);
 
                             }
@@ -338,6 +341,7 @@ public class Person_Details extends AppCompatActivity {
                                 movie_name1.setText(name1);
                                 Picasso.with(Person_Details.this).load(image_url + profile1).into
                                         (movie_image1);
+                                backdrop1 = image_url + profile1;
                             } else {
                                 moviesPerson.setVisibility(View.GONE);
                                 movie_name1.setVisibility(View.GONE);
@@ -355,6 +359,7 @@ public class Person_Details extends AppCompatActivity {
                                 movie_name2.setText(name2);
                                 Picasso.with(Person_Details.this).load(image_url + profile2).into
                                         (movie_image2);
+                                backdrop2 = image_url + profile2;
                             } else {
                                 moviesPerson.setVisibility(View.GONE);
                                 movie_name2.setVisibility(View.GONE);
@@ -372,6 +377,7 @@ public class Person_Details extends AppCompatActivity {
                                 movie_name3.setText(name3);
                                 Picasso.with(Person_Details.this).load(image_url + profile3).into
                                         (movie_image3);
+                                backdrop3 = image_url + profile3;
                             } else {
                                 moviesPerson.setVisibility(View.GONE);
                                 movie_name3.setVisibility(View.GONE);
@@ -534,33 +540,33 @@ public class Person_Details extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                View view1 = getLayoutInflater().inflate(R.layout.custom_more_image, null);
-                ListView oddView = (ListView) view1.findViewById(R.id.odd_list_image);
-                ListView evenView = (ListView) view1.findViewById(R.id.even_list_image);
-
-
-                if (more_image_array != null && more_image_array.size() != 0) {
-
-                    for (int i = 0; i < more_image_array.size(); i++) {
-
-                        if (i % 2 == 0) {
-                            evenArray.add(more_image_array.get(i));
-                        } else {
-                            oddArray.add(more_image_array.get(i));
-                        }
-
-                    }
-
-                }
-
-                Adapter_more_image oddAdapter = new Adapter_more_image(oddArray, Person_Details.this);
-                Adapter_more_image evenAdapter = new Adapter_more_image(evenArray, Person_Details.this);
-
-                oddView.setAdapter(oddAdapter);
-                evenView.setAdapter(evenAdapter);
-
-                AlertDialog.Builder builderAlertDialog = new AlertDialog.Builder(
-                        Person_Details.this);
+//                View view1 = getLayoutInflater().inflate(R.layout.custom_more_image, null);
+//                ListView oddView = (ListView) view1.findViewById(R.id.odd_list_image);
+//                ListView evenView = (ListView) view1.findViewById(R.id.even_list_image);
+//
+//
+//                if (more_image_array != null && more_image_array.size() != 0) {
+//
+//                    for (int i = 0; i < more_image_array.size(); i++) {
+//
+//                        if (i % 2 == 0) {
+//                            evenArray.add(more_image_array.get(i));
+//                        } else {
+//                            oddArray.add(more_image_array.get(i));
+//                        }
+//
+//                    }
+//
+//                }
+//
+//                Adapter_more_image oddAdapter = new Adapter_more_image(oddArray, Person_Details.this);
+//                Adapter_more_image evenAdapter = new Adapter_more_image(evenArray, Person_Details.this);
+//
+//                oddView.setAdapter(oddAdapter);
+//                evenView.setAdapter(evenAdapter);
+//
+//                AlertDialog.Builder builderAlertDialog = new AlertDialog.Builder(
+//                        Person_Details.this);
 
                 if (more_image_array == null || more_image_array.size() == 0) {
                     Toast.makeText(Person_Details.this, "No more image is Found or Network Error",
@@ -568,9 +574,22 @@ public class Person_Details extends AppCompatActivity {
                     return;
                 } else {
 
-                    builderAlertDialog
-                            .setView(view1)
-                            .show();
+//                    builderAlertDialog
+//                            .setView(view1)
+//                            .show();
+
+                    Intent intent = new Intent(Person_Details.this, ImageGalleryActivity.class);
+                    // Intent intent = new Intent(MainActivity.this, ImageGalleryActivity.class);
+
+//
+                    intent.putStringArrayListExtra("images", more_image_array);
+// optionally set background color using Palette
+                    intent.putExtra("palette_color_type", PaletteColorType.VIBRANT);
+
+                    startActivity(intent);
+
+
+
 
                 }
 
@@ -595,9 +614,11 @@ public class Person_Details extends AppCompatActivity {
 
                         Movie current = person_more_movie_list.get(position);
                         String movie_id = String.valueOf(current.getId());
+                        String image = image_url + current.getUrlThumbnail();
 
                         Intent intent1 = new Intent(Person_Details.this, Movie_Details.class);
                         intent1.putExtra("tv", movie_id);
+                        intent1.putExtra("url", image);
                         startActivity(intent1);
 
                     }
@@ -724,6 +745,7 @@ public class Person_Details extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent1 = new Intent(Person_Details.this, Movie_Details.class);
                 intent1.putExtra("tv", mid1);
+                intent1.putExtra("url", backdrop1);
                 startActivity(intent1);
             }
         });
@@ -733,6 +755,7 @@ public class Person_Details extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent1 = new Intent(Person_Details.this, Movie_Details.class);
                 intent1.putExtra("tv", mid2);
+                intent1.putExtra("url", backdrop2);
                 startActivity(intent1);
             }
         });
@@ -742,6 +765,7 @@ public class Person_Details extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent1 = new Intent(Person_Details.this, Movie_Details.class);
                 intent1.putExtra("tv", mid3);
+                intent1.putExtra("url", backdrop3);
                 startActivity(intent1);
             }
         });

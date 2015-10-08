@@ -103,7 +103,8 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
     ArrayList<String> more_image_array = new ArrayList<String>();
     CardView rating_card;
     ImageView watch;
-    ImageView wish, add;
+    ImageView wish;
+    //ImageView add;
     TextView tvGenre;
     private ImageLoader imageLoader;
     //Retriving data
@@ -126,7 +127,7 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
 
 
         dbMovies = new DBMovies(IMDB_Movie_Details_Top_Bottom.this);
-        layout1 = (LinearLayout) findViewById(R.id.multiple_layout);
+        //  layout1 = (LinearLayout) findViewById(R.id.multiple_layout);
         layout2 = (LinearLayout) findViewById(R.id.watch_layout);
         layout3 = (LinearLayout) findViewById(R.id.wish_layout);
         boolean bool1 = dbMovies.checkWatch(w_id);
@@ -153,13 +154,13 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
         }
 
 
-        add.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                layout2.setVisibility(View.VISIBLE);
-                layout3.setVisibility(View.VISIBLE);
-            }
-        });
+//        add.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                layout2.setVisibility(View.VISIBLE);
+//                layout3.setVisibility(View.VISIBLE);
+//            }
+//        });
 
 
         //  scrollView = (ScrollView) findViewById(R.id.movie_details);
@@ -1318,7 +1319,7 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
         cast_text3 = (TextView) findViewById(R.id.movie_details_cast_name3);
         watch = (ImageView) findViewById(R.id.watch);
         wish = (ImageView) findViewById(R.id.wish);
-        add = (ImageView) findViewById(R.id.multiple_actions);
+        //add = (ImageView) findViewById(R.id.multiple_actions);
         tvVotenumber = (TextView) findViewById(R.id.vote_number);
     }
 
@@ -1458,7 +1459,7 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
         if (i == 1) {
 
             tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_one_toolbar));
-            add.setBackgroundColor(getResources().getColor(R.color.Style_one_toolbar));
+            //add.setBackgroundColor(getResources().getColor(R.color.Style_one_toolbar));
             wish.setBackgroundColor(getResources().getColor(R.color.Style_one_toolbar));
             watch.setBackgroundColor(getResources().getColor(R.color.Style_one_toolbar));
             rating_card.setBackgroundColor(getResources().getColor(R.color.Style_one_toolbar));
@@ -1472,7 +1473,7 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
         if (i == 2) {
 
             tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
-            add.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
+            //add.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
             wish.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
             watch.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
             rating_card.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
@@ -1487,7 +1488,7 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
         if (i == 3) {
 
             tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
-            add.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
+            //add.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
             wish.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
             watch.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
             rating_card.setBackgroundColor(getResources().getColor(R.color.Style_three_toolbar));
@@ -1502,7 +1503,7 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
         if (i == 4) {
 
             tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_four_toolbar));
-            add.setBackgroundColor(getResources().getColor(R.color.Style_four_toolbar));
+            //add.setBackgroundColor(getResources().getColor(R.color.Style_four_toolbar));
             wish.setBackgroundColor(getResources().getColor(R.color.Style_four_toolbar));
             watch.setBackgroundColor(getResources().getColor(R.color.Style_four_toolbar));
             rating_card.setBackgroundColor(getResources().getColor(R.color.Style_four_toolbar));
@@ -1517,7 +1518,7 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
         if (i == 5) {
 
             tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_five_toolbar));
-            add.setBackgroundColor(getResources().getColor(R.color.Style_five_toolbar));
+            //add.setBackgroundColor(getResources().getColor(R.color.Style_five_toolbar));
             wish.setBackgroundColor(getResources().getColor(R.color.Style_five_toolbar));
             watch.setBackgroundColor(getResources().getColor(R.color.Style_five_toolbar));
             rating_card.setBackgroundColor(getResources().getColor(R.color.Style_five_toolbar));
@@ -1532,7 +1533,7 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
         if (i == 6) {
 
             tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_six_toolbar));
-            add.setBackgroundColor(getResources().getColor(R.color.Style_six_toolbar));
+            //add.setBackgroundColor(getResources().getColor(R.color.Style_six_toolbar));
             wish.setBackgroundColor(getResources().getColor(R.color.Style_six_toolbar));
             watch.setBackgroundColor(getResources().getColor(R.color.Style_six_toolbar));
             rating_card.setBackgroundColor(getResources().getColor(R.color.Style_six_toolbar));
@@ -1547,7 +1548,7 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
         if (i == 7) {
 
             tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_seven_toolbar));
-            add.setBackgroundColor(getResources().getColor(R.color.Style_seven_toolbar));
+            //add.setBackgroundColor(getResources().getColor(R.color.Style_seven_toolbar));
             wish.setBackgroundColor(getResources().getColor(R.color.Style_seven_toolbar));
             watch.setBackgroundColor(getResources().getColor(R.color.Style_seven_toolbar));
             rating_card.setBackgroundColor(getResources().getColor(R.color.Style_seven_toolbar));
@@ -1562,7 +1563,7 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
         if (i == 8) {
 
             tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_eight_toolbar));
-            add.setBackgroundColor(getResources().getColor(R.color.Style_eight_toolbar));
+            //add.setBackgroundColor(getResources().getColor(R.color.Style_eight_toolbar));
             wish.setBackgroundColor(getResources().getColor(R.color.Style_eight_toolbar));
             watch.setBackgroundColor(getResources().getColor(R.color.Style_eight_toolbar));
             rating_card.setBackgroundColor(getResources().getColor(R.color.Style_eight_toolbar));
@@ -1577,7 +1578,7 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
         if (i == 9) {
 
             tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_nine_toolbar));
-            add.setBackgroundColor(getResources().getColor(R.color.Style_nine_toolbar));
+            //add.setBackgroundColor(getResources().getColor(R.color.Style_nine_toolbar));
             wish.setBackgroundColor(getResources().getColor(R.color.Style_nine_toolbar));
             watch.setBackgroundColor(getResources().getColor(R.color.Style_nine_toolbar));
             rating_card.setBackgroundColor(getResources().getColor(R.color.Style_nine_toolbar));
@@ -1592,7 +1593,7 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
         if (i == 10) {
 
             tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_ten_toolbar));
-            add.setBackgroundColor(getResources().getColor(R.color.Style_ten_toolbar));
+            //add.setBackgroundColor(getResources().getColor(R.color.Style_ten_toolbar));
             wish.setBackgroundColor(getResources().getColor(R.color.Style_ten_toolbar));
             watch.setBackgroundColor(getResources().getColor(R.color.Style_ten_toolbar));
             rating_card.setBackgroundColor(getResources().getColor(R.color.Style_ten_toolbar));
@@ -1607,7 +1608,7 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
         if (i == 11) {
 
             tvGenre.setBackgroundColor(getResources().getColor(R.color.Style_eleven_view));
-            add.setBackgroundColor(getResources().getColor(R.color.Style_eleven_view));
+            //add.setBackgroundColor(getResources().getColor(R.color.Style_eleven_view));
             wish.setBackgroundColor(getResources().getColor(R.color.Style_eleven_view));
             watch.setBackgroundColor(getResources().getColor(R.color.Style_eleven_view));
             rating_card.setBackgroundColor(getResources().getColor(R.color.Style_eleven_view));
@@ -1677,7 +1678,10 @@ public class IMDB_Movie_Details_Top_Bottom extends AppCompatActivity {
 
         }
 
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
 
+        }
 
 
     }

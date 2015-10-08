@@ -4,8 +4,9 @@ package com.example.razon30.totalmovie;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,7 +19,9 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.android.volley.RequestQueue;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
+import com.github.mrengineer13.snackbar.SnackBar;
 
 import java.util.ArrayList;
 
@@ -29,7 +32,7 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class FragmentBoxOffice extends android.support.v4.app.Fragment implements Sort,
-        BoxOfficeMoviesLoadedListener{
+        BoxOfficeMoviesLoadedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -38,6 +41,9 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
     public ArrayList<Movie> listMovies = new ArrayList<Movie>();
     //sorting
     public MovieSorter movieSorter = new MovieSorter();
+    //VOlley-Json
+    public VolleySingleton volleySingleton;
+    public RequestQueue requestQueue;
     Toolbar toolbar;
     String urlPreId = "http://api.themoviedb.org/3/movie/";
     long id;
@@ -54,9 +60,6 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
     //recycle
     private RecyclerView listMovieHits;
     private AdapterBoxOffice adapterBoxOffice;
-    //VOlley-Json
-    private VolleySingleton volleySingleton;
-    private RequestQueue requestQueue;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     public static FragmentBoxOffice newInstance(String param1, String param2) {
@@ -84,9 +87,9 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_fragment_box_office, container, false);
 
-      //  swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe);
+        //  swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe);
 
-       // swipeRefreshLayout.setOnRefreshListener(this);
+        // swipeRefreshLayout.setOnRefreshListener(this);
 
         workingOnFAB(view);
 
@@ -96,20 +99,24 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
         adapterBoxOffice = new AdapterBoxOffice(getActivity());
         listMovieHits.setAdapter(adapterBoxOffice);
 
-        if (savedInstanceState!=null){
-            listMovies = savedInstanceState.getParcelableArrayList(STATE_MOVIE);
-            adapterBoxOffice.setMovies(listMovies);
-        }
-        else {
 
-            listMovies = MyApplication.getWritableDatabase().getAllMoviesBoxOffice();
-            if (listMovies.isEmpty()) {
-                // L.t(getActivity(), "executing task from fragment");
-                new TaskLoadMoviesBoxOffice(this).execute();
-            }
-
-        }
+        new TaskLoadMoviesBoxOffice_now().execute();
         adapterBoxOffice.setMovies(listMovies);
+        adapterBoxOffice.notifyDataSetChanged();
+
+//        if (savedInstanceState!=null){
+//            listMovies = savedInstanceState.getParcelableArrayList(STATE_MOVIE);
+//            adapterBoxOffice.setMovies(listMovies);
+//        }
+//        else {
+//
+//            listMovies = MyApplication.getWritableDatabase().getAllMoviesBoxOffice();
+//            if (listMovies.isEmpty()) {
+//                // L.t(getActivity(), "executing task from fragment");
+//                new TaskLoadMoviesBoxOffice(this).execute();
+//            }
+//
+//        }
 
 
         listMovieHits.addOnItemTouchListener(new RecyclerTOuchListener(getActivity(), listMovieHits, new ClickListener() {
@@ -120,11 +127,12 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
 
                 Movie movie = listMovies.get(position);
                 String id = String.valueOf(movie.getId());
+                String image = image_url + movie.getUrlThumbnail();
 
                 Intent intent = new Intent(getActivity(), Movie_Details.class);
+
                 intent.putExtra("tv", id);
-
-
+                intent.putExtra("url", image);
                 startActivity(intent);
 
 
@@ -140,45 +148,58 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
         }));
 
 
-
         return view;
     }
 
     private void workingOnFAB(final View view) {
-        FloatingActionsMenu menuMultipleActions = (FloatingActionsMenu) view.findViewById(R.id
+        FloatingActionMenu menuMultipleActions = (FloatingActionMenu) view.findViewById(R.id
                 .multiple_actions);
 
-       // menuMultipleActions.setBackgroundResource(R.drawable.refresh);
+        // menuMultipleActions.setBackgroundResource(R.drawable.refresh);
 
-        com.getbase.floatingactionbutton.FloatingActionButton action_a = (com.getbase
-                .floatingactionbutton.FloatingActionButton) view.findViewById(R.id.action_a);
+        FloatingActionButton action_a = (FloatingActionButton) view.findViewById(R.id.action_a);
         final RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.layout);
 
         action_a.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Snackbar.make(layout,"Sorting Alphabetically",Snackbar.LENGTH_SHORT).show();
+
+
+                new SnackBar.Builder(getActivity())
+                        .withMessage("Sorting Alphabetically") // OR
+                        .withTextColorId(R.color.translucent_black_light)
+                        .withBackgroundColorId(R.color.accent_color)
+                        .withTypeFace(Typeface.SANS_SERIF)
+                        .show();
                 sortByName();
+
             }
         });
 
-        com.getbase.floatingactionbutton.FloatingActionButton action_b = (com.getbase
-                .floatingactionbutton.FloatingActionButton) view.findViewById(R.id.action_b);
+        FloatingActionButton action_b = (FloatingActionButton) view.findViewById(R.id.action_b);
         action_b.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Toast.makeText(getActivity(), "", Toast.LENGTH_SHORT).show();
-                Snackbar.make(layout,"Sorting By Date",Snackbar.LENGTH_SHORT).show();
+                new SnackBar.Builder(getActivity())
+                        .withMessage("Sorting By Date") // OR
+                        .withTextColorId(R.color.translucent_black_light)
+                        .withBackgroundColorId(R.color.accent_color)
+                        .withTypeFace(Typeface.SANS_SERIF)
+                        .show();
                 sortByDate();
             }
         });
 
-        com.getbase.floatingactionbutton.FloatingActionButton action_c = (com.getbase
-                .floatingactionbutton.FloatingActionButton) view.findViewById(R.id.action_c);
+        FloatingActionButton action_c = (FloatingActionButton) view.findViewById(R.id.action_c);
         action_c.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Snackbar.make(layout, "Sorting By Ratings", Snackbar.LENGTH_SHORT)
+                new SnackBar.Builder(getActivity())
+                        .withMessage("Sorting By Ratings") // OR
+                        .withTextColorId(R.color.translucent_black_light)
+                        .withBackgroundColorId(R.color.accent_color)
+                        .withTypeFace(Typeface.SANS_SERIF)
                         .show();
                 sortByRatings();
             }
@@ -228,11 +249,15 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
 //            adapterBoxOffice.notifyDataSetChanged();
 //        }
 
-        adapterBoxOffice.setMovies(listMovies);
+        // adapterBoxOffice.setMovies(listMovies);
         adapterBoxOffice.notifyDataSetChanged();
 
     }
 
+    public void populateBoxOffice() {
+
+
+    }
 
     public interface ClickListener {
 
@@ -242,27 +267,27 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
 
     }
 
-    static class RecyclerTOuchListener implements RecyclerView.OnItemTouchListener{
+    static class RecyclerTOuchListener implements RecyclerView.OnItemTouchListener {
 
         GestureDetector gestureDetector;
         ClickListener clickListener;
 
-        public  RecyclerTOuchListener(Context context, final RecyclerView rv, final ClickListener clickListener){
+        public RecyclerTOuchListener(Context context, final RecyclerView rv, final ClickListener clickListener) {
 
             this.clickListener = clickListener;
-            gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener(){
+            gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener() {
 
                 @Override
                 public boolean onSingleTapUp(MotionEvent e) {
-                    return  true;
+                    return true;
                 }
 
                 @Override
                 public void onLongPress(MotionEvent e) {
 
-                    View child = rv.findChildViewUnder(e.getX(),e.getY());
-                    if (child != null && clickListener !=null){
-                        clickListener.onLongClick(child,rv.getChildPosition(child));
+                    View child = rv.findChildViewUnder(e.getX(), e.getY());
+                    if (child != null && clickListener != null) {
+                        clickListener.onLongClick(child, rv.getChildPosition(child));
                     }
 
                 }
@@ -272,14 +297,13 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
         }
 
 
-
         @Override
         public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
 
-            View child = rv.findChildViewUnder(e.getX(),e.getY());
-            if (child !=null && clickListener!=null && gestureDetector.onTouchEvent(e)){
+            View child = rv.findChildViewUnder(e.getX(), e.getY());
+            if (child != null && clickListener != null && gestureDetector.onTouchEvent(e)) {
 
-                clickListener.onCLick(child,rv.getChildPosition(child));
+                clickListener.onCLick(child, rv.getChildPosition(child));
 
             }
 
@@ -291,9 +315,37 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
 
         }
 
+        @Override
+        public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+        }
 
 
     }
 
+    public class TaskLoadMoviesBoxOffice_now extends AsyncTask<Void, Void, ArrayList<Movie>> {
 
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            volleySingleton = VolleySingleton.getsInstance();
+            requestQueue = volleySingleton.getmRequestQueue();
+        }
+
+        @Override
+        protected ArrayList<Movie> doInBackground(Void... params) {
+            listMovies = MovieUtils.loadBoxOfficeMovies(requestQueue);
+            return listMovies;
+        }
+
+        @Override
+        protected void onPostExecute(ArrayList<Movie> aVoid) {
+            super.onPostExecute(aVoid);
+
+            adapterBoxOffice.setMovies(listMovies);
+            adapterBoxOffice.notifyDataSetChanged();
+
+
+        }
+    }
 }

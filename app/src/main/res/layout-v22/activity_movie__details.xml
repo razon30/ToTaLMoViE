@@ -46,15 +46,18 @@
                 <!--/>-->
 
 
-                <ImageView
+                <com.github.siyamed.shapeimageview.CircularImageView
                     android:id="@+id/play_trailer"
-                    android:layout_width="75dp"
-                    android:layout_height="75dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:gravity="center"
                     android:src="@android:drawable/ic_media_play"
-                    app:layout_collapseMode="parallax"/>
+                    app:layout_collapseMode="parallax"
+                    app:siBorderColor="#FFFFFF"
+                    app:siBorderType="fill"
+                    app:siBorderWidth="4dp"/>
 
             </RelativeLayout>
 
@@ -64,8 +67,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:background="@android:color/transparent"
+                android:elevation="20dp"
                 app:layout_collapseMode="pin"
-
                 app:theme="@style/Rushmore.Toolbar.Transparent"
                 />
 
@@ -147,21 +150,21 @@
                             android:orientation="horizontal"
                             >
 
-                            <LinearLayout
-                                android:id="@+id/multiple_layout"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:gravity="center_vertical|center">
+                            <!--<LinearLayout-->
+                            <!--android:id="@+id/multiple_layout"-->
+                            <!--android:layout_width="0dp"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_weight="1"-->
+                            <!--android:gravity="center_vertical|center">-->
 
-                                <ImageView
-                                    android:id="@+id/multiple_actions"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:src="@drawable/facebook"
-                                    android:textSize="18sp">
-                                </ImageView>
-                            </LinearLayout>
+                            <!--<ImageView-->
+                            <!--android:id="@+id/multiple_actions"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:src="@drawable/facebook"-->
+                            <!--android:textSize="18sp">-->
+                            <!--</ImageView>-->
+                            <!--</LinearLayout>-->
 
                             <LinearLayout
                                 android:id="@+id/watch_layout"
@@ -170,15 +173,18 @@
                                 android:layout_weight="1"
                                 android:gravity="center_vertical|center">
 
-                                <ImageView
+                                <Button
                                     android:id="@+id/watch"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="@color/translucent_black_light"
-                                    android:src="@drawable/ic_btn_seen"
-                                    android:textSize="18sp">
+                                    android:layout_height="30dp"
+                                    android:background="@drawable/myrect"
+                                    android:elevation="15dp"
+                                    android:text="Watch"
+                                    android:textColor="#FFFFFF"
 
-                                </ImageView>
+                                    android:textSize="14sp">
+
+                                </Button>
                             </LinearLayout>
 
                             <LinearLayout

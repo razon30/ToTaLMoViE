@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -16,9 +18,9 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.speech.RecognizerIntent;
 import android.support.design.widget.NavigationView;
-import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
@@ -27,6 +29,8 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Base64;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -57,25 +61,36 @@ import com.facebook.appevents.AppEventsLogger;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
-import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
-import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
+import com.github.siyamed.shapeimageview.CircularImageView;
 import com.quinny898.library.persistentsearch.SearchBox;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
 
-import it.neokree.materialtabs.MaterialTab;
-import it.neokree.materialtabs.MaterialTabListener;
+import io.karim.MaterialTabs;
+
+//import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
+//import com.oguzdev.circularfloatingactionmenu.library.FloatingActionMenu;
+//import com.oguzdev.circularfloatingactionmenu.library.SubActionButton;
+//import com.google.android.gms.auth.GoogleAuthException;
+//import com.google.android.gms.auth.GoogleAuthUtil;
+//import com.google.android.gms.auth.GooglePlayServicesAvailabilityException;
+//import com.google.android.gms.auth.UserRecoverableAuthException;
 
 
-public class MainActivity extends AppCompatActivity implements MaterialTabListener, View
-        .OnClickListener, NavigationView.OnNavigationItemSelectedListener {
+//import it.neokree.materialtabs.MaterialTab;
+//import it.neokree.materialtabs.MaterialTabHost;
+//import it.neokree.materialtabs.MaterialTabListener;
+
+
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     public static final int MOVIES_SEARCH_RESULTS = 0;
     public static final int MOVIES_HITS = 1;
@@ -94,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
     ActionBarDrawerToggle actionBarDrawerToggle;
     //for drawer header
     ImageView drawer_cover_image;
-    ImageView drawer_profile_image;
+    CircularImageView drawer_profile_image;
     TextView drawer_name, drawer_profile;
     CallbackManager callbackManager;
     AccessToken accessToken;
@@ -118,20 +133,19 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
     String multiPost = "multi?api_key=f246d5e5105e9934d3cd4c4c181d618d&query=";
     String keyword = "";
     //FLoating Button
-    FloatingActionButton actionButton;
-    FloatingActionMenu actionMenu;
+//    FloatingActionButton actionButton;
+//    FloatingActionMenu actionMenu;
     SharedPreferences sharedPreferences;
     View view;
+    //for tab
+    MaterialTabs tabHost;
     //for search
     private SearchBox search;
     private Toolbar toolbar;
     private boolean mUserSawDrawer = false;
-    //for tab
-    private TabLayout tabHost;
-    //for viewPager
     private ViewPager viewPager;
-    private ViewPagerAdapter adapter;
     private ViewGroup containerAppBar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,6 +154,14 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
         callbackManager = CallbackManager.Factory.create();
         setContentView(R.layout.activity_main);
         getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
+        imageCoverLayout = (RelativeLayout) findViewById(R.id.imageHeaderLayout);
+        // logInDemoLayout = (LinearLayout) findViewById(R.id.logInCoverLayout);
+
+
+        drawer_cover_image = (ImageView) findViewById(R.id.fb_cover_image);
+        drawer_profile_image = (CircularImageView) findViewById(R.id.fb_profile_image);
+        drawer_name = (TextView) findViewById(R.id.fb_profile_name);
+        drawer_profile = (TextView) findViewById(R.id.fb_profile);
 
 
         //progressDialouge();
@@ -176,10 +198,32 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
         search = (SearchBox) findViewById(R.id.searchbox);
         // search.enableVoiceRecognition(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        tabHost = (TabLayout) findViewById(R.id.materialTabHost);
-        viewPager = (ViewPager) findViewById(R.id.viewPager);
         this.setSupportActionBar(toolbar);
         view = findViewById(R.id.view);
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+
+//        if (Build.VERSION.SDK_INT>21) {
+//
+//            TabLayout tabHost;
+//            ViewPagerAdapter adapter;
+//            tabHost = (TabLayout) findViewById(R.id.materialTabHost);
+//            adapter = new ViewPagerAdapter(getSupportFragmentManager());
+//            viewPager.setAdapter(adapter);
+//            //Notice how the Tab Layout links with the Pager Adapter
+//            tabHost.setTabsFromPagerAdapter(adapter);
+//            //Notice how The Tab Layout adn View Pager object are linked
+//            tabHost.setupWithViewPager(viewPager);
+//            viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabHost));
+//
+//        }else {
+
+        tabHost = (MaterialTabs) findViewById(R.id.material_tabs);
+        viewPager.setAdapter(new MainActivityPagerAdapter(getSupportFragmentManager()));
+        tabHost.setViewPager(viewPager);
+
+
+        //  }
+
 
         worksOnColor();
 
@@ -216,19 +260,10 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
         });
 
         worksOnDrawer();
-        worksOnDrawerHeader();
+        if (isNetworkAvailable()) {
+            worksOnDrawerHeader();
+        }
         worksOnDrawerMenu();
-
-
-        adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        viewPager.setAdapter(adapter);
-
-        //Notice how the Tab Layout links with the Pager Adapter
-        tabHost.setTabsFromPagerAdapter(adapter);
-
-        //Notice how The Tab Layout adn View Pager object are linked
-        tabHost.setupWithViewPager(viewPager);
-        viewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabHost));
 
 
 //        viewPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
@@ -492,14 +527,6 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
 //        button.setReadPermissions("public_profile");
 //        button.setVisibility(button.GONE);
 
-        imageCoverLayout = (RelativeLayout) findViewById(R.id.imageHeaderLayout);
-        // logInDemoLayout = (LinearLayout) findViewById(R.id.logInCoverLayout);
-
-
-        drawer_cover_image = (ImageView) findViewById(R.id.fb_cover_image);
-        drawer_profile_image = (ImageView) findViewById(R.id.fb_profile_image);
-        drawer_name = (TextView) findViewById(R.id.fb_profile_name);
-        drawer_profile = (TextView) findViewById(R.id.fb_profile);
 
 //        if (!sharedPreferences.contains("log")) {
 //
@@ -508,22 +535,22 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
 //        }
 
 //
-//        try {
-//            PackageInfo info = getPackageManager().getPackageInfo(
-//                    "com.example.razon30.totalmovie",
-//                    PackageManager.GET_SIGNATURES);
-//            for (android.content.pm.Signature signature : info.signatures) {
-//                MessageDigest md = MessageDigest.getInstance("SHA");
-//                md.update(signature.toByteArray());
-//                Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
-//                // Toast.makeText(MainActivity.this,"KeyHash: "+Base64.encodeToString(md.digest(),
-//                //       Base64.DEFAULT),Toast.LENGTH_SHORT).show();
-//            }
-//        } catch (PackageManager.NameNotFoundException e) {
-//
-//        } catch (NoSuchAlgorithmException e) {
-//
-//        }
+        try {
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.example.razon30.totalmovie",
+                    PackageManager.GET_SIGNATURES);
+            for (android.content.pm.Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA1");
+                md.update(signature.toByteArray());
+                Log.e("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+                // Toast.makeText(MainActivity.this,"KeyHash: "+Base64.encodeToString(md.digest(),
+                //       Base64.DEFAULT),Toast.LENGTH_SHORT).show();
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }
 
 //        logIn.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -966,51 +993,51 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
     }
 
 
-    private void setting_floating_action_button_and_menu() {
-
-        ImageView icon = new ImageView(this);
-        icon.setImageResource(R.drawable.ic_action_refresh);
-        actionButton = new FloatingActionButton
-                .Builder(this)
-                .setContentView(icon)
-                .setBackgroundDrawable(R.drawable.selector_button_red)
-                .build();
-
-        SubActionButton.Builder item = new SubActionButton.Builder(this);
-        item.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_sub_button_gray));
-
-        ImageView icon_sort_name = new ImageView(this);
-        icon_sort_name.setImageResource(R.drawable.ic_action_alphabets);
-        ImageView icon_sort_date = new ImageView(this);
-        icon_sort_date.setImageResource(R.drawable.ic_action_calendar);
-        ImageView icon_sort_rating = new ImageView(this);
-        icon_sort_rating.setImageResource(R.drawable.ic_action_important);
-
-        SubActionButton button_sort_name = item.setContentView(icon_sort_name).build();
-        SubActionButton button_sort_date = item.setContentView(icon_sort_date).build();
-        SubActionButton button_sort_rating = item.setContentView(icon_sort_rating).build();
-
-
-        actionMenu = new FloatingActionMenu.Builder(this)
-                .addSubActionView(button_sort_name)
-                .addSubActionView(button_sort_date)
-                .addSubActionView(button_sort_rating)
-                .attachTo(actionButton)
-                .build();
-
-
-        button_sort_name.setTag(TAG_SORT_NAME);
-        button_sort_date.setTag(TAG_SORT_DATE);
-        button_sort_rating.setTag(TAG_SORT_RATINGS);
-
-        button_sort_name.setOnClickListener(this);
-        button_sort_date.setOnClickListener(this);
-        button_sort_rating.setOnClickListener(this);
-
-        actionButton.setTranslationX(-200.0f);
-
-
-    }
+//    private void setting_floating_action_button_and_menu() {
+//
+//        ImageView icon = new ImageView(this);
+//        icon.setImageResource(R.drawable.ic_action_refresh);
+//        actionButton = new FloatingActionButton
+//                .Builder(this)
+//                .setContentView(icon)
+//                .setBackgroundDrawable(R.drawable.selector_button_red)
+//                .build();
+//
+//        SubActionButton.Builder item = new SubActionButton.Builder(this);
+//        item.setBackgroundDrawable(getResources().getDrawable(R.drawable.selector_sub_button_gray));
+//
+//        ImageView icon_sort_name = new ImageView(this);
+//        icon_sort_name.setImageResource(R.drawable.ic_action_alphabets);
+//        ImageView icon_sort_date = new ImageView(this);
+//        icon_sort_date.setImageResource(R.drawable.ic_action_calendar);
+//        ImageView icon_sort_rating = new ImageView(this);
+//        icon_sort_rating.setImageResource(R.drawable.ic_action_important);
+//
+//        SubActionButton button_sort_name = item.setContentView(icon_sort_name).build();
+//        SubActionButton button_sort_date = item.setContentView(icon_sort_date).build();
+//        SubActionButton button_sort_rating = item.setContentView(icon_sort_rating).build();
+//
+//
+//        actionMenu = new FloatingActionMenu.Builder(this)
+//                .addSubActionView(button_sort_name)
+//                .addSubActionView(button_sort_date)
+//                .addSubActionView(button_sort_rating)
+//                .attachTo(actionButton)
+//                .build();
+//
+//
+//        button_sort_name.setTag(TAG_SORT_NAME);
+//        button_sort_date.setTag(TAG_SORT_DATE);
+//        button_sort_rating.setTag(TAG_SORT_RATINGS);
+//
+//        button_sort_name.setOnClickListener(this);
+//        button_sort_date.setOnClickListener(this);
+//        button_sort_rating.setOnClickListener(this);
+//
+//        actionButton.setTranslationX(-200.0f);
+//
+//
+//    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -1035,42 +1062,42 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onTabSelected(MaterialTab materialTab) {
-        viewPager.setCurrentItem(materialTab.getPosition());
-    }
+//    @Override
+//    public void onTabSelected(MaterialTab materialTab) {
+//        viewPager.setCurrentItem(materialTab.getPosition());
+//    }
+//
+//
+//    @Override
+//    public void onTabReselected(MaterialTab materialTab) {
+//    }
+//
+//
+//    @Override
+//    public void onTabUnselected(MaterialTab materialTab) {
+//    }
 
 
-    @Override
-    public void onTabReselected(MaterialTab materialTab) {
-    }
-
-
-    @Override
-    public void onTabUnselected(MaterialTab materialTab) {
-    }
-
-
-    @Override
-    public void onClick(View v) {
-
-
-        Fragment fragment = (Fragment) adapter.instantiateItem(viewPager, viewPager.getCurrentItem());
-        if (fragment instanceof Sort) {
-
-            if (v.getTag().equals(TAG_SORT_NAME)) {
-                ((Sort) fragment).sortByName();
-            }
-            if (v.getTag().equals(TAG_SORT_DATE)) {
-                ((Sort) fragment).sortByDate();
-            }
-            if (v.getTag().equals(TAG_SORT_RATINGS)) {
-                ((Sort) fragment).sortByRatings();
-            }
-        }
-
-
-    }
+//    @Override
+//    public void onClick(View v) {
+//
+//
+//        Fragment fragment = (Fragment) adapter.instantiateItem(viewPager, viewPager.getCurrentItem());
+//        if (fragment instanceof Sort) {
+//
+//            if (v.getTag().equals(TAG_SORT_NAME)) {
+//                ((Sort) fragment).sortByName();
+//            }
+//            if (v.getTag().equals(TAG_SORT_DATE)) {
+//                ((Sort) fragment).sortByDate();
+//            }
+//            if (v.getTag().equals(TAG_SORT_RATINGS)) {
+//                ((Sort) fragment).sortByRatings();
+//            }
+//        }
+//
+//
+//    }
 
     public void openSearch() {
         toolbar.setTitle("");
@@ -1188,6 +1215,7 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
             view.setBackgroundColor(getResources().getColor(R.color.Style_one_view));
             toolbar.setBackgroundColor(getResources().getColor(R.color.Style_one_toolbar));
             tabHost.setBackgroundColor(getResources().getColor(R.color.Style_one_tab));
+
 
             if (Build.VERSION.SDK_INT >= 21) {
                 // getWindow().setStatusBarColor(getResources().getColor(R.color.accent_material_dark));
@@ -1366,6 +1394,43 @@ public class MainActivity extends AppCompatActivity implements MaterialTabListen
         private Drawable getIcon(int position) {
             return getResources().getDrawable(icon[position]);
         }
+    }
+
+
+    public class MainActivityPagerAdapter extends FragmentPagerAdapter {
+
+        private final String[] TITLES = {"Discover", "Box Office", "Upcoming"};
+
+
+        public MainActivityPagerAdapter(FragmentManager fm) {
+            super(fm);
+        }
+
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            return TITLES[position];
+        }
+
+        @Override
+        public int getCount() {
+            return TITLES.length;
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position) {
+                case 0:
+                default:
+                    return new FragmentSearch();
+                case 1:
+                    return new FragmentBoxOffice();
+                case 2:
+                    return new FragmentUpcoming();
+            }
+        }
+
+
     }
 
 }
