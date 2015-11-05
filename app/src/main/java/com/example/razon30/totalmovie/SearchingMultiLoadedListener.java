@@ -7,6 +7,6 @@ import java.util.ArrayList;
  */
 public interface SearchingMultiLoadedListener {
 
-    public void onSearchingMultiLoaded(ArrayList<Movie> listMovies);
+    void onSearchingMultiLoaded(ArrayList<Movie> listMovies);
 
 }

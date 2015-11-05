@@ -1,7 +1,6 @@
 package com.example.razon30.totalmovie;
 
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -19,11 +18,10 @@ import java.util.ArrayList;
  */
 public class TrailerLoadTask extends AsyncTask<Void, Void, ArrayList<Movie>> {
 
+    String trailer = "http://www.myapifilms.com/imdb/trailers";
     private UpcomingMoviesLoadedListener myComponent;
     private VolleySingleton volleySingleton;
     private RequestQueue requestQueue;
-
-    String trailer = "http://www.myapifilms.com/imdb/trailers";
 
 
     public TrailerLoadTask(UpcomingMoviesLoadedListener myComponent) {

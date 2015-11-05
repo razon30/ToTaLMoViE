@@ -5,8 +5,10 @@ package com.example.razon30.totalmovie;
  */
 public interface Sort {
 
-    public void sortByName();
-    public void sortByDate();
-    public void sortByRatings();
+    void sortByName();
+
+    void sortByDate();
+
+    void sortByRatings();
 
 }

@@ -10,16 +10,15 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
-import java.util.zip.Inflater;
 
 /**
  * Created by razon30 on 18-07-15.
  */
 public class Adapter_more_image extends BaseAdapter {
 
+    private static LayoutInflater inflater = null;
     ArrayList<String> arrayList;
     Context context;
-    private static LayoutInflater inflater=null;
     String image_url = "http://image.tmdb.org/t/p/w500";
 
     public Adapter_more_image(ArrayList<String> arrayList, Context context) {

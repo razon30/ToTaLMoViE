@@ -5,21 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
-
-import java.util.ArrayList;
 
 /**
  * Created by razon30 on 22-07-15.
  */
 public class Adapter_genre extends BaseAdapter{
 
+    private static LayoutInflater inflater = null;
     String[] genreName = null;
     Context context;
-    private static LayoutInflater inflater=null;
     String image_url = "http://image.tmdb.org/t/p/w500";
 
     private int previousPosition=0;
@@ -58,16 +53,6 @@ public class Adapter_genre extends BaseAdapter{
         textView.setText(genreName[position]);
 
         AnimationUtils.animateToolbar(view);
-
-//        if(position>previousPosition)
-//        {
-//            AnimationUtils.animateList(view,true);
-//        }
-//        else{
-//            AnimationUtils.animateList(view, false);
-//        }
-//        previousPosition=position;
-
 
         return view;
     }

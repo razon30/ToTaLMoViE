@@ -5,12 +5,13 @@ import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -44,16 +45,10 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
     //VOlley-Json
     public VolleySingleton volleySingleton;
     public RequestQueue requestQueue;
-    Toolbar toolbar;
-    String urlPreId = "http://api.themoviedb.org/3/movie/";
     long id;
-    String urlLaterId = "?api_key=f246d5e5105e9934d3cd4c4c181d618d";
+
     String image_url = "http://image.tmdb.org/t/p/w500";
-    String vediopost = "/videos?api_key=f246d5e5105e9934d3cd4c4c181d618d";
-    String cast_post = "/credits?api_key=f246d5e5105e9934d3cd4c4c181d618d";
-    String image_post = "/images?api_key=f246d5e5105e9934d3cd4c4c181d618d";
-    String similar_post = "/similar?api_key=f246d5e5105e9934d3cd4c4c181d618d";
-    String reviews_post = "/reviews?api_key=f246d5e5105e9934d3cd4c4c181d618d";
+
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
@@ -100,30 +95,29 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
         listMovieHits.setAdapter(adapterBoxOffice);
 
 
-        new TaskLoadMoviesBoxOffice_now().execute();
-        adapterBoxOffice.setMovies(listMovies);
-        adapterBoxOffice.notifyDataSetChanged();
+        if (!isNetworkAvailable()) {
 
-//        if (savedInstanceState!=null){
-//            listMovies = savedInstanceState.getParcelableArrayList(STATE_MOVIE);
-//            adapterBoxOffice.setMovies(listMovies);
-//        }
-//        else {
-//
-//            listMovies = MyApplication.getWritableDatabase().getAllMoviesBoxOffice();
-//            if (listMovies.isEmpty()) {
-//                // L.t(getActivity(), "executing task from fragment");
-//                new TaskLoadMoviesBoxOffice(this).execute();
-//            }
-//
-//        }
+            if (savedInstanceState != null) {
+                listMovies = savedInstanceState.getParcelableArrayList(STATE_MOVIE);
+                adapterBoxOffice.setMovies(listMovies);
+            } else {
+
+                listMovies = MyApplication.getWritableDatabase().getAllMoviesBoxOffice();
+
+            }
+
+        } else {
+            new TaskLoadMoviesBoxOffice_now().execute();
+            adapterBoxOffice.setMovies(listMovies);
+            adapterBoxOffice.notifyDataSetChanged();
+        }
+
+
 
 
         listMovieHits.addOnItemTouchListener(new RecyclerTOuchListener(getActivity(), listMovieHits, new ClickListener() {
             @Override
             public void onCLick(View v, int position) {
-                //  Toast.makeText(getActivity(), "Touched on: " + position, Toast.LENGTH_LONG)
-                // .show();
 
                 Movie movie = listMovies.get(position);
                 String id = String.valueOf(movie.getId());
@@ -141,9 +135,6 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
             @Override
             public void onLongClick(View v, int position) {
 
-                //  Toast.makeText(getActivity(), "Long Touched on: " + position, Toast.LENGTH_LONG)
-                //     .show();
-
             }
         }));
 
@@ -154,8 +145,6 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
     private void workingOnFAB(final View view) {
         FloatingActionMenu menuMultipleActions = (FloatingActionMenu) view.findViewById(R.id
                 .multiple_actions);
-
-        // menuMultipleActions.setBackgroundResource(R.drawable.refresh);
 
         FloatingActionButton action_a = (FloatingActionButton) view.findViewById(R.id.action_a);
         final RelativeLayout layout = (RelativeLayout) view.findViewById(R.id.layout);
@@ -254,9 +243,12 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
 
     }
 
-    public void populateBoxOffice() {
-
-
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getActivity().getSystemService(Context
+                .CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
 
     public interface ClickListener {
@@ -348,4 +340,5 @@ public class FragmentBoxOffice extends android.support.v4.app.Fragment implement
 
         }
     }
+
 }

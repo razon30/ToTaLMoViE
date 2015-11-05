@@ -16,8 +16,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -29,15 +27,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.github.mrengineer13.snackbar.SnackBar;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-//import com.github.jlmd.animatedcircleloadingview.AnimatedCircleLoadingView;
 
 
 public class FragmentSearch extends android.support.v4.app.Fragment {
@@ -48,18 +45,14 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
     private static final String STATE_MOVIE = "state_genre";
     public VolleySingleton volleySingleton;
     public RequestQueue requestQueue;
-    //    String genreUrl = "http://api.themoviedb.org/3/genre/movie/list?api_key=f246d5e5105e9934d3cd4c4c181d618d";
-//
+
     ArrayList<Movie> trailer_list = new ArrayList<Movie>();
     String trailer = "http://www.myapifilms.com/imdb/trailers";
     String imdb_bottom_100 = "http://www.myapifilms.com/imdb/bottom";
     String imdb_top_250 = "http://www.myapifilms.com/imdb/top";
-    String item_of_top_250_of_imdb = "http://api.themoviedb.org/3/find/";
+
     // String imdb_id;
-    String itemPost = "?external_source=imdb_id&api_key=f246d5e5105e9934d3cd4c4c181d618d";
-    String urlPre = "http://api.themoviedb.org/3/search/";
-    String multiPost = "multi?api_key=f246d5e5105e9934d3cd4c4c181d618d&query=";
-    String keyword = "";
+
     String image_url = "http://image.tmdb.org/t/p/w500";
     String popular_movie = "http://api.themoviedb.org/3/movie/popular?api_key=f246d5e5105e9934d3cd4c4c181d618d";
     String popular_person = "http://api.themoviedb.org/3/person/popular?api_key=f246d5e5105e9934d3cd4c4c181d618d";
@@ -72,10 +65,7 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
     String tid1, tid2, tid3;
     ImageView trialerImageView1, trialerImageView2, trialerImageView3;
     TextView tvTrailer1, tvTrailer2, tvTrailer3;
-    String imdb_id;
-    String DB_id = "";
-    EditText etSearch;
-    Button btnSearch;
+
     ListView lvGenre1, lvGenre2, lvGenre3;
     String[] genreName1 = {"Action", "Adventure", "Animation", "Comedy", "Crime", "Documentary", "Drama"};
     String[] genreName2 = {"Family", "Fantasy", "Foreign", "History", "Horror", "Music", "Mystery"};
@@ -94,23 +84,6 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
-    // private ProgressBar progressBar;
-
-
-//
-//    private VolleySingleton volleySingleton;
-//    private RequestQueue requestQueue;
-//    ArrayList<Movie> genreList = new ArrayList<Movie>();
-//    ArrayList<Movie> personList = new ArrayList<Movie>();
-//    ArrayList<Movie> movieList = new ArrayList<Movie>();
-//    public ArrayList<Movie> listMovies = new ArrayList<Movie>();
-//
-//    Adapter_genre adapter_genre;
-
-//    private RecyclerView listMovieHits;
-//    public ArrayList<Movie> listMovies = new ArrayList<Movie>();
-//    Adapter_Genre_Recycle adapter_genre_recycle;
 
     public static FragmentSearch newInstance(String param1, String param2) {
         FragmentSearch fragment = new FragmentSearch();
@@ -138,14 +111,9 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
         View view = inflater.inflate(R.layout.fragment_fragment_search, container, false);
         initialize(view);
 
-        //   new TaskLoadUpcomingSearching(this,popular_movie).execute();
-
         volleySingleton = VolleySingleton.getsInstance();
         requestQueue = volleySingleton.getmRequestQueue();
 
-
-//        circleView = new AnimatedCircleLoadingView(getActivity());
-//        new DownloadWebPageTask().execute();
 
         DownloadWebPageTask download = new DownloadWebPageTask(view);
         download.execute();
@@ -178,65 +146,12 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                         String imdb_idd = movie.getImdb_id_top();
 
 
-//                        JsonObjectRequest request0 = new JsonObjectRequest(Request.Method.GET,
-//                                item_of_top_250_of_imdb+ imdb_id +itemPost, null,
-//
-//                                new Response.Listener<JSONObject>() {
-//                                    @Override
-//                                    public void onResponse(JSONObject jsonObject) {
-//
-//                                        if (jsonObject == null || jsonObject.length() == 0) {
-//                                            Toast.makeText(getActivity(), "Problem to load", Toast
-//                                                    .LENGTH_LONG)
-//                                                    .show();
-//
-//                                        }
-//
-//                                        try {
-//
-//
-//                                            JSONArray array = jsonObject.getJSONArray("movie_results");
-//
-//                                            JSONObject cur = array.getJSONObject(0);
-//
-//                                            DB_id = cur.getString("id");
-//
-//
-//                                        } catch (Exception e) {
-////                            Toast.makeText(Movie_Details.this, e.toString(), Toast.LENGTH_LONG)
-////                                    .show();
-//
-//
-//                                        }
-//
-//
-//                                    }
-//                                },
-//                                new Response.ErrorListener() {
-//                                    @Override
-//                                    public void onErrorResponse(VolleyError volleyError) {
-////                        Toast.makeText(Movie_Details.this, volleyError.toString(), Toast.LENGTH_LONG)
-////                                .show();
-//
-//                                    }
-//                                });
-//
-//                        requestQueue.add(request0);
-
                         Intent intent = new Intent(getActivity(), IMDB_Movie_Details_Top_Bottom.class);
                         intent.putExtra("tv", imdb_idd);
 
-//                        Toast.makeText(getActivity(), imdb_idd + "", Toast.LENGTH_LONG)
-//                                .show();
 
 
                         startActivity(intent);
-
-//                        else {
-//
-//                            Toast.makeText(getActivity(), DB_id.toString(), Toast.LENGTH_LONG)
-//                               .show();
-//                        }
 
 
                     }
@@ -256,8 +171,12 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
 
                 if (topten == null || topten.size() == 0) {
 
-                    Toast.makeText(getActivity(), "No Movie Found or Network Error",
-                            Toast.LENGTH_LONG).show();
+                    new SnackBar.Builder(getActivity())
+                            .withMessage("No Movie Found or Network Error") // OR
+                            .withTextColorId(R.color.translucent_black_light)
+                            .withBackgroundColorId(R.color.accent_color)
+                            .withTypeFace(Typeface.SANS_SERIF)
+                            .show();
                     return;
                 } else {
 
@@ -300,75 +219,19 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                         String imdb_idd = movie.getImdb_id_top();
 
 
-//                        JsonObjectRequest request0 = new JsonObjectRequest(Request.Method.GET,
-//                                item_of_top_250_of_imdb+ imdb_id +itemPost, null,
-//
-//                                new Response.Listener<JSONObject>() {
-//                                    @Override
-//                                    public void onResponse(JSONObject jsonObject) {
-//
-//                                        if (jsonObject == null || jsonObject.length() == 0) {
-//                                            Toast.makeText(getActivity(), "Problem to load", Toast
-//                                                    .LENGTH_LONG)
-//                                                    .show();
-//
-//                                        }
-//
-//                                        try {
-//
-//
-//                                            JSONArray array = jsonObject.getJSONArray("movie_results");
-//
-//                                            JSONObject cur = array.getJSONObject(0);
-//
-//                                            DB_id = cur.getString("id");
-//
-//
-//                                        } catch (Exception e) {
-////                            Toast.makeText(Movie_Details.this, e.toString(), Toast.LENGTH_LONG)
-////                                    .show();
-//
-//
-//                                        }
-//
-//
-//                                    }
-//                                },
-//                                new Response.ErrorListener() {
-//                                    @Override
-//                                    public void onErrorResponse(VolleyError volleyError) {
-////                        Toast.makeText(Movie_Details.this, volleyError.toString(), Toast.LENGTH_LONG)
-////                                .show();
-//
-//                                    }
-//                                });
-//
-//                        requestQueue.add(request0);
 
                         Intent intent = new Intent(getActivity(), IMDB_Movie_Details_Top_Bottom.class);
                         intent.putExtra("tv", imdb_idd);
 
-//                        Toast.makeText(getActivity(), imdb_idd + "", Toast.LENGTH_LONG)
-//                                .show();
 
 
                         startActivity(intent);
-
-//                        else {
-//
-//                            Toast.makeText(getActivity(), DB_id.toString(), Toast.LENGTH_LONG)
-//                               .show();
-//                        }
 
 
                     }
 
                     @Override
                     public void onLongClick(View v, int position) {
-
-                        //  Toast.makeText(getActivity(), "Long Touched on: " + position, Toast
-                        //        .LENGTH_LONG)
-                        //        .show();
 
                     }
                 }));
@@ -378,8 +241,12 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                         getActivity());
 
                 if (bottomten == null || bottomten.size() == 0) {
-                    Toast.makeText(getActivity(), "No Movie Found or Network Error",
-                            Toast.LENGTH_LONG).show();
+                    new SnackBar.Builder(getActivity())
+                            .withMessage("No Movie Found or Network Error") // OR
+                            .withTextColorId(R.color.translucent_black_light)
+                            .withBackgroundColorId(R.color.accent_color)
+                            .withTypeFace(Typeface.SANS_SERIF)
+                            .show();
                     return;
                 } else {
 
@@ -427,9 +294,12 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                         getActivity());
 
                 if (trailer_list == null || trailer_list.size() == 0) {
-                    Toast.makeText(getActivity(), "Sorry !! Trailer is not available right now",
-                            Toast
-                                    .LENGTH_LONG).show();
+                    new SnackBar.Builder(getActivity())
+                            .withMessage("Sorry!!\nTrailer Is Not Available right Now") // OR
+                            .withTextColorId(R.color.translucent_black_light)
+                            .withBackgroundColorId(R.color.accent_color)
+                            .withTypeFace(Typeface.SANS_SERIF)
+                            .show();
 
                     return;
                 } else {
@@ -490,8 +360,12 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                         getActivity());
 
                 if (popular_movie_list == null || popular_movie_list.size() == 0) {
-                    Toast.makeText(getActivity(), "No more Popular Movie Found or Network Error",
-                            Toast.LENGTH_LONG).show();
+                    new SnackBar.Builder(getActivity())
+                            .withMessage("No Popular Movie Found or Network Error") // OR
+                            .withTextColorId(R.color.translucent_black_light)
+                            .withBackgroundColorId(R.color.accent_color)
+                            .withTypeFace(Typeface.SANS_SERIF)
+                            .show();
                     return;
                 } else {
 
@@ -534,9 +408,12 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                 AlertDialog.Builder builderAlertDialog = new AlertDialog.Builder(getActivity());
 
                 if (popular_person_list == null || popular_person_list.size() == 0) {
-                    Toast.makeText(getActivity(), "No Popular Person is Found or Network " +
-                                    "Error",
-                            Toast.LENGTH_LONG).show();
+                    new SnackBar.Builder(getActivity())
+                            .withMessage("No Popular Person Found or Network Error") // OR
+                            .withTextColorId(R.color.translucent_black_light)
+                            .withBackgroundColorId(R.color.accent_color)
+                            .withTypeFace(Typeface.SANS_SERIF)
+                            .show();
                     return;
                 } else {
 
@@ -721,214 +598,7 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
             }
         });
 
-//        btnSearch.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                String keyword = etSearch.getText().toString().trim();
-//
-//                if (keyword!=null && keyword.length()!=0 && keyword!=""){
-//
-//                    keyword = keyword.replaceAll("\\s", "");
-//
-//                    String key = urlPre+multiPost+keyword;
-//
-//                    Intent intent = new Intent(getActivity(),Multi_Search_Activity.class);
-//                    intent.putExtra("tv",key);
-//                    startActivity(intent);
-//
-//                }else {
-//                    Toast.makeText(getActivity(),"Not Proper Keyword",Toast.LENGTH_LONG).show();
-//                    return;
-//                }
-//
-//            }
-//        });
-
-
-//        volleySingleton = VolleySingleton.getsInstance();
-//        requestQueue = volleySingleton.getmRequestQueue();
-//        adapter_genre = new Adapter_genre(getActivity());
-//        lvGenre.setAdapter(adapter_genre);
-
-//        listMovieHits = (RecyclerView) view.findViewById(R.id.search_genre_list);
-//        listMovieHits.setLayoutManager(new LinearLayoutManager(getActivity()));
-//        adapter_genre_recycle = new Adapter_Genre_Recycle(getActivity());
-//        listMovieHits.setAdapter(adapter_genre_recycle);
-//
-//
-//        if (savedInstanceState != null) {
-//            listMovies = savedInstanceState.getParcelableArrayList(STATE_MOVIE);
-//            adapter_genre_recycle.setMovies(listMovies);
-//           // adapter_genre.setMovies(listMovies);
-//
-//        } else {
-//
-//            new TaskLoadGenreSearching(this).execute();
-//
-//
-//            // new TaskLoadSearching(getActivity()).execute();
-//
-//
-////            JsonObjectRequest request1 = new JsonObjectRequest(Request.Method.GET, genreUrl, null,
-////                    new Response.Listener<JSONObject>() {
-////                        @Override
-////                        public void onResponse(JSONObject jsonObject) {
-////
-////                            if (jsonObject == null || jsonObject.length() == 0) {
-////                                Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
-////                                        .show();
-////
-////                            }
-////
-////                            try {
-////
-////
-////                                JSONArray genreArray = jsonObject.getJSONArray("genres");
-////
-////                                for (int i = 0; i < genreArray.length(); i++) {
-////
-////                                    JSONObject currentGenre = genreArray.getJSONObject(i);
-////
-////                                    long id = currentGenre.getLong("id");
-////                                    String genre = currentGenre.getString("name");
-////
-////                                    Movie movie = new Movie(id, genre);
-////                                    genreList.add(movie);
-////
-////                                }
-////
-////
-////                            } catch (Exception e) {
-////                                Toast.makeText(getActivity(), e.toString(), Toast.LENGTH_LONG)
-////                                        .show();
-////                            }
-////                        }
-////                    },
-////                    new Response.ErrorListener() {
-////                        @Override
-////                        public void onErrorResponse(VolleyError volleyError) {
-////                            Toast.makeText(getActivity(), volleyError.toString(), Toast.LENGTH_LONG)
-////                                    .show();
-////                        }
-////                    });
-////
-////            requestQueue.add(request1);
-//        }
-//
-//        adapter_genre_recycle.setMovies(listMovies);
-//
-//        listMovieHits.addOnItemTouchListener(new RecyclerTOuchListener(getActivity(), listMovieHits, new ClickListener() {
-//            @Override
-//            public void onCLick(View v, int position) {
-//                Toast.makeText(getActivity(), "Touched on: " + position, Toast.LENGTH_LONG).show();
-//
-//                Movie movie = listMovies.get(position);
-//                String id = String.valueOf(movie.getGenre_id());
-//
-//                Intent intent = new Intent(getActivity(), Search_List_Activity.class);
-//                intent.putExtra("tv", id);
-//
-//
-//                startActivity(intent);
-//
-//
-//            }
-//
-//            @Override
-//            public void onLongClick(View v, int position) {
-//
-//                Toast.makeText(getActivity(), "Long Touched on: " + position, Toast.LENGTH_LONG).show();
-//
-//            }
-//        }));
-//
-//       // adapter_genre.setMovies(listMovies);
-//
-//
-////                    AlertDialog.Builder builderAlertDialog = new AlertDialog.Builder(
-////                            getActivity());
-////
-////                    if (movieList == null || movieList.size() == 0) {
-////                        Toast.makeText(getActivity(), "No Similar Movie Found or Network Error",
-////                                Toast.LENGTH_LONG).show();
-////                        return;
-////                    } else {
-////
-////                        builderAlertDialog
-////                                .setView(view1)
-////                                .show();
-////
-////                        movieList.removeAll(personList);
-////                        movieList.removeAll(movieList);
-////                        personList.removeAll(personList);
-////
-////                    }
-////
-////
-////
-////                }
-//
-//
-////        lvGenre.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-////            @Override
-////            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-////
-////                Movie movie = listMovies.get(position);
-////
-////               // MyApplication.getWritableDatabase().deleateAll_Searching();
-////
-////                String idd = String.valueOf(movie.getGenre_id());
-////
-////                Intent intent = new Intent(getActivity(), Search_List_Activity.class);
-////                intent.putExtra("tv", idd);
-////                startActivity(intent);
-////
-////
-////            }
-////        });
-
         return view;
-    }
-
-    private String getImageUrl(String id1) {
-
-
-        JsonObjectRequest requesturl = new JsonObjectRequest(Request.Method.GET, "http://api.themoviedb.org/3/movie/" + id1 +
-                "?api_key=f246d5e5105e9934d3cd4c4c181d618d", null,
-
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject jsonObject) {
-
-                        if (jsonObject == null || jsonObject.length() == 0) {
-                            Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
-                                    .show();
-
-                        }
-
-
-                        String backdrop_path = null;
-                        try {
-                            backdrop_path = jsonObject.getString("backdrop_path");
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-
-                        url25 = image_url + backdrop_path;
-
-
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-
-                    }
-                });
-
-        requestQueue.add(requesturl);
-        return url25;
     }
 
     private void WOrksOnData() {
@@ -940,7 +610,11 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                     public void onResponse(JSONObject jsonObject) {
 
                         if (jsonObject == null || jsonObject.length() == 0) {
-                            Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
+                            new SnackBar.Builder(getActivity())
+                                    .withMessage("Problem to Load or Network Error") // OR
+                                    .withTextColorId(R.color.translucent_black_light)
+                                    .withBackgroundColorId(R.color.accent_color)
+                                    .withTypeFace(Typeface.SANS_SERIF)
                                     .show();
 
                         }
@@ -1022,7 +696,11 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                     public void onResponse(JSONArray jsonArray) {
 
                         if (jsonArray == null || jsonArray.length() == 0) {
-                            Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
+                            new SnackBar.Builder(getActivity())
+                                    .withMessage("Problem to Load or Network Error") // OR
+                                    .withTextColorId(R.color.translucent_black_light)
+                                    .withBackgroundColorId(R.color.accent_color)
+                                    .withTypeFace(Typeface.SANS_SERIF)
                                     .show();
                         }
 
@@ -1037,58 +715,6 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                                 String urlPoster = current.getString("urlPoster");
                                 int rating = current.getInt("rating");
                                 String year = current.getString("year");
-
-
-//                                JsonObjectRequest request0 = new JsonObjectRequest(Request.Method.GET,
-//                                        item_of_top_250_of_imdb+ "tt0478970" +itemPost, null,
-//
-//                                        new Response.Listener<JSONObject>() {
-//                                            @Override
-//                                            public void onResponse(JSONObject jsonObject) {
-//
-//                                                if (jsonObject == null || jsonObject.length() == 0) {
-//                                                    Toast.makeText(getActivity(), "Problem to load", Toast
-//                                                            .LENGTH_LONG)
-//                                                            .show();
-//
-//                                                }
-//
-//                                                try {
-//
-//
-//                                                    JSONArray array = jsonObject.getJSONArray("movie_results");
-//
-//                                                    for (int j=0;j<array.length();j++){
-//
-//                                                        JSONObject cur = array.getJSONObject(j);
-//
-//                                                        DB_id = ["movie_results"][0]["id"];
-//
-//
-//                                                    }
-//
-//
-//
-//                                                } catch (Exception e) {
-////                            Toast.makeText(Movie_Details.this, e.toString(), Toast.LENGTH_LONG)
-////                                    .show();
-//
-//
-//                                                }
-//
-//
-//                                            }
-//                                        },
-//                                        new Response.ErrorListener() {
-//                                            @Override
-//                                            public void onErrorResponse(VolleyError volleyError) {
-////                        Toast.makeText(Movie_Details.this, volleyError.toString(), Toast.LENGTH_LONG)
-////                                .show();
-//
-//                                            }
-//                                        });
-//
-//                                requestQueue.add(request0);
 
                                 Movie movie = new Movie(imdb_id, title, urlPoster, rating, year);
                                 topten.add(movie);
@@ -1118,7 +744,11 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                     public void onResponse(JSONArray jsonArray) {
 
                         if (jsonArray == null || jsonArray.length() == 0) {
-                            Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
+                            new SnackBar.Builder(getActivity())
+                                    .withMessage("Problem to Load or Network Error") // OR
+                                    .withTextColorId(R.color.translucent_black_light)
+                                    .withBackgroundColorId(R.color.accent_color)
+                                    .withTypeFace(Typeface.SANS_SERIF)
                                     .show();
                         }
 
@@ -1134,57 +764,6 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                                 int rating = current.getInt("rating");
                                 String year = current.getString("year");
 
-
-//                                JsonObjectRequest request0 = new JsonObjectRequest(Request.Method.GET,
-//                                        item_of_top_250_of_imdb+ "tt0478970" +itemPost, null,
-//
-//                                        new Response.Listener<JSONObject>() {
-//                                            @Override
-//                                            public void onResponse(JSONObject jsonObject) {
-//
-//                                                if (jsonObject == null || jsonObject.length() == 0) {
-//                                                    Toast.makeText(getActivity(), "Problem to load", Toast
-//                                                            .LENGTH_LONG)
-//                                                            .show();
-//
-//                                                }
-//
-//                                                try {
-//
-//
-//                                                    JSONArray array = jsonObject.getJSONArray("movie_results");
-//
-//                                                    for (int j=0;j<array.length();j++){
-//
-//                                                        JSONObject cur = array.getJSONObject(j);
-//
-//                                                        DB_id = ["movie_results"][0]["id"];
-//
-//
-//                                                    }
-//
-//
-//
-//                                                } catch (Exception e) {
-////                            Toast.makeText(Movie_Details.this, e.toString(), Toast.LENGTH_LONG)
-////                                    .show();
-//
-//
-//                                                }
-//
-//
-//                                            }
-//                                        },
-//                                        new Response.ErrorListener() {
-//                                            @Override
-//                                            public void onErrorResponse(VolleyError volleyError) {
-////                        Toast.makeText(Movie_Details.this, volleyError.toString(), Toast.LENGTH_LONG)
-////                                .show();
-//
-//                                            }
-//                                        });
-//
-//                                requestQueue.add(request0);
 
                                 Movie movie = new Movie(imdb_id, title, urlPoster, rating, year);
                                 bottomten.add(movie);
@@ -1237,9 +816,12 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                                         public void onResponse(JSONObject jsonObject) {
 
                                             if (jsonObject == null || jsonObject.length() == 0) {
-                                                Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
+                                                new SnackBar.Builder(getActivity())
+                                                        .withMessage("Problem to Load or Network Error") // OR
+                                                        .withTextColorId(R.color.translucent_black_light)
+                                                        .withBackgroundColorId(R.color.accent_color)
+                                                        .withTypeFace(Typeface.SANS_SERIF)
                                                         .show();
-
                                             }
 
                                             try {
@@ -1290,9 +872,12 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                                         public void onResponse(JSONObject jsonObject) {
 
                                             if (jsonObject == null || jsonObject.length() == 0) {
-                                                Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
+                                                new SnackBar.Builder(getActivity())
+                                                        .withMessage("Problem to Load or Network Error") // OR
+                                                        .withTextColorId(R.color.translucent_black_light)
+                                                        .withBackgroundColorId(R.color.accent_color)
+                                                        .withTypeFace(Typeface.SANS_SERIF)
                                                         .show();
-
                                             }
 
                                             try {
@@ -1344,9 +929,12 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                                         public void onResponse(JSONObject jsonObject) {
 
                                             if (jsonObject == null || jsonObject.length() == 0) {
-                                                Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
+                                                new SnackBar.Builder(getActivity())
+                                                        .withMessage("Problem to Load or Network Error") // OR
+                                                        .withTextColorId(R.color.translucent_black_light)
+                                                        .withBackgroundColorId(R.color.accent_color)
+                                                        .withTypeFace(Typeface.SANS_SERIF)
                                                         .show();
-
                                             }
 
                                             try {
@@ -1421,9 +1009,12 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
                     public void onResponse(JSONObject jsonObject) {
 
                         if (jsonObject == null || jsonObject.length() == 0) {
-                            Toast.makeText(getActivity(), "Problem to load", Toast.LENGTH_LONG)
+                            new SnackBar.Builder(getActivity())
+                                    .withMessage("Problem to Load or Network Error") // OR
+                                    .withTextColorId(R.color.translucent_black_light)
+                                    .withBackgroundColorId(R.color.accent_color)
+                                    .withTypeFace(Typeface.SANS_SERIF)
                                     .show();
-
                         }
 
                         try {
@@ -1490,8 +1081,6 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
 
     private void initialize(View view) {
 
-//       etSearch = (EditText) view.findViewById(R.id.et_search);
-//       btnSearch = (Button) view.findViewById(R.id.btn_search);
         lvGenre1 = (ListView) view.findViewById(R.id.search_genre_list1);
         lvGenre2 = (ListView) view.findViewById(R.id.search_genre_list2);
         lvGenre3 = (ListView) view.findViewById(R.id.search_genre_list3);
@@ -1532,81 +1121,6 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
         //  cardView.setCardElevation(40);
 
     }
-
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        outState.putParcelableArrayList(STATE_MOVIE, listMovies);
-//    }
-//
-//    @Override
-//    public void onGenreLoaded(ArrayList<Movie> listMovies) {
-//
-//        adapter_genre_recycle.setMovies(listMovies);
-//
-//       // this.listMovies = listMovies;
-//
-//        //adapter_genre.setMovies(listMovies);
-//
-//    }
-
-//    public static interface ClickListener{
-//
-//        public void onCLick(View v, int position);
-//        public void onLongClick(View v, int position);
-//
-//    }
-//
-//    static class RecyclerTOuchListener implements RecyclerView.OnItemTouchListener{
-//
-//        GestureDetector gestureDetector;
-//        ClickListener clickListener;
-//
-//        public  RecyclerTOuchListener(Context context, final RecyclerView rv, final ClickListener clickListener){
-//
-//            this.clickListener = clickListener;
-//            gestureDetector = new GestureDetector(context, new GestureDetector.SimpleOnGestureListener(){
-//
-//                @Override
-//                public boolean onSingleTapUp(MotionEvent e) {
-//                    return  true;
-//                }
-//
-//                @Override
-//                public void onLongPress(MotionEvent e) {
-//
-//                    View child = rv.findChildViewUnder(e.getX(),e.getY());
-//                    if (child != null && clickListener !=null){
-//                        clickListener.onLongClick(child,rv.getChildPosition(child));
-//                    }
-//
-//                }
-//            });
-//
-//
-//        }
-//
-//
-//
-//        @Override
-//        public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
-//
-//            View child = rv.findChildViewUnder(e.getX(),e.getY());
-//            if (child !=null && clickListener!=null && gestureDetector.onTouchEvent(e)){
-//
-//                clickListener.onCLick(child,rv.getChildPosition(child));
-//
-//            }
-//
-//            return false;
-//        }
-//
-//        @Override
-//        public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-//
-//        }
-//    }
-
 
     public interface ClickListener {
 
@@ -1681,14 +1195,6 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
 
         @Override
         protected void onPreExecute() {
-            //textView.setText("Hello !!!");
-//            circleView = (AnimatedCircleLoadingView) view.findViewById(R.id.circle_loading_view);
-//            circleView.setVisibility(circleView.VISIBLE);
-//            circleView.startDeterminate();
-//            circleView.startIndeterminate();
-            //  progressBar = (ProgressBar)view.findViewById(R.id.progressBar1);
-            //  progressBar.setVisibility(View.VISIBLE);
-
             super.onPreExecute();
         }
 
@@ -1709,10 +1215,6 @@ public class FragmentSearch extends android.support.v4.app.Fragment {
         @Override
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
-//            circleView.stopOk();
-//            circleView.setVisibility(circleView.GONE);
-            //  progressBar.setVisibility(View.INVISIBLE);
-
 
         }
     }

@@ -60,6 +60,8 @@ public class Movie implements Parcelable {
     long genre_id;
     String genre_name;
     StringBuilder stringBuilder;
+    //for watch and wish
+    String movieID, movieNAME, alarmTIME, alarmDATE;
     //primary details
     private long id;
     private String title;
@@ -91,7 +93,6 @@ public class Movie implements Parcelable {
         this.synopsis = synopsis;
         this.urlThumbnail = urlThumbnail;
     }
-
     public Movie(long genre_id, String genre_name) {
         this.genre_id = genre_id;
         this.genre_name = genre_name;
@@ -115,6 +116,14 @@ public class Movie implements Parcelable {
         this.author = author;
         this.text = text;
     }
+
+    public Movie(String movieID, String movieNAME, String alarmTIME, String alarmDATE) {
+        this.movieID = movieID;
+        this.movieNAME = movieNAME;
+        this.alarmTIME = alarmTIME;
+        this.alarmDATE = alarmDATE;
+    }
+
     //search result for movie
     public Movie(String type,long id, String title, String releaseDateTheater, int audienceScore,
                  String urlThumbnail) {
@@ -195,73 +204,38 @@ public class Movie implements Parcelable {
         return trailer_title;
     }
 
-    public void setTrailer_title(String trailer_title) {
-        this.trailer_title = trailer_title;
-    }
 
     public String getVideoURL() {
         return videoURL;
     }
 
-    public void setVideoURL(String videoURL) {
-        this.videoURL = videoURL;
-    }
 
     public String getImdb_id_top() {
         return imdb_id_top;
     }
 
-    public void setImdb_id_top(String imdb_id_top) {
-        this.imdb_id_top = imdb_id_top;
-    }
 
     public String getImdb_title() {
         return imdb_title;
     }
 
-    public void setImdb_title(String imdb_title) {
-        this.imdb_title = imdb_title;
-    }
+
 
     public String getImdb_url_poster() {
         return imdb_url_poster;
     }
 
-    public void setImdb_url_poster(String imdb_url_poster) {
-        this.imdb_url_poster = imdb_url_poster;
-    }
 
     public String getYear_imdb() {
         return year_imdb;
     }
 
-    public void setYear_imdb(String year_imdb) {
-        this.year_imdb = year_imdb;
-    }
 
     public int getRating_imdb() {
         return rating_imdb;
     }
 
-    public void setRating_imdb(int rating_imdb) {
-        this.rating_imdb = rating_imdb;
-    }
 
-    public long getGenre_id() {
-        return genre_id;
-    }
-
-    public void setGenre_id(long genre_id) {
-        this.genre_id = genre_id;
-    }
-
-    public String getGenre_name() {
-        return genre_name;
-    }
-
-    public void setGenre_name(String genre_name) {
-        this.genre_name = genre_name;
-    }
 
     public String getType() {
         return type;
@@ -271,29 +245,9 @@ public class Movie implements Parcelable {
         this.type = type;
     }
 
-    public StringBuilder getStringBuilder() {
-        return stringBuilder;
-    }
 
-    public void setStringBuilder(StringBuilder stringBuilder) {
-        this.stringBuilder = stringBuilder;
-    }
 
-    public String getHomepage() {
-        return homepage;
-    }
 
-    public void setHomepage(String homepage) {
-        this.homepage = homepage;
-    }
-
-    public String getBackdrop_path() {
-        return backdrop_path;
-    }
-
-    public void setBackdrop_path(String backdrop_path) {
-        this.backdrop_path = backdrop_path;
-    }
 
     public String getGenre() {
         return genre;
@@ -301,46 +255,6 @@ public class Movie implements Parcelable {
 
     public void setGenre(String genre) {
         this.genre = genre;
-    }
-
-    public String getOverview() {
-        return overview;
-    }
-
-    public void setOverview(String overview) {
-        this.overview = overview;
-    }
-
-    public String getRevenue() {
-        return revenue;
-    }
-
-    public void setRevenue(String revenue) {
-        this.revenue = revenue;
-    }
-
-    public String getPoster_path() {
-        return poster_path;
-    }
-
-    public void setPoster_path(String poster_path) {
-        this.poster_path = poster_path;
-    }
-
-    public String getTagLine() {
-        return tagLine;
-    }
-
-    public void setTagLine(String tagLine) {
-        this.tagLine = tagLine;
-    }
-
-    public String getImdb_id() {
-        return imdb_id;
-    }
-
-    public void setImdb_id(String imdb_id) {
-        this.imdb_id = imdb_id;
     }
 
     public long getId() {
@@ -363,33 +277,20 @@ public class Movie implements Parcelable {
         return releaseDateTheater;
     }
 
-    public void setReleaseDateTheater(String releaseDateTheater) {
-        this.releaseDateTheater = releaseDateTheater;
-    }
 
     public int getAudienceScore() {
         return audienceScore;
     }
 
-    public void setAudienceScore(int audienceScore) {
-        this.audienceScore = audienceScore;
-    }
 
     public String getSynopsis() {
         return synopsis;
-    }
-
-    public void setSynopsis(String synopsis) {
-        this.synopsis = synopsis;
     }
 
     public String getUrlThumbnail() {
         return urlThumbnail;
     }
 
-    public void setUrlThumbnail(String urlThumbnail) {
-        this.urlThumbnail = urlThumbnail;
-    }
 
     @Override
     public int describeContents() {
@@ -408,24 +309,14 @@ public class Movie implements Parcelable {
         return job;
     }
 
-    public void setJob(String job) {
-        this.job = job;
-    }
 
     public String getProfile_thumbnail() {
         return profile_thumbnail;
     }
 
-    public void setProfile_thumbnail(String profile_thumbnail) {
-        this.profile_thumbnail = profile_thumbnail;
-    }
 
     public String getAuthor() {
         return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
     }
 
     public String getText() {
@@ -434,6 +325,38 @@ public class Movie implements Parcelable {
 
     public void setText(String text) {
         this.text = text;
+    }
+
+    public String getMovieID() {
+        return movieID;
+    }
+
+    public void setMovieID(String movieID) {
+        this.movieID = movieID;
+    }
+
+    public String getMovieNAME() {
+        return movieNAME;
+    }
+
+    public void setMovieNAME(String movieNAME) {
+        this.movieNAME = movieNAME;
+    }
+
+    public String getAlarmTIME() {
+        return alarmTIME;
+    }
+
+    public void setAlarmTIME(String alarmTIME) {
+        this.alarmTIME = alarmTIME;
+    }
+
+    public String getAlarmDATE() {
+        return alarmDATE;
+    }
+
+    public void setAlarmDATE(String alarmDATE) {
+        this.alarmDATE = alarmDATE;
     }
 
     @Override

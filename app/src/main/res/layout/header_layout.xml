@@ -108,173 +108,173 @@
 
     <!--</LinearLayout>-->
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:orientation="vertical">
+    <!--<LinearLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginTop="20dp"-->
+    <!--android:orientation="vertical">-->
 
-        <LinearLayout
-            android:id="@+id/drawer_layout_discover"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+    <!--<LinearLayout-->
+    <!--android:id="@+id/drawer_layout_discover"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="horizontal">-->
 
-            <ImageButton
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:background="#607d8b"
-                android:gravity="center_vertical|left"
+    <!--<ImageButton-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:background="#607d8b"-->
+    <!--android:gravity="center_vertical|left"-->
 
-                android:src="@drawable/ic_btn_movie"
-                />
+    <!--android:src="@drawable/ic_btn_movie"-->
+    <!--/>-->
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="3"
+    <!--<TextView-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_marginRight="10dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:layout_weight="3"-->
 
-                android:gravity="center|left"
-                android:paddingRight="10dp"
-                android:text="Discover"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"/>
-        </LinearLayout>
+    <!--android:gravity="center|left"-->
+    <!--android:paddingRight="10dp"-->
+    <!--android:text="Discover"-->
+    <!--android:textColor="#FFFFFF"-->
+    <!--android:textSize="18sp"/>-->
+    <!--</LinearLayout>-->
 
-        <LinearLayout
+    <!--<LinearLayout-->
 
-            android:id="@+id/drawer_layout_Box_Office"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+    <!--android:id="@+id/drawer_layout_Box_Office"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="horizontal">-->
 
-            <ImageButton
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:background="#607d8b"
+    <!--<ImageButton-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:background="#607d8b"-->
 
-                android:gravity="center_vertical|left"
+    <!--android:gravity="center_vertical|left"-->
 
-                android:src="@drawable/ic_btn_watchlist"
-                />
+    <!--android:src="@drawable/ic_btn_watchlist"-->
+    <!--/>-->
 
-            <TextView
+    <!--<TextView-->
 
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="3"
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_marginRight="10dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:layout_weight="3"-->
 
-                android:gravity="center|left"
-                android:paddingRight="10dp"
-                android:text="Box Office"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"/>
-        </LinearLayout>
+    <!--android:gravity="center|left"-->
+    <!--android:paddingRight="10dp"-->
+    <!--android:text="Box Office"-->
+    <!--android:textColor="#FFFFFF"-->
+    <!--android:textSize="18sp"/>-->
+    <!--</LinearLayout>-->
 
-        <LinearLayout
-            android:id="@+id/drawer_layout_Upcoming"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+    <!--<LinearLayout-->
+    <!--android:id="@+id/drawer_layout_Upcoming"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="horizontal">-->
 
-            <ImageButton
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:background="#607d8b"
+    <!--<ImageButton-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:background="#607d8b"-->
 
-                android:gravity="center_vertical|left"
+    <!--android:gravity="center_vertical|left"-->
 
-                android:src="@drawable/ic_btn_collection"
-                />
+    <!--android:src="@drawable/ic_btn_collection"-->
+    <!--/>-->
 
-            <TextView
+    <!--<TextView-->
 
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="3"
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_marginRight="10dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:layout_weight="3"-->
 
-                android:gravity="center|left"
-                android:paddingRight="10dp"
-                android:text="Upcoming"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"/>
-        </LinearLayout>
+    <!--android:gravity="center|left"-->
+    <!--android:paddingRight="10dp"-->
+    <!--android:text="Upcoming"-->
+    <!--android:textColor="#FFFFFF"-->
+    <!--android:textSize="18sp"/>-->
+    <!--</LinearLayout>-->
 
-        <LinearLayout
-            android:id="@+id/drawer_layout_watchList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+    <!--<LinearLayout-->
+    <!--android:id="@+id/drawer_layout_watchList"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="horizontal">-->
 
-            <ImageButton
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:background="#607d8b"
+    <!--<ImageButton-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:background="#607d8b"-->
 
-                android:gravity="center_vertical|left"
+    <!--android:gravity="center_vertical|left"-->
 
-                android:src="@drawable/ic_btn_seen"
-                />
+    <!--android:src="@drawable/ic_btn_seen"-->
+    <!--/>-->
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="3"
+    <!--<TextView-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_marginRight="10dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:layout_weight="3"-->
 
-                android:gravity="center|left"
-                android:paddingRight="10dp"
-                android:text="Watch List"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"/>
-        </LinearLayout>
+    <!--android:gravity="center|left"-->
+    <!--android:paddingRight="10dp"-->
+    <!--android:text="Watch List"-->
+    <!--android:textColor="#FFFFFF"-->
+    <!--android:textSize="18sp"/>-->
+    <!--</LinearLayout>-->
 
-        <LinearLayout
-            android:id="@+id/drawer_layout_wishList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            >
+    <!--<LinearLayout-->
+    <!--android:id="@+id/drawer_layout_wishList"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="horizontal"-->
+    <!-->-->
 
-            <ImageButton
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="1"
-                android:background="#607d8b"
-                android:gravity="center_vertical|left"
-                android:src="@drawable/ic_action_watchlist"
-                />
+    <!--<ImageButton-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:layout_weight="1"-->
+    <!--android:background="#607d8b"-->
+    <!--android:gravity="center_vertical|left"-->
+    <!--android:src="@drawable/ic_action_watchlist"-->
+    <!--/>-->
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="40dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="3"
-                android:gravity="center|left"
-                android:paddingRight="10dp"
-                android:text="Wish List"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"/>
-        </LinearLayout>
+    <!--<TextView-->
+    <!--android:layout_width="0dp"-->
+    <!--android:layout_height="40dp"-->
+    <!--android:layout_marginRight="10dp"-->
+    <!--android:layout_marginTop="10dp"-->
+    <!--android:layout_weight="3"-->
+    <!--android:gravity="center|left"-->
+    <!--android:paddingRight="10dp"-->
+    <!--android:text="Wish List"-->
+    <!--android:textColor="#FFFFFF"-->
+    <!--android:textSize="18sp"/>-->
+    <!--</LinearLayout>-->
 
-    </LinearLayout>
+    <!--</LinearLayout>-->
 
     <!--</LinearLayout>-->
 </LinearLayout>

@@ -5,10 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -16,9 +13,9 @@ import java.util.ArrayList;
  * Created by razon30 on 19-07-15.
  */
 public class Review_Adapter extends BaseAdapter {
+    private static LayoutInflater inflater = null;
     ArrayList<Movie> arrayList;
     Context context;
-    private static LayoutInflater inflater=null;
 
     public Review_Adapter(ArrayList<Movie> arrayList, Context context) {
         this.arrayList = arrayList;

@@ -7,6 +7,6 @@ import java.util.ArrayList;
  */
 public interface BoxOfficeMoviesLoadedListener {
 
-    public void onBoxOfficeMoviesLoaded(ArrayList<Movie> listMovies);
+    void onBoxOfficeMoviesLoaded(ArrayList<Movie> listMovies);
 
 }

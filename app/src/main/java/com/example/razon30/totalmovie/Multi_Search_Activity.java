@@ -23,8 +23,6 @@ public class Multi_Search_Activity extends AppCompatActivity implements Searchin
 
     private static final String STATE_MOVIE = "multi_search_list";
     public ArrayList<Movie> listMovies = new ArrayList<Movie>();
-    String urlPre = "http://api.themoviedb.org/3/search/";
-    String multiPost = "multi?api_key=f246d5e5105e9934d3cd4c4c181d618d&query=";
     Adapter_KKeyword_Search adapter_kKeyword_search;
     TextView tv;
     //recycle
@@ -54,11 +52,8 @@ public class Multi_Search_Activity extends AppCompatActivity implements Searchin
             listMovies = savedInstanceState.getParcelableArrayList(STATE_MOVIE);
             adapter_kKeyword_search.setMovies(listMovies);
         } else {
-            // listMovies = MyApplication.getWritableDatabase().getAllMoviesSearching();
-            // if (listMovies.isEmpty()) {
-            // L.t(getActivity(), "executing task from fragment");
             new TaskLoadMultiSearching(Multi_Search_Activity.this,keyword).execute();
-            //  }
+
 
         }
 

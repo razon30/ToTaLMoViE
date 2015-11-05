@@ -22,13 +22,13 @@ public class MovieUtils {
             ".org/3/movie/now_playing?api_key=f246d5e5105e9934d3cd4c4c181d618d&append_to_response" +
             "=images&include_image_language=en,null&page=3";
 
-//    static String URL4 = "http://api.themoviedb" +
-//            ".org/3/movie/now_playing?api_key=f246d5e5105e9934d3cd4c4c181d618d&append_to_response" +
-//            "=images&include_image_language=en,null&page=4";
-//
-//    static String URL5 = "http://api.themoviedb" +
-//            ".org/3/movie/now_playing?api_key=f246d5e5105e9934d3cd4c4c181d618d&append_to_response" +
-//            "=images&include_image_language=en,null&page=5";
+    static String URL4 = "http://api.themoviedb" +
+            ".org/3/movie/now_playing?api_key=f246d5e5105e9934d3cd4c4c181d618d&append_to_response" +
+            "=images&include_image_language=en,null&page=4";
+
+    static String URL5 = "http://api.themoviedb" +
+            ".org/3/movie/now_playing?api_key=f246d5e5105e9934d3cd4c4c181d618d&append_to_response" +
+            "=images&include_image_language=en,null&page=5";
 
 
 
@@ -36,20 +36,20 @@ public class MovieUtils {
         JSONObject response1 = Requestor.sendRequestBoxOfficeMovies(requestQueue,URL1 );
         JSONObject response2 = Requestor.sendRequestBoxOfficeMovies(requestQueue,URL2 );
         JSONObject response3 = Requestor.sendRequestBoxOfficeMovies(requestQueue,URL3 );
-//        JSONObject response4 = Requestor.sendRequestBoxOfficeMovies(requestQueue,URL4 );
-//        JSONObject response5 = Requestor.sendRequestBoxOfficeMovies(requestQueue,URL5 );
+        JSONObject response4 = Requestor.sendRequestBoxOfficeMovies(requestQueue, URL4);
+        JSONObject response5 = Requestor.sendRequestBoxOfficeMovies(requestQueue, URL5);
 
         ArrayList<Movie> listMovies1 = Parser.parseJSONResponse(response1);
         ArrayList<Movie> listMovies2 = Parser.parseJSONResponse(response2);
         ArrayList<Movie> listMovies3 = Parser.parseJSONResponse(response3);
-//        ArrayList<Movie> listMovies4 = Parser.parseJSONResponse(response4);
-//        ArrayList<Movie> listMovies5 = Parser.parseJSONResponse(response5);
+        ArrayList<Movie> listMovies4 = Parser.parseJSONResponse(response4);
+        ArrayList<Movie> listMovies5 = Parser.parseJSONResponse(response5);
 
         //listMovies1.remove(listMovies2);
         listMovies1.addAll(listMovies2);
         listMovies1.addAll(listMovies3);
-//        listMovies1.addAll(listMovies4);
-//        listMovies1.addAll(listMovies5);
+        listMovies1.addAll(listMovies4);
+        listMovies1.addAll(listMovies5);
 
         MyApplication.getWritableDatabase().insertdata_boxOffice(listMovies1, true);
         return listMovies1;

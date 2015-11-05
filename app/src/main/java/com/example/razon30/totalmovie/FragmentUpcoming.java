@@ -14,7 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
-import com.android.volley.RequestQueue;
 import com.github.clans.fab.FloatingActionButton;
 import com.github.clans.fab.FloatingActionMenu;
 import com.github.mrengineer13.snackbar.SnackBar;
@@ -38,9 +37,6 @@ public class FragmentUpcoming extends android.support.v4.app.Fragment implements
     //recycle
     private RecyclerView listMovieHits;
     private AdapterBoxOffice adapterBoxOffice;
-    //VOlley-Json
-    private VolleySingleton volleySingleton;
-    private RequestQueue requestQueue;
 
    // private SwipeRefreshLayout swipeRefreshLayout;
 

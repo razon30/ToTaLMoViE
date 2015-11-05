@@ -21,8 +21,6 @@ public class Search_List_Activity extends AppCompatActivity implements Searching
 
     private static final String STATE_MOVIE = "state_movie_search_list";
     public ArrayList<Movie> listMovies = new ArrayList<Movie>();
-    String urlPreId = "http://api.themoviedb.org/3/genre/";
-    String urlPostId = "/movies?api_key=f246d5e5105e9934d3cd4c4c181d618d";
     String id;
     String image_url = "http://image.tmdb.org/t/p/w500";
     //recycle
@@ -51,80 +49,13 @@ public class Search_List_Activity extends AppCompatActivity implements Searching
             listMovies = savedInstanceState.getParcelableArrayList(STATE_MOVIE);
             adapterBoxOffice.setMovies(listMovies);
         } else {
-          // listMovies = MyApplication.getWritableDatabase().getAllMoviesSearching();
-           // if (listMovies.isEmpty()) {
-                // L.t(getActivity(), "executing task from fragment");
                 new TaskLoadMoviesSearching(Search_List_Activity.this,id).execute();
-         //  }
 
         }
 
-//        JsonObjectRequest request = new JsonObjectRequest(Request.Method.GET,
-//                    urlPreId + id + urlPostId, null,
-//
-//                    new Response.Listener<JSONObject>() {
-//                        @Override
-//                        public void onResponse(JSONObject jsonObject) {
-//
-//                            if (jsonObject == null || jsonObject.length() == 0) {
-//                                Toast.makeText(Search_List_Activity.this, "Problem to load", Toast.LENGTH_LONG)
-//                                        .show();
-//
-//                            }
-//
-//                            try {
-//
-//                                JSONArray arrayMovies = jsonObject.getJSONArray("results");
-//                                for (int i = 0; i < arrayMovies.length(); i++) {
-//                                    long id = -1;
-//                                    String title = "NA";
-//                                    String releaseDate = "NA";
-//                                    int audienceScore = -1;
-//                                    String synopsis = "NA";
-//                                    String urlThumbnail = "NA";
-//
-//                                    JSONObject currentmovie = arrayMovies.getJSONObject(i);
-//                                    title = currentmovie.getString("title");
-//                                    id = currentmovie.getLong("id");
-//                                    releaseDate = currentmovie.getString("release_date");
-//                                    audienceScore = currentmovie.getInt("vote_average");
-//                                    synopsis = currentmovie.getString("overview");
-//                                    urlThumbnail = currentmovie.getString("poster_path");
-//
-//
-//                                    Movie movie = new Movie(id,title,releaseDate,audienceScore,synopsis,urlThumbnail);
-//
-//                                    if (id != -1 && !title.equals("NA")) {
-//                                        listMovies.add(movie);
-//                                    }
-//                                }
-//
-//
-//                            } catch (Exception e) {
-//                                Toast.makeText(Search_List_Activity.this, e.toString(), Toast.LENGTH_LONG)
-//                                        .show();
-//
-//
-//                            }
-//
-//
-//                        }
-//                    },
-//                    new Response.ErrorListener() {
-//                        @Override
-//                        public void onErrorResponse(VolleyError volleyError) {
-//                            Toast.makeText(Search_List_Activity.this, volleyError.toString(), Toast.LENGTH_LONG)
-//                                    .show();
-//
-//                        }
-//                    });
-//
-//            requestQueue.add(request);
-//        }
 
         adapterBoxOffice.setMovies(listMovies);
-//        Toast.makeText(Search_List_Activity.this, listMovies.size()+"", Toast.LENGTH_LONG)
-//                .show();
+
 
         listMovieHits.addOnItemTouchListener(new RecyclerTOuchListener(Search_List_Activity.this,
                 listMovieHits, new

@@ -11,11 +11,17 @@
     <uses-permission android:name="android.permission.USE_CREDENTIALS"/>
     <uses-permission android:name="android.permission.NETWORK"/>
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
+    <uses-permission android:name="com.android.alarm.permission.SET_ALARM"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <!-- Always required on api < 21, needed to keep a wake lock while your job is running -->
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <!-- Required on all api levels if you are using setPersisted(true) -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:name=".MyApplication"
         android:allowBackup="true"
-        android:icon="@drawable/a_movie"
+        android:icon="@drawable/t_movie"
         android:label="ToTaL MoViE"
         android:theme="@style/AppTheme"
         tools:replace="android:label">
@@ -23,6 +29,11 @@
             android:name="com.facebook.FacebookContentProvider"
             android:authorities="com.facebook.app.FacebookContentProvider505284192967672"
             android:exported="true"/>
+
+        <service
+            android:name=".TestJobService"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE"/>
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -82,6 +93,8 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label=""
             android:theme="@style/ImageGalleryTheme"/>
+        <activity android:name=".SearchActivity">
+        </activity>
     </application>
 
 </manifest>

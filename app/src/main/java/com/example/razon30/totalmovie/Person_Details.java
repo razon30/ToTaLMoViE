@@ -25,7 +25,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -34,6 +33,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.etiennelawlor.imagegallery.library.activities.ImageGalleryActivity;
 import com.etiennelawlor.imagegallery.library.enums.PaletteColorType;
+import com.github.mrengineer13.snackbar.SnackBar;
 import com.quinny898.library.persistentsearch.SearchBox;
 import com.squareup.picasso.Picasso;
 
@@ -52,10 +52,8 @@ public class Person_Details extends AppCompatActivity {
     //popular
     public ArrayList<Movie> popular_person_list = new ArrayList<Movie>();
 
-    // CollapsingToolbarLayout collapsingToolbarLayout;
-    // CoordinatorLayout rootLayout;
     ImageView image_cover,image_cover1, image_poster, hide, show;
-    TextView name, biography, birth_date, birth_place, height, homepage, person_more_image, person_more_movies;
+    TextView name, biography, birth_date, birth_place, homepage, person_more_image, person_more_movies;
     WebView popular_person;
     String urlPreId = "http://api.themoviedb.org/3/person/";
     long id;
@@ -63,14 +61,9 @@ public class Person_Details extends AppCompatActivity {
     String image_url = "http://image.tmdb.org/t/p/w500";
     String image_post = "/images?api_key=f246d5e5105e9934d3cd4c4c181d618d";
     String more_movie_post = "/movie_credits?api_key=f246d5e5105e9934d3cd4c4c181d618d";
-    String person_popular_post = "popular?api_key=f246d5e5105e9934d3cd4c4c181d618d";
     String urlPre = "http://api.themoviedb.org/3/search/";
     String multiPost = "multi?api_key=f246d5e5105e9934d3cd4c4c181d618d&query=";
     //more image
-    ListView oddList, evenList;
-    ImageView more_image;
-    ArrayList<String> oddArray = new ArrayList<String>();
-    ArrayList<String> evenArray = new ArrayList<String>();
     ArrayList<String> more_image_array = new ArrayList<String>();
     String person_homepage;
     int line_count;
@@ -99,11 +92,6 @@ public class Person_Details extends AppCompatActivity {
         worksOnSearch(id);
         worksOnColor();
 
-
-//        rootLayout = (CoordinatorLayout) findViewById(R.id.rootLayout);
-//        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbarLayout);
-
-
         volleySingleton = VolleySingleton.getsInstance();
         requestQueue = volleySingleton.getmRequestQueue();
 
@@ -114,16 +102,19 @@ public class Person_Details extends AppCompatActivity {
                     public void onResponse(JSONObject jsonObject) {
 
                         if (jsonObject == null || jsonObject.length() == 0) {
-                            Toast.makeText(Person_Details.this, "Problem to load", Toast.LENGTH_LONG)
+                            new SnackBar.Builder(Person_Details.this)
+                                    .withMessage("Problem to Load") // OR
+                                    .withTextColorId(R.color.translucent_black_light)
+                                    .withBackgroundColorId(R.color.accent_color)
+                                    .withTypeFace(Typeface.SANS_SERIF)
                                     .show();
-
                         }
 
                         try {
 
                             String name1 = jsonObject.getString("name");
                             name.setText(name1);
-                            if (Build.VERSION.SDK_INT >= 22) {
+
                                 CollapsingToolbarLayout collapsingToolbarLayout;
                                 collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapsingToolbarLayout);
                                 collapsingToolbarLayout.setTitle(name1);
@@ -135,7 +126,7 @@ public class Person_Details extends AppCompatActivity {
                                         .ExpandedAppBarPlus1);
                                 collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style
                                         .CollapsedAppBarPlus1);
-                            }
+
 
 
                             profile_path = "";
@@ -210,7 +201,11 @@ public class Person_Details extends AppCompatActivity {
                     public void onResponse(JSONObject jsonObject) {
 
                         if (jsonObject == null || jsonObject.length() == 0) {
-                            Toast.makeText(Person_Details.this, "Problem to load", Toast.LENGTH_LONG)
+                            new SnackBar.Builder(Person_Details.this)
+                                    .withMessage("Problem to Load") // OR
+                                    .withTextColorId(R.color.translucent_black_light)
+                                    .withBackgroundColorId(R.color.accent_color)
+                                    .withTypeFace(Typeface.SANS_SERIF)
                                     .show();
 
                         }
@@ -321,9 +316,12 @@ public class Person_Details extends AppCompatActivity {
                     public void onResponse(JSONObject jsonObject) {
 
                         if (jsonObject == null || jsonObject.length() == 0) {
-                            Toast.makeText(Person_Details.this, "Problem to load", Toast.LENGTH_LONG)
+                            new SnackBar.Builder(Person_Details.this)
+                                    .withMessage("Problem to Load") // OR
+                                    .withTextColorId(R.color.translucent_black_light)
+                                    .withBackgroundColorId(R.color.accent_color)
+                                    .withTypeFace(Typeface.SANS_SERIF)
                                     .show();
-
                         }
 
                         try {
@@ -451,9 +449,12 @@ public class Person_Details extends AppCompatActivity {
                     public void onResponse(JSONObject jsonObject) {
 
                         if (jsonObject == null || jsonObject.length() == 0) {
-                            Toast.makeText(Person_Details.this, "Problem to load", Toast.LENGTH_LONG)
+                            new SnackBar.Builder(Person_Details.this)
+                                    .withMessage("Problem to Load") // OR
+                                    .withTextColorId(R.color.translucent_black_light)
+                                    .withBackgroundColorId(R.color.accent_color)
+                                    .withTypeFace(Typeface.SANS_SERIF)
                                     .show();
-
                         }
 
                         try {
@@ -528,7 +529,11 @@ public class Person_Details extends AppCompatActivity {
                             Uri.parse(person_homepage));
                     startActivity(i);
                 } else {
-                    Toast.makeText(Person_Details.this, "No Link is Available", Toast.LENGTH_LONG)
+                    new SnackBar.Builder(Person_Details.this)
+                            .withMessage("No Link Is Available") // OR
+                            .withTextColorId(R.color.translucent_black_light)
+                            .withBackgroundColorId(R.color.accent_color)
+                            .withTypeFace(Typeface.SANS_SERIF)
                             .show();
                 }
 
@@ -540,50 +545,20 @@ public class Person_Details extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-//                View view1 = getLayoutInflater().inflate(R.layout.custom_more_image, null);
-//                ListView oddView = (ListView) view1.findViewById(R.id.odd_list_image);
-//                ListView evenView = (ListView) view1.findViewById(R.id.even_list_image);
-//
-//
-//                if (more_image_array != null && more_image_array.size() != 0) {
-//
-//                    for (int i = 0; i < more_image_array.size(); i++) {
-//
-//                        if (i % 2 == 0) {
-//                            evenArray.add(more_image_array.get(i));
-//                        } else {
-//                            oddArray.add(more_image_array.get(i));
-//                        }
-//
-//                    }
-//
-//                }
-//
-//                Adapter_more_image oddAdapter = new Adapter_more_image(oddArray, Person_Details.this);
-//                Adapter_more_image evenAdapter = new Adapter_more_image(evenArray, Person_Details.this);
-//
-//                oddView.setAdapter(oddAdapter);
-//                evenView.setAdapter(evenAdapter);
-//
-//                AlertDialog.Builder builderAlertDialog = new AlertDialog.Builder(
-//                        Person_Details.this);
-
                 if (more_image_array == null || more_image_array.size() == 0) {
-                    Toast.makeText(Person_Details.this, "No more image is Found or Network Error",
-                            Toast.LENGTH_LONG).show();
+                    new SnackBar.Builder(Person_Details.this)
+                            .withMessage("No More Image Found Or Network Error") // OR
+                            .withTextColorId(R.color.translucent_black_light)
+                            .withBackgroundColorId(R.color.accent_color)
+                            .withTypeFace(Typeface.SANS_SERIF)
+                            .show();
                     return;
                 } else {
 
-//                    builderAlertDialog
-//                            .setView(view1)
-//                            .show();
 
                     Intent intent = new Intent(Person_Details.this, ImageGalleryActivity.class);
-                    // Intent intent = new Intent(MainActivity.this, ImageGalleryActivity.class);
 
-//
                     intent.putStringArrayListExtra("images", more_image_array);
-// optionally set background color using Palette
                     intent.putExtra("palette_color_type", PaletteColorType.VIBRANT);
 
                     startActivity(intent);
@@ -629,8 +604,12 @@ public class Person_Details extends AppCompatActivity {
                         Person_Details.this);
 
                 if (person_more_movie_list == null || person_more_movie_list.size() == 0) {
-                    Toast.makeText(Person_Details.this, "No More Movie is Found or Network Error",
-                            Toast.LENGTH_LONG).show();
+                    new SnackBar.Builder(Person_Details.this)
+                            .withMessage("No More Movie Found or Network Error") // OR
+                            .withTextColorId(R.color.translucent_black_light)
+                            .withBackgroundColorId(R.color.accent_color)
+                            .withTypeFace(Typeface.SANS_SERIF)
+                            .show();
                     return;
                 } else {
 
@@ -643,56 +622,6 @@ public class Person_Details extends AppCompatActivity {
 
             }
         });
-
-//        popular_person.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//                Toast.makeText(Person_Details.this, "length " + popular_person_list.size(),
-//                        Toast.LENGTH_LONG)
-//                        .show();
-//
-//                View view1 = getLayoutInflater().inflate(R.layout.review, null);
-//                ListView movieView = (ListView) view1.findViewById(R.id.review_list);
-//
-//                Popular_Person_Adapter adapter = new Popular_Person_Adapter
-//                        (popular_person_list, Person_Details.this);
-//
-//                movieView.setAdapter(adapter);
-//
-//                movieView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//                    @Override
-//                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//
-//                        Movie current = popular_person_list.get(position);
-//                        String movie_id = String.valueOf(current.getId());
-//
-//                        Intent intent1 = new Intent(Person_Details.this, Person_Details.class);
-//                        intent1.putExtra("tv", movie_id);
-//                        startActivity(intent1);
-//
-//                    }
-//                });
-//
-//
-//                AlertDialog.Builder builderAlertDialog = new AlertDialog.Builder(
-//                        Person_Details.this);
-//
-//                if (popular_person_list == null || popular_person_list.size() == 0) {
-//                    Toast.makeText(Person_Details.this, "No Popular Person is Found or Network " +
-//                                    "Error",
-//                            Toast.LENGTH_LONG).show();
-//                    return;
-//                } else {
-//
-//                    builderAlertDialog
-//                            .setView(view1)
-//                            .show();
-//
-//                }
-//
-//            }
-//        });
 
 
         popular_person.setOnTouchListener(new View.OnTouchListener() {
@@ -725,9 +654,13 @@ public class Person_Details extends AppCompatActivity {
                         Person_Details.this);
 
                 if (popular_person_list == null || popular_person_list.size() == 0) {
-                    Toast.makeText(Person_Details.this, "No Popular Person is Found or Network " +
-                                    "Error",
-                            Toast.LENGTH_LONG).show();
+
+                    new SnackBar.Builder(Person_Details.this)
+                            .withMessage("No Popular Person is Found or Network Error")
+                            .withTextColorId(R.color.translucent_black_light)
+                            .withBackgroundColorId(R.color.accent_color)
+                            .withTypeFace(Typeface.SANS_SERIF)
+                            .show();
                 } else {
 
                     builderAlertDialog
@@ -776,7 +709,6 @@ public class Person_Details extends AppCompatActivity {
     private void worksOnSearch(final long id) {
         //for search
         search = (SearchBox) findViewById(R.id.searchbox);
-        // search.enableVoiceRecognition(this);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -791,7 +723,8 @@ public class Person_Details extends AppCompatActivity {
                 dbMovies = new DBMovies(Person_Details.this);
 
                 if (item.getItemId() == R.id.action_search) {
-                    openSearch();
+                    // openSearch();
+                    startActivity(new Intent(Person_Details.this, SearchActivity.class));
                 }
                 if (item.getItemId() == R.id.refresh) {
                     Intent intent = new Intent(Person_Details.this, Person_Details.class);
@@ -801,11 +734,21 @@ public class Person_Details extends AppCompatActivity {
                 if (item.getItemId() == R.id.clearWatch) {
 
                     dbMovies.deleteAllWatch();
-                    Toast.makeText(Person_Details.this, "Watch List cleared", Toast.LENGTH_LONG).show();
+                    new SnackBar.Builder(Person_Details.this)
+                            .withMessage("Watch List Cleared")
+                            .withTextColorId(R.color.translucent_black_light)
+                            .withBackgroundColorId(R.color.accent_color)
+                            .withTypeFace(Typeface.SANS_SERIF)
+                            .show();
                 }
                 if (item.getItemId() == R.id.clearWish) {
                     dbMovies.deleteAllWish();
-                    Toast.makeText(Person_Details.this, "Wish List cleared", Toast.LENGTH_LONG).show();
+                    new SnackBar.Builder(Person_Details.this)
+                            .withMessage("Wish List Cleared")
+                            .withTextColorId(R.color.translucent_black_light)
+                            .withBackgroundColorId(R.color.accent_color)
+                            .withTypeFace(Typeface.SANS_SERIF)
+                            .show();
                 }
                 if (item.getItemId() == R.id.about) {
                     Intent intent = new Intent(Person_Details.this, Credit.class);
@@ -851,8 +794,8 @@ public class Person_Details extends AppCompatActivity {
     private void initialization() {
 
         image_cover = (ImageView) findViewById(R.id.coverPerson);
-        image_cover1 = (ImageView) findViewById(R.id.cover_person1);
-        image_cover1.setVisibility(View.GONE);
+        // image_cover1 = (ImageView) findViewById(R.id.cover_person1);
+        //      image_cover1.setVisibility(View.GONE);
         image_poster = (ImageView) findViewById(R.id.postar_image_detail);
         name = (TextView) findViewById(R.id.name_person);
         name.setVisibility(View.GONE);
@@ -865,16 +808,12 @@ public class Person_Details extends AppCompatActivity {
         person_more_image = (TextView) findViewById(R.id.person_more_image);
         person_more_movies = (TextView) findViewById(R.id.person_more_movies);
         popular_person = (WebView) findViewById(R.id.recent_popular_person);
-        Typeface custom_font = Typeface.createFromAsset(getAssets(), "roboto_slab_regular.ttf");
-        // popular_person.setTypeface(custom_font);
 
         popular_person.loadUrl("file:///android_asset/www/app.html");
 
         WebSettings mWebSettings = popular_person.getSettings();
 
         mWebSettings.setJavaScriptEnabled(true);
-
-        // popular_person.setSelected(true);
 
 
         image1 = (ImageView) findViewById(R.id.person_details_image1);
@@ -921,22 +860,6 @@ public class Person_Details extends AppCompatActivity {
     public void openSearch() {
         toolbar.setTitle("");
         search.revealFromMenuItem(R.id.action_search, this);
-//        for (int x = 0; x < 10; x++) {
-//            SearchResult option = new SearchResult("Result "
-//                    + Integer.toString(x), getResources().getDrawable(
-//                    R.drawable.ic_history));
-//            //  search.addSearchable(option);
-//        }
-//        search.setMenuListener(new SearchBox.MenuListener() {
-//
-//            @Override
-//            public void onMenuClick() {
-//                // Hamburger has been clicked
-//                Toast.makeText(MainActivity.this, "Menu click",
-//                        Toast.LENGTH_LONG).show();
-//            }
-//
-//        });
         search.setSearchListener(new SearchBox.SearchListener() {
 
             @Override
@@ -984,7 +907,12 @@ public class Person_Details extends AppCompatActivity {
                     startActivity(intent);
 
                 } else {
-                    Toast.makeText(Person_Details.this, "Not Proper Keyword", Toast.LENGTH_LONG).show();
+                    new SnackBar.Builder(Person_Details.this)
+                            .withMessage("Not Proper Keyword")
+                            .withTextColorId(R.color.translucent_black_light)
+                            .withBackgroundColorId(R.color.accent_color)
+                            .withTypeFace(Typeface.SANS_SERIF)
+                            .show();
                     return;
                 }
 
@@ -1001,8 +929,6 @@ public class Person_Details extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        //callbackManager.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == 1234 && resultCode == RESULT_OK) {
             ArrayList<String> matches = data
@@ -1023,13 +949,6 @@ public class Person_Details extends AppCompatActivity {
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         return activeNetworkInfo != null && activeNetworkInfo.isConnected();
     }
-
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//        Intent intent = new Intent(Person_Details.this, MainActivity.class);
-//        startActivity(intent);
-//    }
 
     private void worksOnColor() {
 

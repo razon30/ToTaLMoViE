@@ -20,6 +20,8 @@ public class DBMovies extends SQLiteOpenHelper {
     public static final String DB_TABLE_NAME_BOX_OFFICE = "Box_Office";
     public static final String DB_TABLE_NAME_UPCOMING = "Box_Office_upcoming";
     public static final String DB_TABLE_NAME_SEARCHING = "Box_Office_searching";
+    public static final String DB_TABLE_NAME_SEARCH_KEY = "Search_key";
+
     public static final String ID_FIELD = "_id";
     public static final String Movie_Id = "movie_id";
     public static final String TITLE = "title";
@@ -32,6 +34,13 @@ public class DBMovies extends SQLiteOpenHelper {
     public static final String DB_TABLE_NAME_WISH = "Wish_Movies";
     public static final String W_ID = "w_id";
     public static final String W_NAME = "w_name";
+    public static final String W_TIME = "w_time";
+    public static final String W_DATE = "w_date";
+
+    //search result
+    public static final String Search_Key = "search_key";
+
+
     // CREATING THE TABLE
     public static final String MOVIES_TABLE_SQL_BOX_OFFICE = "CREATE TABLE "
             + DB_TABLE_NAME_BOX_OFFICE + " ( " + ID_FIELD
@@ -48,12 +57,19 @@ public class DBMovies extends SQLiteOpenHelper {
             + " INTEGER PRIMARY KEY AUTOINCREMENT," + Movie_Id + " TEXT, " + TITLE
             + " TEXT, " + RATINGS + " TEXT, " + RELEASE_DATE + " TEXT, " + SYNOPSIS
             + " TEXT, " + URLTHUMBNILE + " TEXT)";
+
     public static final String MOVIES_TABLE_SQL_WATCH = "CREATE TABLE "
             + DB_TABLE_NAME_WATCH + " ( " + W_ID
-            + " TEXT, " + W_NAME + " TEXT)";
+            + " TEXT, " + W_DATE + " TEXT, " + W_TIME + " TEXT, " + W_NAME + " TEXT)";
+
     public static final String MOVIES_TABLE_SQL_WISH = "CREATE TABLE "
             + DB_TABLE_NAME_WISH + " ( " + W_ID
-            + " TEXT, " + W_NAME + " TEXT)";
+            + " TEXT, " + W_DATE + " TEXT, " + W_TIME + " TEXT, " + W_NAME + " TEXT)";
+
+    public static final String MOVIES_TABLE_SEARCH_KEY = "CREATE TABLE "
+            + DB_TABLE_NAME_SEARCH_KEY + " ( " + Search_Key + " TEXT)";
+
+
     SQLiteDatabase db;
     Context context;
 
@@ -79,6 +95,9 @@ public class DBMovies extends SQLiteOpenHelper {
 
         db.execSQL(MOVIES_TABLE_SQL_WISH);
         Log.e("TABLE CREAT", MOVIES_TABLE_SQL_WISH);
+
+        db.execSQL(MOVIES_TABLE_SEARCH_KEY);
+        Log.e("TABLE CREAT", MOVIES_TABLE_SEARCH_KEY);
 
 
     }
@@ -344,12 +363,6 @@ public class DBMovies extends SQLiteOpenHelper {
 
         SQLiteDatabase db = this.getReadableDatabase();
 
-        //Cursor cursor = db.query(DB_TABLE_NAME, null, ID_FIELD + " LIKE '%"
-        //		+ keyword + "%'", null, null, null, null);
-
-
-        //Cursor cursor = db.query(DB_TABLE_NAME, null, null, null, null, null, null);
-
         String selectQuery = "SELECT  * FROM " + DB_TABLE_NAME_WATCH;
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -387,22 +400,6 @@ public class DBMovies extends SQLiteOpenHelper {
 
         if (cursor != null && cursor.getCount() > 0) {
 
-//            cursor.moveToFirst();
-//            for (int i = 0; i < cursor.getCount(); i++) {
-//
-//                String name = cursor.getString(cursor
-//                        .getColumnIndex(W_ID));
-//
-//                if (name == w_id) {
-//
-//                    bool = true;
-//                    break;
-//                } else {
-//
-//                    cursor.moveToNext();
-//                }
-//            }
-//        }
 
             cursor.close();
             db.close();
@@ -423,13 +420,6 @@ public class DBMovies extends SQLiteOpenHelper {
         int dlt = db.delete(DB_TABLE_NAME_WATCH, W_ID + "=?", new String[]{""
                 + address});
 
-//        String selectQuery = "DELETE FROM " + DB_TABLE_NAME_WISH + " WHERE " + address + "=" +
-//                W_ID;
-
-        //  db.rawQuery(selectQuery, null);
-
-        //int dlt = db.delete(DB_TABLE_NAME_WATCH, null, null);
-
         db.close();
         return dlt;
 
@@ -439,14 +429,6 @@ public class DBMovies extends SQLiteOpenHelper {
         // TODO Auto-generated method stub
 
         SQLiteDatabase db = this.getReadableDatabase();
-
-        //int dlt = db.delete(DB_TABLE_NAME_WATCH, W_ID + "=?", new String[]{""
-        //    + address});
-
-//        String selectQuery = "DELETE FROM " + DB_TABLE_NAME_WISH + " WHERE " + address + "=" +
-//                W_ID;
-
-        //  db.rawQuery(selectQuery, null);
 
         int dlt = db.delete(DB_TABLE_NAME_WATCH, null, null);
 
@@ -458,7 +440,8 @@ public class DBMovies extends SQLiteOpenHelper {
     public long insertWish(Movie movie) {
         // TODO Auto-generated method stub
 
-        if (movie.getAuthor().length() == 0 || movie.getAuthor() == null || movie.getAuthor().compareTo("")
+        if (movie.getMovieID().length() == 0 || movie.getMovieID() == null || movie.getMovieID().compareTo
+                ("")
                 == 0) {
 
             return -1;
@@ -468,9 +451,11 @@ public class DBMovies extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(W_ID, movie.getAuthor());
+        values.put(W_ID, movie.getMovieID());
         // values.put(PASSWORD, data.getPassword());
-        values.put(W_NAME, movie.getText());
+        values.put(W_NAME, movie.getMovieNAME());
+        values.put(W_DATE, movie.getAlarmDATE());
+        values.put(W_TIME, movie.getAlarmTIME());
         long insert = db.insert(DB_TABLE_NAME_WISH, null, values);
         db.close();
         return insert;
@@ -483,12 +468,6 @@ public class DBMovies extends SQLiteOpenHelper {
         ArrayList<Movie> dataArrayList = new ArrayList<Movie>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-
-        //Cursor cursor = db.query(DB_TABLE_NAME, null, ID_FIELD + " LIKE '%"
-        //		+ keyword + "%'", null, null, null, null);
-
-
-        //Cursor cursor = db.query(DB_TABLE_NAME, null, null, null, null, null, null);
 
         String selectQuery = "SELECT  * FROM " + DB_TABLE_NAME_WISH;
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -503,8 +482,10 @@ public class DBMovies extends SQLiteOpenHelper {
                         .getColumnIndex(W_ID));
                 String link = cursor.getString(cursor
                         .getColumnIndex(W_NAME));
+                String time = cursor.getString(cursor.getColumnIndex(W_TIME));
+                String date = cursor.getString(cursor.getColumnIndex(W_DATE));
 
-                Movie movie = new Movie(name, link);
+                Movie movie = new Movie(name, link, time, date);
 
                 dataArrayList.add(movie);
                 cursor.moveToNext();
@@ -530,21 +511,6 @@ public class DBMovies extends SQLiteOpenHelper {
             db.close();
             return true;
 
-//            cursor.moveToFirst();
-//            for (int i = 0; i < cursor.getCount(); i++) {
-//
-//                String name = cursor.getString(cursor
-//                        .getColumnIndex(W_ID));
-//
-//                if (name == w_id) {
-//
-//                    bool = true;
-//                    break;
-//                } else {
-//
-//                    cursor.moveToNext();
-//                }
-//            }
         } else {
             return false;
         }
@@ -559,13 +525,6 @@ public class DBMovies extends SQLiteOpenHelper {
 
         int dlt = db.delete(DB_TABLE_NAME_WISH, W_ID + "=?", new String[]{""
                 + address});
-
-//        String selectQuery = "DELETE FROM " + DB_TABLE_NAME_WISH + " WHERE " + address + "=" +
-//                W_ID;
-
-        //  db.rawQuery(selectQuery, null);
-
-        //int dlt = db.delete(DB_TABLE_NAME_WATCH, null, null);
 
         db.close();
         return dlt;
@@ -605,6 +564,65 @@ public class DBMovies extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         db.delete(DB_TABLE_NAME_SEARCHING, null, null);
+
+    }
+
+    public long insertSearchKey(String search_Key) {
+        // TODO Auto-generated method stub
+
+        if (search_Key.length() == 0 || search_Key == null || search_Key.compareTo("")
+                == 0) {
+
+            return -1;
+
+        }
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(Search_Key, search_Key);
+        long insert = db.insert(DB_TABLE_NAME_SEARCH_KEY, null, values);
+        db.close();
+        return insert;
+
+    }
+
+    public ArrayList<String> getAllSearchKey() {
+        // TODO Auto-generated method stub
+
+        ArrayList<String> dataArrayList = new ArrayList<String>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT  * FROM " + DB_TABLE_NAME_SEARCH_KEY;
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+
+        if (cursor != null && cursor.getCount() > 0) {
+
+            cursor.moveToFirst();
+            for (int i = 0; i < cursor.getCount(); i++) {
+
+                String name = cursor.getString(cursor
+                        .getColumnIndex(Search_Key));
+
+                dataArrayList.add(name);
+                cursor.moveToNext();
+
+            }
+
+        }
+
+        cursor.close();
+        db.close();
+        return dataArrayList;
+    }
+
+    public void deleateAll_SearchKey() {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        db.delete(DB_TABLE_NAME_SEARCH_KEY, null, null);
 
     }
 

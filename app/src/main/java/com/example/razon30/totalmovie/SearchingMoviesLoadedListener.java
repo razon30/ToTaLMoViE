@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public interface SearchingMoviesLoadedListener {
 
-    public void onSearchingMoviesLoaded(ArrayList<Movie> listMovies);
+    void onSearchingMoviesLoaded(ArrayList<Movie> listMovies);
 
 
 }

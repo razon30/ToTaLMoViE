@@ -1,7 +1,6 @@
 package com.example.razon30.totalmovie;
 
 import android.content.Context;
-import android.mtp.MtpObjectInfo;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +15,8 @@ import java.util.ArrayList;
 public class Adapter_trailer extends BaseAdapter{
 
     ArrayList<Movie> trailer_list = new ArrayList<Movie>();
-    private LayoutInflater layoutInflater;
     Context context;
+    private LayoutInflater layoutInflater;
 
     public Adapter_trailer(Context context) {
         this.context = context;

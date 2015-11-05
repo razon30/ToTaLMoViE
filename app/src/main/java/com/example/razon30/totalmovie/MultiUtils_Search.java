@@ -11,10 +11,6 @@ import java.util.ArrayList;
  */
 public class MultiUtils_Search {
 
-    static   String urlPre = "http://api.themoviedb.org/3/search/";
-    static  String multiPost = "multi?api_key=f246d5e5105e9934d3cd4c4c181d618d&query=";
-
-
     public static ArrayList<Movie> loadBoxSearch(RequestQueue requestQueue, String id) {
         JSONObject response1 = Requestor.sendRequestBoxOfficeMovies(requestQueue,id );
 

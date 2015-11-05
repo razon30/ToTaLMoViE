@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public interface UpcomingMoviesLoadedListener {
 
-    public void onUpcomingMoviesLoaded(ArrayList<Movie> listMovies);
+    void onUpcomingMoviesLoaded(ArrayList<Movie> listMovies);
 
 
 }

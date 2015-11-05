@@ -7,6 +7,6 @@ import java.util.ArrayList;
  */
 public interface SearchingUpcomingLoadedListener {
 
-    public void onSearchingUpcomingLoaded(ArrayList<String> listMovies);
+    void onSearchingUpcomingLoaded(ArrayList<String> listMovies);
 
 }
